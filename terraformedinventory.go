@@ -33,7 +33,7 @@ func main() {
 	}
 
 	if file == "" {
-		fmt.Printf("Usage: %s PATH\n", os.Args[0])
+		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
 		os.Exit(1)
 	}
 
