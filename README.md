@@ -9,16 +9,16 @@ Terraform, then (re-)provision them with Ansible. It's pretty neat.
 
 Just download the OSX binary and run it.
 
-    curl -L -O https://github.com/adammck/terraformedinventory/releases/download/v0.1/terraformedinventory
-    chmod u+x terraformedinventory
-    ./terraformedinventory --list whatever.tfstate
+    curl -L -O https://github.com/adammck/terraform-inventory/releases/download/v0.2/terraform-inventory
+    chmod u+x terraform-inventory
+    ./terraform-inventory --list whatever.tfstate
 
 Ansible doesn't (seem to) support calling the inventory script with parameters,
 so I like to wrap this tool up in a little shell script, and call that.
 Something like:
 
 	#!/bin/bash
-	terraformedinventory $@ $(dirname $0)/deploy/terraform.tfstate
+	terraform-inventory $@ $(dirname $0)/deploy/terraform.tfstate
 
 Configuration via environment variables, like most other dynamic inventory
 scripts, is coming soon.
@@ -28,8 +28,8 @@ scripts, is coming soon.
 
 [Install Terraform] [tfdev] from source, then:
 
-	git clone https://github.com/adammck/terraformedinventory.git
-	cd terraformedinventory
+	git clone https://github.com/adammck/terraform-inventory.git
+	cd terraform-inventory
 	go build
 
 
