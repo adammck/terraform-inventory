@@ -9,7 +9,8 @@ Terraform, then (re-)provision them with Ansible. It's pretty neat.
 
 Just download the OSX binary and run it.
 
-    curl https://github.com/adammck/terraformedinventory/releases/download/v0.1/terraformedinventory
+    curl -L -O https://github.com/adammck/terraformedinventory/releases/download/v0.1/terraformedinventory
+    chmod u+x terraformedinventory
     ./terraformedinventory --list whatever.tfstate
 
 Ansible doesn't (seem to) support calling the inventory script with parameters,
