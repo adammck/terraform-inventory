@@ -29,11 +29,13 @@ func main() {
 	flag.Parse()
 	file := flag.Arg(0)
 
-	if !*list && *host == "" {
-	}
-
 	if file == "" {
 		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
+		os.Exit(1)
+	}
+
+	if !*list && *host == "" {
+		fmt.Println("Either --host or --list must be specified")
 		os.Exit(1)
 	}
 
@@ -62,10 +64,6 @@ func main() {
 	} else if *host != "" {
 		host := mustGetHost(state, *host)
 		os.Stdout.Write(mustMarshal(host.vars))
-
-	} else {
-		fmt.Println("Either --host or --list must be specified")
-		os.Exit(1)
 	}
 }
 
