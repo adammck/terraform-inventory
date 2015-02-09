@@ -5,13 +5,17 @@ from a [Terraform] [tf] state file. It allows one to spawn a bunch of VMs with
 Terraform, then (re-)provision them with Ansible. It's pretty neat.
 
 
+# Installation
+
+On OSX, install it with Homebrew:
+
+	brew install https://raw.github.com/adammck/terraform-inventory/master/homebrew/terraform-inventory.rb
+
+This is only a tiny tool, so it's not in the main Homebrew repo. Feel free to
+add it, if you think that would be useful.
+
+
 ## Usage
-
-Just download the OSX binary and run it.
-
-	curl -L -O https://github.com/adammck/terraform-inventory/releases/download/v0.2/terraform-inventory
-	chmod u+x terraform-inventory
-	./terraform-inventory --list whatever.tfstate
 
 Ansible doesn't (seem to) support calling the inventory script with parameters
 (and this tool doesn't support configuration via environment variables yet), so
@@ -27,10 +31,10 @@ Then run Ansible with the script as an inventory:
 
 ## Development
 
-[Install Terraform] [tfdev] from source, then:
+It's just a Go app, so the usual:
 
-	git clone https://github.com/adammck/terraform-inventory.git
-	cd terraform-inventory
+	go get github.com/adammck/terraform-inventory
+	cd $GOPATH/adammck/terraform-inventory
 	go build
 
 
@@ -43,4 +47,3 @@ MIT.
 
 [ansible]: http://www.ansible.com
 [tf]:      http://www.terraform.io
-[tfdev]:   https://github.com/hashicorp/terraform#developing-terraform
