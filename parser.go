@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"encoding/json"
+	"strings"
 )
 
 type state struct {
@@ -36,7 +37,8 @@ func (s *state) instances() map[string]instanceState {
 	for _, m := range s.Modules {
 		for k, r := range m.Resources {
 			if r.Type == "aws_instance" {
-				inst[k] = r.Primary
+				name := strings.TrimPrefix(k, "aws_instance.")
+				inst[name] = r.Primary
 			}
 		}
 	}

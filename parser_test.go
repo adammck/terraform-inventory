@@ -111,6 +111,6 @@ func TestInstances(t *testing.T) {
 
 	inst := s.instances()
 	assert.Equal(t, 2, len(inst))
-	assert.Equal(t, "i-aaaaaaaa", inst["aws_instance.one"].ID)
-	assert.Equal(t, "i-bbbbbbbb", inst["aws_instance.two"].ID)
+	assert.Equal(t, "i-aaaaaaaa", inst["one"].ID)
+	assert.Equal(t, "i-bbbbbbbb", inst["two"].ID)
 }
