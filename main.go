@@ -7,12 +7,18 @@ import (
 	"path/filepath"
 )
 
+var version = flag.Bool("version", false, "print version information and exit")
 var list = flag.Bool("list", false, "list mode")
 var host = flag.String("host", "", "host mode")
 
 func main() {
 	flag.Parse()
 	file := flag.Arg(0)
+
+	if *version == true {
+		fmt.Printf("%s version %d\n", os.Args[0], versionInfo())
+		return
+	}
 
 	if file == "" {
 		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
