@@ -17,9 +17,13 @@ add it, if you think that would be useful.
 
 ## Usage
 
-Ansible doesn't (seem to) support calling the inventory script with parameters
-(and this tool doesn't support configuration via environment variables yet), so
-I like to create a little shell script and call that. Something like:
+Ansible doesn't (seem to) support calling the inventory script with parameters,
+so you can specify the path to the state file using the environment variable
+TI\_TFSTATE like so:
+
+  TI\_TFSTATE=deploy/terraform.tfstate ansible-playbook --inventory-file=terraform-inventory
+
+Alternately, you can create a little shell script and call that. Something like:
 
 	#!/bin/bash
 	terraform-inventory $@ deploy/terraform.tfstate

@@ -20,7 +20,7 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
 	for _, inst := range s.instances() {
-		if hostname ==  inst.Attributes["private_ip"] {
+		if hostname == inst.Attributes["private_ip"] {
 			return output(stdout, stderr, inst.Attributes)
 		}
 	}
