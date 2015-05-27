@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	"testing"
 	"strings"
+	"testing"
 )
 
 const exampleStateFile = `
@@ -70,7 +70,7 @@ func TestStateRead(t *testing.T) {
 							ID: "i-aaaaaaaa",
 							Attributes: map[string]string{
 								"ami": "ami-XXXXXXXX",
-								"id": "i-aaaaaaaa",
+								"id":  "i-aaaaaaaa",
 							},
 						},
 					},
@@ -80,7 +80,7 @@ func TestStateRead(t *testing.T) {
 							ID: "i-bbbbbbbb",
 							Attributes: map[string]string{
 								"ami": "ami-YYYYYYYY",
-								"id": "i-bbbbbbbb",
+								"id":  "i-bbbbbbbb",
 							},
 						},
 					},
@@ -90,7 +90,7 @@ func TestStateRead(t *testing.T) {
 							ID: "sg-cccccccc",
 							Attributes: map[string]string{
 								"description": "Whatever",
-								"id": "sg-cccccccc",
+								"id":          "sg-cccccccc",
 							},
 						},
 					},

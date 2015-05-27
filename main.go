@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	env "github.com/danryan/env"
 	"os"
 	"path/filepath"
 )
@@ -11,9 +12,15 @@ var version = flag.Bool("version", false, "print version information and exit")
 var list = flag.Bool("list", false, "list mode")
 var host = flag.String("host", "", "host mode")
 
+type Config struct {
+	TfState string `env:"key=TI_TFSTATE"`
+}
+
 func main() {
 	flag.Parse()
 	file := flag.Arg(0)
+	cfg := &Config{}
+	env.MustProcess(cfg)
 
 	if *version == true {
 		fmt.Printf("%s version %d\n", os.Args[0], versionInfo())
@@ -21,8 +28,12 @@ func main() {
 	}
 
 	if file == "" {
-		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
-		os.Exit(1)
+		if cfg.TfState == "" {
+			fmt.Printf("Usage: %s [options] path\n", os.Args[0])
+			os.Exit(1)
+		} else {
+			file = cfg.TfState
+		}
 	}
 
 	if !*list && *host == "" {
