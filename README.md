@@ -1,8 +1,8 @@
 # Terraformed Inventory
 
 This is a little Go app which generates an dynamic [Ansible] [ansible] inventory
-from a [Terraform] [tf] state file. It allows one to spawn a bunch of VMs with
-Terraform, then (re-)provision them with Ansible. It's pretty neat.
+from an AWS-based [Terraform] [tf] state file. It allows one to spawn a bunch of EC2 VMs with
+Terraform, then (re-)provision them with Ansible. It's pretty neat. 
 
 
 # Installation
