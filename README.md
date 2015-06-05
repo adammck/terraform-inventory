@@ -41,6 +41,11 @@ It's just a Go app, so the usual:
 	cd $GOPATH/adammck/terraform-inventory
 	go build
 
+To test against an example statefile, run:
+
+	terraform-inventory --list fixtures/example.tfstate
+	terraform-inventory --host=web-aws fixtures/example.tfstate
+
 To update the fixtures, populate `fixtures/secrets.tfvars` with your DO and AWS
 account details, and run `fixtures/update`. You probably don't need to do this.
 

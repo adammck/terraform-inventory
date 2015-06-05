@@ -23,7 +23,7 @@ func main() {
 	env.MustProcess(cfg)
 
 	if *version == true {
-		fmt.Printf("%s version %d\n", os.Args[0], versionInfo())
+		fmt.Printf("%s version %s\n", os.Args[0], versionInfo())
 		return
 	}
 
