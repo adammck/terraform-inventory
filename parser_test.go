@@ -33,7 +33,8 @@ const exampleStateFile = `
 						"id": "i-bbbbbbbb",
 						"attributes": {
 							"id": "i-bbbbbbbb",
-							"private_ip": "10.0.0.2"
+							"private_ip": "10.0.0.2",
+							"public_ip": "50.0.0.1"
 						}
 					}
 				},
@@ -91,6 +92,7 @@ func TestStateRead(t *testing.T) {
 							Attributes: map[string]string{
 								"id":         "i-bbbbbbbb",
 								"private_ip": "10.0.0.2",
+								"public_ip": "50.0.0.1",
 							},
 						},
 					},
@@ -136,8 +138,21 @@ func TestResources(t *testing.T) {
 	assert.Equal(t, "digitalocean_droplet", inst["three"].Type)
 }
 
-func TestIsSupported(t *testing.T) {
+func TestAddress(t *testing.T) {
+	r := strings.NewReader(exampleStateFile)
 
+	var s state
+	err := s.read(r)
+	assert.Nil(t, err)
+
+	inst := s.resources()
+	assert.Equal(t, 3, len(inst))
+	assert.Equal(t, "10.0.0.1", inst["one"].Address())
+	assert.Equal(t, "50.0.0.1", inst["two"].Address())
+	assert.Equal(t, "192.168.0.3", inst["three"].Address())
+}
+
+func TestIsSupported(t *testing.T) {
 	r := resourceState{
 		Type: "something",
 	}

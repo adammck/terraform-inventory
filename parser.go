@@ -11,6 +11,19 @@ type state struct {
 	Modules []moduleState `json:"modules"`
 }
 
+// keyNames contains the names of the keys to check for in each resource in the
+// state file. This allows us to support multiple types of resource without too
+// much fuss.
+var keyNames []string
+
+func init() {
+	keyNames = []string{
+		"ipv4_address", // DO
+		"public_ip", // AWS
+		"private_ip", // AWS
+	}
+}
+
 // read populates the state object from a statefile.
 func (s *state) read(stateFile io.Reader) error {
 
@@ -57,26 +70,23 @@ type resourceState struct {
 }
 
 // isSupported returns true if terraform-inventory supports this resource.
-func (s *resourceState) isSupported() bool {
+func (s resourceState) isSupported() bool {
 	return s.Address() != ""
 }
 
 // Address returns the IP address of this resource.
-func (s *resourceState) Address() string {
-	switch s.Type {
-	case "aws_instance":
-		return s.Primary.Attributes["private_ip"]
-
-	case "digitalocean_droplet":
-		return s.Primary.Attributes["ipv4_address"]
-
-	default:
-		return ""
+func (s resourceState) Address() string {
+	for _, key := range(keyNames) {
+		if ip := s.Primary.Attributes[key]; ip != "" {
+			return ip
+		}
 	}
+
+	return ""
 }
 
 // Attributes returns a map containing everything we know about this resource.
-func (s *resourceState) Attributes() map[string]string {
+func (s resourceState) Attributes() map[string]string {
 	return s.Primary.Attributes
 }
 
