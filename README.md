@@ -41,6 +41,9 @@ It's just a Go app, so the usual:
 	cd $GOPATH/adammck/terraform-inventory
 	go build
 
+To update the fixtures, populate `fixtures/secrets.tfvars` with your DO and AWS
+account details, and run `fixtures/update`. You probably don't need to do this.
+
 
 ## License
 

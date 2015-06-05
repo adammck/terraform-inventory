@@ -1,0 +1,3 @@
+#!/bin/bash -e
+cd $(cd `dirname "$0"`; cd ..; pwd)
+terraform apply -refresh -var-file="fixtures/secrets.tfvars" -state="fixtures/example.tfstate" -backup="-" fixtures
