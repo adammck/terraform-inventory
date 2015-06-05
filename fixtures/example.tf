@@ -14,12 +14,14 @@ provider "digitalocean" {
 }
 
 resource "aws_instance" "web-aws" {
-    ami = "ami-96a818fe"
-    instance_type = "t2.micro"
-    subnet_id = "${var.aws_subnet_id}"
-    root_block_device = {
-      delete_on_termination = true
-    }
+  ami = "ami-96a818fe"
+  instance_type = "t2.micro"
+  subnet_id = "${var.aws_subnet_id}"
+  associate_public_ip_address = true
+  key_name = "terraform-inventory"
+  root_block_device = {
+    delete_on_termination = true
+  }
 }
 
 resource "digitalocean_droplet" "web-do" {
@@ -27,5 +29,5 @@ resource "digitalocean_droplet" "web-do" {
   name = "terraform-inventory-1"
   region = "nyc1"
   size = "512mb"
-  ssh_keys = [55015]
+  ssh_keys = [862272]
 }

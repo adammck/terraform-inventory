@@ -23,7 +23,7 @@ Ansible doesn't (seem to) support calling the inventory script with parameters,
 so you can specify the path to the state file using the `TI_TFSTATE` environment
 variable, like so:
 
-    TI_TFSTATE=deploy/terraform.tfstate ansible-playbook --inventory-file=terraform-inventory
+	TI_TFSTATE=deploy/terraform.tfstate ansible-playbook --inventory-file=terraform-inventory deploy/playbook.yml
 
 Alternately, you can create a little shell script and call that. Something like:
 
