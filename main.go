@@ -30,6 +30,15 @@ func main() {
 		file = os.Getenv("TI_TFSTATE")
 	}
 
+	// check for a file named terraform.tfstate in the pwd
+	if file == "" {
+		fn := "terraform.tfstate"
+		_, err := os.Stat(fn)
+		if err == nil {
+			file = fn
+		}
+	}
+
 	if file == "" {
 		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
 		os.Exit(1)

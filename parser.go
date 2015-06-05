@@ -19,8 +19,8 @@ var keyNames []string
 func init() {
 	keyNames = []string{
 		"ipv4_address", // DO
-		"public_ip", // AWS
-		"private_ip", // AWS
+		"public_ip",    // AWS
+		"private_ip",   // AWS
 	}
 }
 
@@ -76,7 +76,7 @@ func (s resourceState) isSupported() bool {
 
 // Address returns the IP address of this resource.
 func (s resourceState) Address() string {
-	for _, key := range(keyNames) {
+	for _, key := range keyNames {
 		if ip := s.Primary.Attributes[key]; ip != "" {
 			return ip
 		}
