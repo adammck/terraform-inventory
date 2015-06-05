@@ -1,8 +1,10 @@
 # Terraformed Inventory
 
 This is a little Go app which generates an dynamic [Ansible] [ansible] inventory
-from an AWS-based [Terraform] [tf] state file. It allows one to spawn a bunch of EC2 VMs with
+from a [Terraform] [tf] state file. It allows one to spawn a bunch of VMs with
 Terraform, then (re-)provision them with Ansible. It's pretty neat. 
+
+Currently, only **AWS** and **DigitalOcean** are supported.
 
 
 # Installation
@@ -40,6 +42,14 @@ It's just a Go app, so the usual:
 	go get github.com/adammck/terraform-inventory
 	cd $GOPATH/adammck/terraform-inventory
 	go build
+
+To test against an example statefile, run:
+
+	terraform-inventory --list fixtures/example.tfstate
+	terraform-inventory --host=web-aws fixtures/example.tfstate
+
+To update the fixtures, populate `fixtures/secrets.tfvars` with your DO and AWS
+account details, and run `fixtures/update`. You probably don't need to do this.
 
 
 ## License

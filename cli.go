@@ -11,17 +11,17 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 
 	// add each instance as a pseudo-group, so they can be provisioned
 	// individually where necessary.
-	for name, inst := range s.instances() {
-		groups[name] = []string{inst.Attributes["private_ip"]}
+	for name, res := range s.resources() {
+		groups[name] = []string{res.Address()}
 	}
 
 	return output(stdout, stderr, groups)
 }
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
-	for _, inst := range s.instances() {
-		if hostname == inst.Attributes["private_ip"] {
-			return output(stdout, stderr, inst.Attributes)
+	for name, res := range s.resources() {
+		if hostname == name {
+			return output(stdout, stderr, res.Attributes())
 		}
 	}
 

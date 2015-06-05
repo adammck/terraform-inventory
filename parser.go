@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"strings"
+	"regexp"
 )
 
 type state struct {
@@ -29,16 +29,17 @@ func (s *state) read(stateFile io.Reader) error {
 	return nil
 }
 
-// hosts returns a map of name to instanceState, for each of the aws_instance
-// resources found in the statefile.
-func (s *state) instances() map[string]instanceState {
-	inst := make(map[string]instanceState)
+// resources returns a map of name to resourceState, for any supported resources
+// found in the statefile.
+func (s *state) resources() map[string]resourceState {
+	typeRemover := regexp.MustCompile(`^[\w_]+\.`)
+	inst := make(map[string]resourceState)
 
 	for _, m := range s.Modules {
 		for k, r := range m.Resources {
-			if r.Type == "aws_instance" {
-				name := strings.TrimPrefix(k, "aws_instance.")
-				inst[name] = r.Primary
+			if r.isSupported() {
+				name := typeRemover.ReplaceAllString(k, "")
+				inst[name] = r
 			}
 		}
 	}
@@ -53,6 +54,30 @@ type moduleState struct {
 type resourceState struct {
 	Type    string        `json:"type"`
 	Primary instanceState `json:"primary"`
+}
+
+// isSupported returns true if terraform-inventory supports this resource.
+func (s *resourceState) isSupported() bool {
+	return s.Address() != ""
+}
+
+// Address returns the IP address of this resource.
+func (s *resourceState) Address() string {
+	switch s.Type {
+	case "aws_instance":
+		return s.Primary.Attributes["private_ip"]
+
+	case "digitalocean_droplet":
+		return s.Primary.Attributes["ipv4_address"]
+
+	default:
+		return ""
+	}
+}
+
+// Attributes returns a map containing everything we know about this resource.
+func (s *resourceState) Attributes() map[string]string {
+	return s.Primary.Attributes
 }
 
 type instanceState struct {
