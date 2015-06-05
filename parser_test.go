@@ -65,63 +65,11 @@ const exampleStateFile = `
 `
 
 func TestStateRead(t *testing.T) {
-	r := strings.NewReader(exampleStateFile)
-
 	var s state
+	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.Nil(t, err)
-
-	exp := state{
-		Modules: []moduleState{
-			moduleState{
-				Resources: map[string]resourceState{
-					"aws_instance.one": resourceState{
-						Type: "aws_instance",
-						Primary: instanceState{
-							ID: "i-aaaaaaaa",
-							Attributes: map[string]string{
-								"id":         "i-aaaaaaaa",
-								"private_ip": "10.0.0.1",
-							},
-						},
-					},
-					"aws_instance.two": resourceState{
-						Type: "aws_instance",
-						Primary: instanceState{
-							ID: "i-bbbbbbbb",
-							Attributes: map[string]string{
-								"id":         "i-bbbbbbbb",
-								"private_ip": "10.0.0.2",
-								"public_ip": "50.0.0.1",
-							},
-						},
-					},
-					"aws_security_group.example": resourceState{
-						Type: "aws_security_group",
-						Primary: instanceState{
-							ID: "sg-cccccccc",
-							Attributes: map[string]string{
-								"id":          "sg-cccccccc",
-								"description": "Whatever",
-							},
-						},
-					},
-					"digitalocean_droplet.three": resourceState{
-						Type: "digitalocean_droplet",
-						Primary: instanceState{
-							ID: "ddddddd",
-							Attributes: map[string]string{
-								"id":           "ddddddd",
-								"ipv4_address": "192.168.0.3",
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	assert.Equal(t, exp, s)
+	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.one"].Type)
 }
 
 func TestResources(t *testing.T) {
