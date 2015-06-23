@@ -21,6 +21,7 @@ func init() {
 		"ipv4_address", // DO
 		"public_ip",    // AWS
 		"private_ip",   // AWS
+		"ipaddress",    // CS
 	}
 }
 
