@@ -57,6 +57,16 @@ const exampleStateFile = `
 							"ipv4_address": "192.168.0.3"
 						}
 					}
+				},
+				"cloudstack_instance.four": {
+					"type": "cloudstack_instance",
+					"primary": {
+						"id": "aaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+						"attributes": {
+							"id": "aaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+							"ipaddress": "10.2.1.5"
+						}
+					}
 				}
 			}
 		}
@@ -80,10 +90,11 @@ func TestResources(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 3, len(inst))
+	assert.Equal(t, 4, len(inst))
 	assert.Equal(t, "aws_instance", inst["one"].Type)
 	assert.Equal(t, "aws_instance", inst["two"].Type)
 	assert.Equal(t, "digitalocean_droplet", inst["three"].Type)
+	assert.Equal(t, "cloudstack_instance", inst["four"].Type)
 }
 
 func TestAddress(t *testing.T) {
@@ -94,10 +105,11 @@ func TestAddress(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 3, len(inst))
+	assert.Equal(t, 4, len(inst))
 	assert.Equal(t, "10.0.0.1", inst["one"].Address())
 	assert.Equal(t, "50.0.0.1", inst["two"].Address())
 	assert.Equal(t, "192.168.0.3", inst["three"].Address())
+	assert.Equal(t, "10.2.1.5", inst["four"].Address())
 }
 
 func TestIsSupported(t *testing.T) {
@@ -121,6 +133,16 @@ func TestIsSupported(t *testing.T) {
 		Primary: instanceState{
 			Attributes: map[string]string{
 				"ipv4_address": "192.168.0.3",
+			},
+		},
+	}
+	assert.Equal(t, true, r.isSupported())
+
+	r = resourceState{
+		Type: "cloudstack_instance",
+		Primary: instanceState{
+			Attributes: map[string]string{
+				"ipaddress": "10.2.1.5",
 			},
 		},
 	}
