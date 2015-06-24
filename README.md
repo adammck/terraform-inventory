@@ -2,9 +2,9 @@
 
 This is a little Go app which generates an dynamic [Ansible] [ansible] inventory
 from a [Terraform] [tf] state file. It allows one to spawn a bunch of instances
-with Terraform, then (re-)provision them with Ansible. It's pretty neat. 
+with Terraform, then (re-)provision them with Ansible. It's pretty neat.
 
-Currently, only **AWS** and **DigitalOcean** are supported.
+Currently, only **AWS**, **DigitalOcean** and **CloudStack** are supported.
 
 
 # Installation
