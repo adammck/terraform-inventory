@@ -3,7 +3,7 @@ cd $(cd `dirname "$0"`; cd ..; pwd)
 
 VERSION=$1
 if [ -z $VERSION ]; then
-	echo "Error: VERSION must be set."
+	echo "Usage: $0 VERSION"
 	exit 1
 fi
 
@@ -20,7 +20,7 @@ for target in $TARGETS; do
 		NAME=${NAME}.exe
 	fi
 
-	go build -v -o pkg/${NAME}
+	go build -ldflags "-X main.build_version $VERSION" -o pkg/${NAME}
 
 	pushd pkg
 	zip terraform-inventory_${VERSION}_${GOOS}_${GOARCH}.zip ${NAME}
