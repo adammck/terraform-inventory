@@ -1,2 +1,3 @@
-/terraform-inventory
 /fixtures/secrets.tfvars
+/pkg/*.zip
+/terraform-inventory

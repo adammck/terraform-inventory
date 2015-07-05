@@ -1,0 +1,29 @@
+#!/bin/bash -e
+cd $(cd `dirname "$0"`; cd ..; pwd)
+
+VERSION=$1
+if [ -z $VERSION ]; then
+	echo "Error: VERSION must be set."
+	exit 1
+fi
+
+TARGETS="darwin_386 darwin_amd64 linux_386 linux_amd64 linux_arm windows_386 windows_amd64"
+
+for target in $TARGETS; do
+	t=(${target//_/ })
+
+	export GOOS=${t[0]}
+	export GOARCH=${t[1]}
+	export NAME=terraform-inventory
+
+	if [ $GOOS == "windows" ]; then
+		NAME=${NAME}.exe
+	fi
+
+	go build -v -o pkg/${NAME}
+
+	pushd pkg
+	zip terraform-inventory_${VERSION}_${GOOS}_${GOARCH}.zip ${NAME}
+	rm ${NAME}
+	popd
+done
