@@ -22,6 +22,7 @@ func init() {
 		"public_ip",    // AWS
 		"private_ip",   // AWS
 		"ipaddress",    // CS
+		"ip_address",   // VMware
 	}
 }
 

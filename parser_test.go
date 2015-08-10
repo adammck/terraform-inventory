@@ -67,6 +67,22 @@ const exampleStateFile = `
 							"ipaddress": "10.2.1.5"
 						}
 					}
+				},
+				"vsphere_virtual_machine.five": {
+					"type": "vsphere_virtual_machine",
+					"primary": {
+						"id": "aaaaaaaa",
+						"attributes": {
+							"datacenter": "dddddddd",
+							"host": "hhhhhhhh",
+							"id": "aaaaaaaa",
+							"image": "Ubunutu 14.04 LTS",
+							"ip_address": "10.20.30.40",
+							"linked_clone": "false",
+							"name": "nnnnnn",
+							"power_on": "true"
+						}
+					}
 				}
 			}
 		}
@@ -90,11 +106,12 @@ func TestResources(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 4, len(inst))
+	assert.Equal(t, 5, len(inst))
 	assert.Equal(t, "aws_instance", inst["one"].Type)
 	assert.Equal(t, "aws_instance", inst["two"].Type)
 	assert.Equal(t, "digitalocean_droplet", inst["three"].Type)
 	assert.Equal(t, "cloudstack_instance", inst["four"].Type)
+	assert.Equal(t, "vsphere_virtual_machine", inst["five"].Type)
 }
 
 func TestAddress(t *testing.T) {
@@ -105,11 +122,12 @@ func TestAddress(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 4, len(inst))
+	assert.Equal(t, 5, len(inst))
 	assert.Equal(t, "10.0.0.1", inst["one"].Address())
 	assert.Equal(t, "50.0.0.1", inst["two"].Address())
 	assert.Equal(t, "192.168.0.3", inst["three"].Address())
 	assert.Equal(t, "10.2.1.5", inst["four"].Address())
+	assert.Equal(t, "10.20.30.40", inst["five"].Address())
 }
 
 func TestIsSupported(t *testing.T) {
@@ -143,6 +161,16 @@ func TestIsSupported(t *testing.T) {
 		Primary: instanceState{
 			Attributes: map[string]string{
 				"ipaddress": "10.2.1.5",
+			},
+		},
+	}
+	assert.Equal(t, true, r.isSupported())
+
+	r = resourceState{
+		Type: "vsphere_virtual_machine",
+		Primary: instanceState{
+			Attributes: map[string]string{
+				"ip_address": "10.20.30.40",
 			},
 		},
 	}
