@@ -16,6 +16,8 @@ On OSX, install it with Homebrew:
 This is only a tiny tool, so it's not in the main Homebrew repo. Feel free to
 add it, if you think that would be useful.
 
+Alternatively, you can download a [release](https://github.com/adammck/terraform-inventory/releases) suitable
+to your platform and unzip it. Make sure the `terraform-inventory` binary is executable and you're ready to go.
 
 ## Usage
 
