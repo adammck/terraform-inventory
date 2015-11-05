@@ -20,7 +20,7 @@ for target in $TARGETS; do
 		NAME=${NAME}.exe
 	fi
 
-	go build -ldflags "-X main.build_version $VERSION" -o pkg/${NAME}
+	go build -ldflags "-X main.build_version=$VERSION" -o pkg/${NAME}
 
 	pushd pkg
 	zip terraform-inventory_${VERSION}_${GOOS}_${GOARCH}.zip ${NAME}
