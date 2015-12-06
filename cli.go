@@ -14,7 +14,9 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 	for name, res := range s.resources() {
 		g := res.Groups()
 		for _, i := range g {
-			groups[i] = append(groups[i], res.Address())
+			if i != "" {
+				groups[i] = append(groups[i], res.Address())
+			}
 		}
 		groups[name] = []string{res.Address()}
 	}
