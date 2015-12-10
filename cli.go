@@ -21,6 +21,7 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 		// created using the count parameter.
 		groups[res.Name] = append(groups[res.Name], res.Address())
 
+		// Add the instance by its full name, including the counter.
 		groups[res.NameWithCounter()] = []string{res.Address()}
 	}
 

@@ -133,8 +133,14 @@ const expectedListOutput = `
 }
 `
 
-func TestIntegration(t *testing.T) {
+const expectedHostOneOutput = `
+{
+	"id":"i-aaaaaaaa",
+	"private_ip":"10.0.0.1"
+}
+`
 
+func TestListCommand(t *testing.T) {
 	var s state
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
@@ -148,6 +154,24 @@ func TestIntegration(t *testing.T) {
 
 	var exp, act interface{}
 	json.Unmarshal([]byte(expectedListOutput), &exp)
+	json.Unmarshal([]byte(stdout.String()), &act)
+	assert.Equal(t, exp, act)
+}
+
+func TestHostCommand(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFile)
+	err := s.read(r)
+	assert.Nil(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdHost(&stdout, &stderr, &s, "10.0.0.1")
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	var exp, act interface{}
+	json.Unmarshal([]byte(expectedHostOneOutput), &exp)
 	json.Unmarshal([]byte(stdout.String()), &act)
 	assert.Equal(t, exp, act)
 }
