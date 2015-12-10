@@ -20,13 +20,23 @@ const exampleStateFile = `
 			],
 			"outputs": {},
 			"resources": {
-				"aws_instance.one": {
+				"aws_instance.one.0": {
 					"type": "aws_instance",
 					"primary": {
 						"id": "i-aaaaaaaa",
 						"attributes": {
 							"id": "i-aaaaaaaa",
 							"private_ip": "10.0.0.1"
+						}
+					}
+				},
+				"aws_instance.one.1": {
+					"type": "aws_instance",
+					"primary": {
+						"id": "i-a1a1a1a1",
+						"attributes": {
+							"id": "i-a1a1a1a1",
+							"private_ip": "10.0.1.1"
 						}
 					}
 				},
@@ -106,7 +116,7 @@ const exampleStateFile = `
 
 const expectedListOutput = `
 {
-	"one":   ["10.0.0.1"],
+	"one":   ["10.0.0.1", "10.0.1.1"],
 	"two":   ["50.0.0.1"],
 	"three": ["192.168.0.3"],
 	"four":  ["10.2.1.5"],
@@ -114,6 +124,7 @@ const expectedListOutput = `
 	"six":   ["10.120.0.226"],
 
 	"one.0":   ["10.0.0.1"],
+	"one.1":   ["10.0.1.1"],
 	"two.0":   ["50.0.0.1"],
 	"three.0": ["192.168.0.3"],
 	"four.0":  ["10.2.1.5"],
@@ -146,7 +157,7 @@ func TestStateRead(t *testing.T) {
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.Nil(t, err)
-	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.one"].Type)
+	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.one.0"].Type)
 	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.two"].Type)
 }
 
@@ -158,8 +169,9 @@ func TestResources(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 6, len(inst))
-	assert.Equal(t, "aws_instance", inst["aws_instance.one"].Type)
+	assert.Equal(t, 7, len(inst))
+	assert.Equal(t, "aws_instance", inst["aws_instance.one.0"].Type)
+	assert.Equal(t, "aws_instance", inst["aws_instance.one.1"].Type)
 	assert.Equal(t, "aws_instance", inst["aws_instance.two"].Type)
 	assert.Equal(t, "digitalocean_droplet", inst["digitalocean_droplet.three"].Type)
 	assert.Equal(t, "cloudstack_instance", inst["cloudstack_instance.four"].Type)
@@ -175,8 +187,9 @@ func TestAddress(t *testing.T) {
 	assert.Nil(t, err)
 
 	inst := s.resources()
-	assert.Equal(t, 6, len(inst))
-	assert.Equal(t, "10.0.0.1", inst["aws_instance.one"].Address())
+	assert.Equal(t, 7, len(inst))
+	assert.Equal(t, "10.0.0.1", inst["aws_instance.one.0"].Address())
+	assert.Equal(t, "10.0.1.1", inst["aws_instance.one.1"].Address())
 	assert.Equal(t, "50.0.0.1", inst["aws_instance.two"].Address())
 	assert.Equal(t, "192.168.0.3", inst["digitalocean_droplet.three"].Address())
 	assert.Equal(t, "10.2.1.5", inst["cloudstack_instance.four"].Address())
