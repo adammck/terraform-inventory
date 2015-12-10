@@ -29,6 +29,7 @@ resource "aws_instance" "web-aws" {
   subnet_id = "${var.aws_subnet_id}"
   associate_public_ip_address = true
   key_name = "terraform-inventory"
+  count = 2
   root_block_device = {
     delete_on_termination = true
   }
