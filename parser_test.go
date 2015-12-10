@@ -1,9 +1,12 @@
 package main
 
 import (
-	"github.com/stretchr/testify/assert"
+	"bytes"
+	"encoding/json"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const exampleStateFile = `
@@ -100,6 +103,43 @@ const exampleStateFile = `
 	]
 }
 `
+
+const expectedListOutput = `
+{
+	"one":   ["10.0.0.1"],
+	"two":   ["50.0.0.1"],
+	"three": ["192.168.0.3"],
+	"four":  ["10.2.1.5"],
+	"five":  ["10.20.30.40"],
+	"six":   ["10.120.0.226"],
+
+	"one.0":   ["10.0.0.1"],
+	"two.0":   ["50.0.0.1"],
+	"three.0": ["192.168.0.3"],
+	"four.0":  ["10.2.1.5"],
+	"five.0":  ["10.20.30.40"],
+	"six.0":   ["10.120.0.226"]
+}
+`
+
+func TestIntegration(t *testing.T) {
+
+	var s state
+	r := strings.NewReader(exampleStateFile)
+	err := s.read(r)
+	assert.Nil(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdList(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	var exp, act interface{}
+	json.Unmarshal([]byte(expectedListOutput), &exp)
+	json.Unmarshal([]byte(stdout.String()), &act)
+	assert.Equal(t, exp, act)
+}
 
 func TestStateRead(t *testing.T) {
 	var s state
