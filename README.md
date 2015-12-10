@@ -83,8 +83,12 @@ To test against an example statefile, run:
 	terraform-inventory --host=52.7.58.202 fixtures/example.tfstate
 
 To update the fixtures, populate `fixtures/secrets.tfvars` with your DO and AWS
-account details, and run `fixtures/update`. You almost certainly don't need to
-do this.
+account details, and run `fixtures/update`. To run a tiny Ansible playbook on
+the example resourecs, run:
+
+	TF_STATE=fixtures/example.tfstate ansible-playbook --inventory-file=terraform-inventory fixtures/playbook.yml
+
+You almost certainly don't need to do any of this. Use the tests instead.
 
 
 ## License
