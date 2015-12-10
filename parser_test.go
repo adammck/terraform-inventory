@@ -107,6 +107,7 @@ func TestStateRead(t *testing.T) {
 	err := s.read(r)
 	assert.Nil(t, err)
 	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.one"].Type)
+	assert.Equal(t, "aws_instance", s.Modules[0].Resources["aws_instance.two"].Type)
 }
 
 func TestResources(t *testing.T) {
@@ -118,12 +119,12 @@ func TestResources(t *testing.T) {
 
 	inst := s.resources()
 	assert.Equal(t, 6, len(inst))
-	assert.Equal(t, "aws_instance", inst["one"].Type)
-	assert.Equal(t, "aws_instance", inst["two"].Type)
-	assert.Equal(t, "digitalocean_droplet", inst["three"].Type)
-	assert.Equal(t, "cloudstack_instance", inst["four"].Type)
-	assert.Equal(t, "vsphere_virtual_machine", inst["five"].Type)
-	assert.Equal(t, "openstack_compute_instance_v2", inst["six"].Type)
+	assert.Equal(t, "aws_instance", inst["aws_instance.one"].Type)
+	assert.Equal(t, "aws_instance", inst["aws_instance.two"].Type)
+	assert.Equal(t, "digitalocean_droplet", inst["digitalocean_droplet.three"].Type)
+	assert.Equal(t, "cloudstack_instance", inst["cloudstack_instance.four"].Type)
+	assert.Equal(t, "vsphere_virtual_machine", inst["vsphere_virtual_machine.five"].Type)
+	assert.Equal(t, "openstack_compute_instance_v2", inst["openstack_compute_instance_v2.six"].Type)
 }
 
 func TestAddress(t *testing.T) {
@@ -135,12 +136,12 @@ func TestAddress(t *testing.T) {
 
 	inst := s.resources()
 	assert.Equal(t, 6, len(inst))
-	assert.Equal(t, "10.0.0.1", inst["one"].Address())
-	assert.Equal(t, "50.0.0.1", inst["two"].Address())
-	assert.Equal(t, "192.168.0.3", inst["three"].Address())
-	assert.Equal(t, "10.2.1.5", inst["four"].Address())
-	assert.Equal(t, "10.20.30.40", inst["five"].Address())
-	assert.Equal(t, "10.120.0.226", inst["six"].Address())
+	assert.Equal(t, "10.0.0.1", inst["aws_instance.one"].Address())
+	assert.Equal(t, "50.0.0.1", inst["aws_instance.two"].Address())
+	assert.Equal(t, "192.168.0.3", inst["digitalocean_droplet.three"].Address())
+	assert.Equal(t, "10.2.1.5", inst["cloudstack_instance.four"].Address())
+	assert.Equal(t, "10.20.30.40", inst["vsphere_virtual_machine.five"].Address())
+	assert.Equal(t, "10.120.0.226", inst["openstack_compute_instance_v2.six"].Address())
 }
 
 func TestIsSupported(t *testing.T) {
