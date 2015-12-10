@@ -30,7 +30,7 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
 	for _, res := range s.resources() {
-		if hostname == res.Name {
+		if hostname == res.Address() {
 			return output(stdout, stderr, res.Attributes())
 		}
 	}
