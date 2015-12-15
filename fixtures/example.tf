@@ -13,7 +13,7 @@ provider "digitalocean" {
   token = "${var.do_token}"
 }
 
-resource "aws_instance" "web-aws" {
+resource "aws_instance" "alpha" {
   ami = "ami-96a818fe"
   instance_type = "t2.micro"
   subnet_id = "${var.aws_subnet_id}"
@@ -26,11 +26,11 @@ resource "aws_instance" "web-aws" {
   }
 
   tags = {
-    Role = "Webserver"
+    Role = "Web"
   }
 }
 
-resource "aws_instance" "worker-aws" {
+resource "aws_instance" "beta" {
   ami = "ami-96a818fe"
   instance_type = "t2.micro"
   subnet_id = "${var.aws_subnet_id}"
@@ -46,7 +46,7 @@ resource "aws_instance" "worker-aws" {
   }
 }
 
-resource "digitalocean_droplet" "web-do" {
+resource "digitalocean_droplet" "gamma" {
   image = "centos-7-0-x64"
   name = "terraform-inventory-1"
   region = "nyc1"
