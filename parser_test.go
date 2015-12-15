@@ -26,7 +26,9 @@ const exampleStateFile = `
 						"id": "i-aaaaaaaa",
 						"attributes": {
 							"id": "i-aaaaaaaa",
-							"private_ip": "10.0.0.1"
+							"private_ip": "10.0.0.1",
+							"tags.#": "1",
+							"tags.Role": "Web"
 						}
 					}
 				},
@@ -139,14 +141,18 @@ const expectedListOutput = `
 	"digitalocean_droplet":          ["192.168.0.3"],
 	"cloudstack_instance":           ["10.2.1.5"],
 	"vsphere_virtual_machine":       ["10.20.30.40"],
-	"openstack_compute_instance_v2": ["10.120.0.226"]
+	"openstack_compute_instance_v2": ["10.120.0.226"],
+
+	"role_web": ["10.0.0.1"]
 }
 `
 
 const expectedHostOneOutput = `
 {
 	"id":"i-aaaaaaaa",
-	"private_ip":"10.0.0.1"
+	"private_ip":"10.0.0.1",
+	"tags.#": "1",
+	"tags.Role": "Web"
 }
 `
 

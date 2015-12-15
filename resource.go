@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // keyNames contains the names of the keys to check for in each resource in the
@@ -81,11 +82,39 @@ func (r Resource) IsSupported() bool {
 // Groups returns the list of Ansible groups which this resource should be
 // included in.
 func (r Resource) Groups() []string {
-	return []string{
+	groups := []string{
 		r.baseName,
 		r.NameWithCounter(),
 		r.resourceType,
 	}
+
+	for k, v := range r.Tags() {
+		g := fmt.Sprintf("%s_%s", k, v)
+		groups = append(groups, g)
+	}
+
+	return groups
+}
+
+// Tags returns a map of arbitrary key/value pairs explicitly associated with
+// the resource. Different providers have different mechanisms for attaching
+// these.
+func (r Resource) Tags() map[string]string {
+	t := map[string]string{}
+
+	switch r.resourceType {
+	case "aws_instance":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
+	}
+
+	return t
 }
 
 // Attributes returns a map containing everything we know about this resource.
