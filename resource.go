@@ -85,7 +85,7 @@ func (r Resource) Groups() []string {
 	groups := []string{
 		r.baseName,
 		r.NameWithCounter(),
-		r.resourceType,
+		fmt.Sprintf("type_%s", r.resourceType),
 	}
 
 	for k, v := range r.Tags() {
