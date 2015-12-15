@@ -9,18 +9,28 @@ import (
 func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 	groups := make(map[string][]string, 0)
 
-	// add each instance as a pseudo-group, so they can be provisioned
+	// Add each instance name as a pseudo-group, so they can be provisioned
 	// individually where necessary.
-	for name, res := range s.resources() {
-		groups[name] = []string{res.Address()}
+	for _, res := range s.resources() {
+		_, ok := groups[res.Name]
+		if !ok {
+			groups[res.Name] = []string{}
+		}
+
+		// Add the instance by name. There can be many instances with the same name,
+		// created using the count parameter.
+		groups[res.Name] = append(groups[res.Name], res.Address())
+
+		// Add the instance by its full name, including the counter.
+		groups[res.NameWithCounter()] = []string{res.Address()}
 	}
 
 	return output(stdout, stderr, groups)
 }
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
-	for name, res := range s.resources() {
-		if hostname == name {
+	for _, res := range s.resources() {
+		if hostname == res.Address() {
 			return output(stdout, stderr, res.Attributes())
 		}
 	}

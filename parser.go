@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"regexp"
+	"strconv"
 )
 
 type state struct {
@@ -15,6 +17,7 @@ type state struct {
 // state file. This allows us to support multiple types of resource without too
 // much fuss.
 var keyNames []string
+var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
@@ -26,6 +29,9 @@ func init() {
 		"access_ip_v4", // OpenStack
 		"floating_ip",  // OpenStack
 	}
+
+	// type.name.0
+	nameParser = regexp.MustCompile(`^(\w+)\.([\w\-]+)(?:\.(\d+))?$`)
 }
 
 // read populates the state object from a statefile.
@@ -49,14 +55,17 @@ func (s *state) read(stateFile io.Reader) error {
 // resources returns a map of name to resourceState, for any supported resources
 // found in the statefile.
 func (s *state) resources() map[string]resourceState {
-	typeRemover := regexp.MustCompile(`^[\w_]+\.`)
 	inst := make(map[string]resourceState)
 
 	for _, m := range s.Modules {
 		for k, r := range m.Resources {
 			if r.isSupported() {
-				name := typeRemover.ReplaceAllString(k, "")
-				inst[name] = r
+
+				_, name, counter := parseName(k)
+				//fmt.Println(resType, name, counter)
+				r.Name = name
+				r.Counter = counter
+				inst[k] = r
 			}
 		}
 	}
@@ -64,18 +73,53 @@ func (s *state) resources() map[string]resourceState {
 	return inst
 }
 
+func parseName(name string) (string, string, int) {
+	m := nameParser.FindStringSubmatch(name)
+
+	// This should not happen unless our regex changes.
+	// TODO: Warn instead of silently ignore error?
+	if len(m) != 4 {
+		//fmt.Printf("len=%d\n", len(m))
+		return "", "", 0
+	}
+
+	var c int
+	var err error
+	if m[3] != "" {
+		c, err = strconv.Atoi(m[3])
+		if err != nil {
+			fmt.Printf("err: %s\n", err)
+			// ???
+		}
+	}
+
+	return m[1], m[2], c
+}
+
 type moduleState struct {
 	Resources map[string]resourceState `json:"resources"`
 }
 
 type resourceState struct {
+
+	// Populated from statefile
 	Type    string        `json:"type"`
 	Primary instanceState `json:"primary"`
+
+	// Extracted from key name, and injected by resources method
+	Name    string
+	Counter int
 }
 
 // isSupported returns true if terraform-inventory supports this resource.
 func (s resourceState) isSupported() bool {
 	return s.Address() != ""
+}
+
+// NameWithCounter returns the resource name with its counter. For resources
+// created without a 'count=' attribute, this will always be zero.
+func (s resourceState) NameWithCounter() string {
+	return fmt.Sprintf("%s.%d", s.Name, s.Counter)
 }
 
 // Address returns the IP address of this resource.
