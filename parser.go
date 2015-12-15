@@ -23,7 +23,8 @@ func init() {
 		"private_ip",   // AWS
 		"ipaddress",    // CS
 		"ip_address",   // VMware
-		"access_ip_v4", // OPENSTACK
+		"access_ip_v4", // OpenStack
+		"floating_ip",  // OpenStack
 	}
 }
 
