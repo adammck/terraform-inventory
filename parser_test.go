@@ -129,7 +129,13 @@ const expectedListOutput = `
 	"three.0": ["192.168.0.3"],
 	"four.0":  ["10.2.1.5"],
 	"five.0":  ["10.20.30.40"],
-	"six.0":   ["10.120.0.226"]
+	"six.0":   ["10.120.0.226"],
+
+	"aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
+	"digitalocean_droplet":          ["192.168.0.3"],
+	"cloudstack_instance":           ["10.2.1.5"],
+	"vsphere_virtual_machine":       ["10.20.30.40"],
+	"openstack_compute_instance_v2": ["10.120.0.226"]
 }
 `
 
@@ -144,7 +150,12 @@ func TestListCommand(t *testing.T) {
 	var s state
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutput), &exp)
+	assert.NoError(t, err)
 
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
@@ -152,9 +163,11 @@ func TestListCommand(t *testing.T) {
 	assert.Equal(t, 0, exitCode)
 	assert.Equal(t, "", stderr.String())
 
-	var exp, act interface{}
-	json.Unmarshal([]byte(expectedListOutput), &exp)
-	json.Unmarshal([]byte(stdout.String()), &act)
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
 	assert.Equal(t, exp, act)
 }
 
@@ -162,7 +175,12 @@ func TestHostCommand(t *testing.T) {
 	var s state
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedHostOneOutput), &exp)
+	assert.NoError(t, err)
 
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
@@ -170,8 +188,10 @@ func TestHostCommand(t *testing.T) {
 	assert.Equal(t, 0, exitCode)
 	assert.Equal(t, "", stderr.String())
 
-	var exp, act interface{}
-	json.Unmarshal([]byte(expectedHostOneOutput), &exp)
-	json.Unmarshal([]byte(stdout.String()), &act)
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
 	assert.Equal(t, exp, act)
 }

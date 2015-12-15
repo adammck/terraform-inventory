@@ -82,18 +82,15 @@ func (r Resource) IsSupported() bool {
 // included in.
 func (r Resource) Groups() []string {
 	return []string{
-		r.BaseName(),
+		r.baseName,
 		r.NameWithCounter(),
+		r.resourceType,
 	}
 }
 
 // Attributes returns a map containing everything we know about this resource.
 func (r Resource) Attributes() map[string]string {
 	return r.State.Primary.Attributes
-}
-
-func (r Resource) BaseName() string {
-	return r.baseName
 }
 
 // NameWithCounter returns the resource name with its counter. For resources
