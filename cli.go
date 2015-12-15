@@ -8,21 +8,16 @@ import (
 
 func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 	groups := make(map[string][]string, 0)
-
-	// Add each instance name as a pseudo-group, so they can be provisioned
-	// individually where necessary.
 	for _, res := range s.resources() {
-		_, ok := groups[res.Name]
-		if !ok {
-			groups[res.Name] = []string{}
+		for _, grp := range res.Groups() {
+
+			_, ok := groups[grp]
+			if !ok {
+				groups[grp] = []string{}
+			}
+
+			groups[grp] = append(groups[grp], res.Address())
 		}
-
-		// Add the instance by name. There can be many instances with the same name,
-		// created using the count parameter.
-		groups[res.Name] = append(groups[res.Name], res.Address())
-
-		// Add the instance by its full name, including the counter.
-		groups[res.NameWithCounter()] = []string{res.Address()}
 	}
 
 	return output(stdout, stderr, groups)

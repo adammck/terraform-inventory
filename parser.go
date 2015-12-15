@@ -2,36 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
-	"regexp"
-	"strconv"
 )
 
 type state struct {
 	Modules []moduleState `json:"modules"`
-}
-
-// keyNames contains the names of the keys to check for in each resource in the
-// state file. This allows us to support multiple types of resource without too
-// much fuss.
-var keyNames []string
-var nameParser *regexp.Regexp
-
-func init() {
-	keyNames = []string{
-		"ipv4_address", // DO
-		"public_ip",    // AWS
-		"private_ip",   // AWS
-		"ipaddress",    // CS
-		"ip_address",   // VMware
-		"access_ip_v4", // OpenStack
-		"floating_ip",  // OpenStack
-	}
-
-	// type.name.0
-	nameParser = regexp.MustCompile(`^(\w+)\.([\w\-]+)(?:\.(\d+))?$`)
 }
 
 // read populates the state object from a statefile.
@@ -52,19 +28,23 @@ func (s *state) read(stateFile io.Reader) error {
 	return nil
 }
 
-// resources returns a map of name to resourceState, for any supported resources
-// found in the statefile.
-func (s *state) resources() map[string]resourceState {
-	inst := make(map[string]resourceState)
+// resources returns a slice of the Resources found in the statefile.
+func (s *state) resources() []*Resource {
+	inst := make([]*Resource, 0)
 
 	for _, m := range s.Modules {
-		for k, r := range m.Resources {
-			if r.isSupported() {
+		for k, rs := range m.ResourceStates {
 
-				_, name, counter := parseName(k)
-				r.Name = name
-				r.Counter = counter
-				inst[k] = r
+			// Terraform stores resources in a name->map map, but we need the name to
+			// decide which groups to include the resource in. So wrap it in a higher-
+			// level object with both properties.
+			r, err := NewResource(k, rs)
+			if err != nil {
+				continue
+			}
+
+			if r.IsSupported() {
+				inst = append(inst, r)
 			}
 		}
 	}
@@ -72,33 +52,8 @@ func (s *state) resources() map[string]resourceState {
 	return inst
 }
 
-func parseName(name string) (string, string, int) {
-	m := nameParser.FindStringSubmatch(name)
-
-	// This should not happen unless our regex changes.
-	// TODO: Warn instead of silently ignore error?
-	if len(m) != 4 {
-		return "", "", 0
-	}
-
-	var c int
-	var err error
-	if m[3] != "" {
-
-		// The third section should be the index, if it's present. Not sure what
-		// else we can do other than panic (which seems highly undesirable) if that
-		// isn't the case.
-		c, err = strconv.Atoi(m[3])
-		if err != nil {
-			c = 0
-		}
-	}
-
-	return m[1], m[2], c
-}
-
 type moduleState struct {
-	Resources map[string]resourceState `json:"resources"`
+	ResourceStates map[string]resourceState `json:"resources"`
 }
 
 type resourceState struct {
@@ -106,37 +61,6 @@ type resourceState struct {
 	// Populated from statefile
 	Type    string        `json:"type"`
 	Primary instanceState `json:"primary"`
-
-	// Extracted from key name, and injected by resources method
-	Name    string
-	Counter int
-}
-
-// isSupported returns true if terraform-inventory supports this resource.
-func (s resourceState) isSupported() bool {
-	return s.Address() != ""
-}
-
-// NameWithCounter returns the resource name with its counter. For resources
-// created without a 'count=' attribute, this will always be zero.
-func (s resourceState) NameWithCounter() string {
-	return fmt.Sprintf("%s.%d", s.Name, s.Counter)
-}
-
-// Address returns the IP address of this resource.
-func (s resourceState) Address() string {
-	for _, key := range keyNames {
-		if ip := s.Primary.Attributes[key]; ip != "" {
-			return ip
-		}
-	}
-
-	return ""
-}
-
-// Attributes returns a map containing everything we know about this resource.
-func (s resourceState) Attributes() map[string]string {
-	return s.Primary.Attributes
 }
 
 type instanceState struct {
