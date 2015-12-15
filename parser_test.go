@@ -77,7 +77,11 @@ const exampleStateFile = `
 						"id": "aaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 						"attributes": {
 							"id": "aaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-							"ipaddress": "10.2.1.5"
+							"ipaddress": "10.2.1.5",
+							"name": "terraform-inventory-4",
+							"service_offering": "small",
+							"template": "centos-7-0-x64",
+							"zone": "nyc2"
 						}
 					}
 				},

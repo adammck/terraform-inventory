@@ -1,6 +1,5 @@
 - hosts:
     - web-aws
     - web-do
-    - web-cs
   tasks:
     - command: "echo Hello, world!"
