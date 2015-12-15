@@ -12,6 +12,12 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 	// add each instance as a pseudo-group, so they can be provisioned
 	// individually where necessary.
 	for name, res := range s.resources() {
+		g := res.Groups()
+		for _, i := range g {
+			if i != "" {
+				groups[i] = append(groups[i], res.Address())
+			}
+		}
 		groups[name] = []string{res.Address()}
 	}
 

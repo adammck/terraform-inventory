@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"regexp"
+	"strings"
 )
 
 type state struct {
@@ -87,6 +88,12 @@ func (s resourceState) Address() string {
 	}
 
 	return ""
+}
+
+// Groups returns the group names of the metadata.groups attribute.
+func (s resourceState) Groups() []string {
+	groups := s.Primary.Attributes["metadata.groups"]
+	return strings.Split(groups, ",")
 }
 
 // Attributes returns a map containing everything we know about this resource.
