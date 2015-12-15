@@ -62,7 +62,6 @@ func (s *state) resources() map[string]resourceState {
 			if r.isSupported() {
 
 				_, name, counter := parseName(k)
-				//fmt.Println(resType, name, counter)
 				r.Name = name
 				r.Counter = counter
 				inst[k] = r
@@ -79,17 +78,19 @@ func parseName(name string) (string, string, int) {
 	// This should not happen unless our regex changes.
 	// TODO: Warn instead of silently ignore error?
 	if len(m) != 4 {
-		//fmt.Printf("len=%d\n", len(m))
 		return "", "", 0
 	}
 
 	var c int
 	var err error
 	if m[3] != "" {
+
+		// The third section should be the index, if it's present. Not sure what
+		// else we can do other than panic (which seems highly undesirable) if that
+		// isn't the case.
 		c, err = strconv.Atoi(m[3])
 		if err != nil {
-			fmt.Printf("err: %s\n", err)
-			// ???
+			c = 0
 		}
 	}
 
