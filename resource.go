@@ -22,6 +22,8 @@ func init() {
 		"ip_address",   // VMware
 		"access_ip_v4", // OpenStack
 		"floating_ip",  // OpenStack
+		"network_interface.0.access_config.0.nat_ip", // GCE
+		"network_interface.0.address", // GCE
 	}
 
 	// type.name.0
