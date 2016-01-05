@@ -89,12 +89,18 @@ the example resourecs, run:
 You almost certainly don't need to do any of this. Use the tests instead.
 
 
+## Acknowledgements
+
+Development of
+[#14](https://github.com/adammck/terraform-inventory/issues/14),
+[#16](https://github.com/adammck/terraform-inventory/issues/16),
+and [#22](https://github.com/adammck/terraform-inventory/issues/22)
+was generously sponsored by [Transloadit](https://transloadit.com).
+
+
 ## License
 
 MIT.
-
-
-
 
 [ansible]: http://www.ansible.com
 [tf]:      http://www.terraform.io
