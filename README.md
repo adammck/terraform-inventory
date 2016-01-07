@@ -18,6 +18,7 @@ add it, if you think that would be useful.
 Alternatively, you can download a [release](https://github.com/adammck/terraform-inventory/releases) suitable
 to your platform and unzip it. Make sure the `terraform-inventory` binary is executable and you're ready to go.
 
+
 ## Usage
 
 If your Terraform state file is named `terraform.tfstate` (the default), `cd` to
@@ -29,7 +30,7 @@ This will provide the resource names and IP addresses of any instances found in
 the state file to Ansible, which can then be used as hosts patterns in your
 playbooks. For example, given for the following Terraform config:
 
-	resource "digitalocean_droplet" "my-web-server" {
+	resource "digitalocean_droplet" "my_web_server" {
 	  image = "centos-7-0-x64"
 	  name = "web-1"
 	  region = "nyc1"
@@ -38,13 +39,46 @@ playbooks. For example, given for the following Terraform config:
 
 The corresponding playbook might look like:
 
-	- hosts: my-web-server
+	- hosts: my_web_server
 	  tasks:
 	    - yum: name=cowsay
 	    - command: cowsay hello, world!
 
 Note that the instance was identified by its _resource name_ from the Terraform
-config, not its _instance name_ from the provider.
+config, not its _instance name_ from the provider. On AWS, resources are also
+grouped by their tags. For example:
+
+	resource "aws_instance" "my_web_server" {
+	  instance_type = "t2.micro"
+	  ami = "ami-96a818fe"
+	  tags = {
+	  	Role = "web"
+	  	Env = "dev"
+	  }
+	}
+
+	resource "aws_instance" "my_worker" {
+	  instance_type = "t2.micro"
+	  ami = "ami-96a818fe"
+	  tags = {
+	  	Role = "worker"
+	  	Env = "dev"
+	  }
+	}
+
+Can be provisioned separately with:
+
+	- hosts: role_web
+	  tasks:
+	    - command: cowsay this is a web server!
+
+	- hosts: role_worker
+	  tasks:
+	    - command: cowsay this is a worker server!
+
+	- hosts: env_dev
+	  tasks:
+	    - command: cowsay this runs on all dev servers!
 
 
 ## More Usage
