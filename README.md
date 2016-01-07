@@ -52,8 +52,8 @@ grouped by their tags. For example:
 	  instance_type = "t2.micro"
 	  ami = "ami-96a818fe"
 	  tags = {
-	  	Role = "web"
-	  	Env = "dev"
+	    Role = "web"
+	    Env = "dev"
 	  }
 	}
 
@@ -61,8 +61,8 @@ grouped by their tags. For example:
 	  instance_type = "t2.micro"
 	  ami = "ami-96a818fe"
 	  tags = {
-	  	Role = "worker"
-	  	Env = "dev"
+	    Role = "worker"
+	    Env = "dev"
 	  }
 	}
 
