@@ -7,17 +7,24 @@ import (
 )
 
 func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
-	groups := make(map[string][]string, 0)
+	groups := make(map[string]interface{}, 0)
 	for _, res := range s.resources() {
 		for _, grp := range res.Groups() {
+			tmpGroup := []string{}
 
 			_, ok := groups[grp]
-			if !ok {
-				groups[grp] = []string{}
+			if ok {
+				tmpGroup = groups[grp].([]string)
 			}
 
-			groups[grp] = append(groups[grp], res.Address())
+			tmpGroup = append(tmpGroup, res.Address())
+			groups[grp] = tmpGroup
 		}
+	}
+
+	groups["all"] = make(map[string]string, 0)
+	for _, out := range s.outputs() {
+		groups["all"].(map[string]string)[out.keyName] = out.value
 	}
 
 	return output(stdout, stderr, groups)
