@@ -134,7 +134,7 @@ func (r Resource) NameWithCounter() string {
 
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
-	if keyName := os.Getenv("TERRAFORM_INVENTORY_KEYNAME"); keyName != "" {
+	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {
 		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
 			return ip
 		}
