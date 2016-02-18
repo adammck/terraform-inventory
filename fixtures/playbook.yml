@@ -1,5 +1,5 @@
 - hosts:
-    - web-aws
-    - web-do
+    - alpha
+    - beta
   tasks:
     - command: "echo Hello, world!"

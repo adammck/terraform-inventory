@@ -22,9 +22,11 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 		}
 	}
 
-	groups["all"] = make(map[string]string, 0)
-	for _, out := range s.outputs() {
-		groups["all"].(map[string]string)[out.keyName] = out.value
+	if(len(s.outputs()) > 0) {
+		groups["all"] = make(map[string]string, 0)
+		for _, out := range s.outputs() {
+			groups["all"].(map[string]string)[out.keyName] = out.value
+		}
 	}
 
 	return output(stdout, stderr, groups)
