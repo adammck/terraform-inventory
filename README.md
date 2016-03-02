@@ -106,8 +106,6 @@ Then run Ansible with the script as an inventory:
 It's just a Go app, so the usual:
 
 	go get github.com/adammck/terraform-inventory
-	cd $GOPATH/adammck/terraform-inventory
-	go build
 
 To test against an example statefile, run:
 
