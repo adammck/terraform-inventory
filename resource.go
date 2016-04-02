@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -133,9 +134,15 @@ func (r Resource) NameWithCounter() string {
 
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
-	for _, key := range keyNames {
-		if ip := r.State.Primary.Attributes[key]; ip != "" {
+	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {
+		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
 			return ip
+		}
+	} else {
+		for _, key := range keyNames {
+			if ip := r.State.Primary.Attributes[key]; ip != "" {
+				return ip
+			}
 		}
 	}
 

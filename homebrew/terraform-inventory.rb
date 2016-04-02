@@ -3,8 +3,8 @@ class TerraformInventory < Formula
   head "https://github.com/adammck/terraform-inventory.git"
 
   # Update these when a new version is released
-  url "https://github.com/adammck/terraform-inventory/archive/v0.6.tar.gz"
-  sha1 "aa64cd2bd6f45d82f372f35ae6f7a5ec446a050a"
+  url "https://github.com/adammck/terraform-inventory/archive/v0.6.1.tar.gz"
+  sha1 "4017f58718252a273713bbb6732d9028c5007930"
 
   depends_on "go" => :build
 
