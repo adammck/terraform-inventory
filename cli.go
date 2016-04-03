@@ -6,7 +6,7 @@ import (
 	"io"
 )
 
-func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
+func gatherResources(s *state) map[string][]string {
 	groups := make(map[string][]string, 0)
 	for _, res := range s.resources() {
 		for _, grp := range res.Groups() {
@@ -19,8 +19,40 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 			groups[grp] = append(groups[grp], res.Address())
 		}
 	}
+    return groups
+}
 
-	return output(stdout, stderr, groups)
+func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
+	return output(stdout, stderr, gatherResources(s))
+}
+
+func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
+    groups := gatherResources(s)
+    for group, res := range groups {
+
+        _, err := io.WriteString(stdout, "["+group+"]\n")
+        if err != nil {
+		    fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+            return 1;
+        }
+
+        for _, ress := range res {
+
+            _, err := io.WriteString(stdout, ress + "\n")
+            if err != nil {
+		        fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+                return 1;
+            }
+        }
+
+        _, err = io.WriteString(stdout, "\n")
+        if err != nil {
+		    fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
