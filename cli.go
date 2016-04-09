@@ -6,21 +6,19 @@ import (
 	"io"
 )
 
-func gatherResources(s *state) map[string][]string {
-	groups := make(map[string][]string, 0)
-	for _, res := range s.resources() {
-		for _, grp := range res.Groups() {
-			tmpGroup := []string{}
+func gatherResources(s *state) map[string]interface{} {
+	groups := make(map[string]interface{}, 0)
+for _, res := range s.resources() {
+	for _, grp := range res.Groups() {
 
-			_, ok := groups[grp]
-			if ok {
-				tmpGroup = groups[grp].([]string)
-			}
-
-			tmpGroup = append(tmpGroup, res.Address())
-			groups[grp] = tmpGroup
+		_, ok := groups[grp]
+		if !ok {
+			groups[grp] = []string{}
 		}
+
+		groups[grp] = append(groups[grp].([]string), res.Address())
 	}
+}
 
 	if(len(s.outputs()) > 0) {
 		groups["all"] = make(map[string]string, 0)
@@ -45,7 +43,7 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
             return 1;
         }
 
-        for _, ress := range res {
+        for _, ress := range res.([]string) {
 
             _, err := io.WriteString(stdout, ress + "\n")
             if err != nil {
