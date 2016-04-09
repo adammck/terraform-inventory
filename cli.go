@@ -6,8 +6,8 @@ import (
 	"io"
 )
 
-func gatherResources(s *state) map[string][]string {
-	groups := make(map[string][]string, 0)
+func gatherResources(s *state) map[string]interface{} {
+	groups := make(map[string]interface{}, 0)
 	for _, res := range s.resources() {
 		for _, grp := range res.Groups() {
 
@@ -16,10 +16,17 @@ func gatherResources(s *state) map[string][]string {
 				groups[grp] = []string{}
 			}
 
-			groups[grp] = append(groups[grp], res.Address())
+			groups[grp] = append(groups[grp].([]string), res.Address())
 		}
 	}
-    return groups
+
+	if len(s.outputs()) > 0 {
+		groups["all"] = make(map[string]string, 0)
+		for _, out := range s.outputs() {
+			groups["all"].(map[string]string)[out.keyName] = out.value
+		}
+	}
+	return groups
 }
 
 func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
@@ -27,32 +34,32 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 }
 
 func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
-    groups := gatherResources(s)
-    for group, res := range groups {
+	groups := gatherResources(s)
+	for group, res := range groups {
 
-        _, err := io.WriteString(stdout, "["+group+"]\n")
-        if err != nil {
-		    fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-            return 1;
-        }
+		_, err := io.WriteString(stdout, "["+group+"]\n")
+		if err != nil {
+			fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+			return 1
+		}
 
-        for _, ress := range res {
+		for _, ress := range res.([]string) {
 
-            _, err := io.WriteString(stdout, ress + "\n")
-            if err != nil {
-		        fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-                return 1;
-            }
-        }
+			_, err := io.WriteString(stdout, ress+"\n")
+			if err != nil {
+				fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+				return 1
+			}
+		}
 
-        _, err = io.WriteString(stdout, "\n")
-        if err != nil {
-		    fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-            return 1;
-        }
-    }
+		_, err = io.WriteString(stdout, "\n")
+		if err != nil {
+			fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+			return 1
+		}
+	}
 
-    return 0;
+	return 0
 }
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {

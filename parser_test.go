@@ -18,7 +18,9 @@ const exampleStateFile = `
 			"path": [
 				"root"
 			],
-			"outputs": {},
+      "outputs": {
+          "datacenter": "mydc"
+      },
 			"resources": {
 				"aws_instance.one.0": {
 					"type": "aws_instance",
@@ -122,6 +124,7 @@ const exampleStateFile = `
 
 const expectedListOutput = `
 {
+	"all":	 {"datacenter": "mydc"},
 	"one":   ["10.0.0.1", "10.0.1.1"],
 	"two":   ["50.0.0.1"],
 	"three": ["192.168.0.3"],
