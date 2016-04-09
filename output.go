@@ -8,7 +8,7 @@ type Output struct {
 
 	// The keyName and value of the output
 	keyName string
-	value string
+	value   string
 }
 
 func NewOutput(keyName string, value string) (*Output, error) {
@@ -20,7 +20,6 @@ func NewOutput(keyName string, value string) (*Output, error) {
 
 	return &Output{
 		keyName: keyName,
-		value: value,
+		value:   value,
 	}, nil
 }
-

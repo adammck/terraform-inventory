@@ -68,7 +68,7 @@ func (s *state) resources() []*Resource {
 
 type moduleState struct {
 	ResourceStates map[string]resourceState `json:"resources"`
-	Outputs map[string]string `json:"outputs"`
+	Outputs        map[string]string        `json:"outputs"`
 }
 
 // resourceKeys returns a sorted slice of the key names of the resources in this
