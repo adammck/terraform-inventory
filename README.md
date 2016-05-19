@@ -24,7 +24,7 @@ to your platform and unzip it. Make sure the `terraform-inventory` binary is exe
 If your Terraform state file is named `terraform.tfstate` (the default), `cd` to
 it and run:
 
-	ansible-playbook --inventory-file=terraform-inventory deploy/playbook.yml
+	ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
 This will provide the resource names and IP addresses of any instances found in
 the state file to Ansible, which can then be used as hosts patterns in your
@@ -87,14 +87,14 @@ Ansible doesn't seem to support calling a dynamic inventory script with params,
 so if you need to specify the location of your state file, set the `TF_STATE`
 environment variable before running `ansible-playbook`, like:
 
-	TF_STATE=deploy/terraform.tfstate ansible-playbook --inventory-file=terraform-inventory deploy/playbook.yml
+	TF_STATE=deploy/terraform.tfstate ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
 Alternately, if you need to do something fancier (like downloading your state
 file from S3 before running), you might wrap this tool with a shell script, and
 call that instead. Something like:
 
 	#!/bin/bash
-	terraform-inventory $@ deploy/terraform.tfstate
+	/path/to/terraform-inventory $@ deploy/terraform.tfstate
 
 Then run Ansible with the script as an inventory:
 
@@ -116,7 +116,7 @@ To update the fixtures, populate `fixtures/secrets.tfvars` with your DO and AWS
 account details, and run `fixtures/update`. To run a tiny Ansible playbook on
 the example resourecs, run:
 
-	TF_STATE=fixtures/example.tfstate ansible-playbook --inventory-file=terraform-inventory fixtures/playbook.yml
+	TF_STATE=fixtures/example.tfstate ansible-playbook --inventory-file=/path/to/terraform-inventory fixtures/playbook.yml
 
 You almost certainly don't need to do any of this. Use the tests instead.
 
