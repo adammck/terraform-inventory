@@ -4,7 +4,7 @@ class TerraformInventory < Formula
 
   # Update these when a new version is released
   url "https://github.com/adammck/terraform-inventory/archive/v0.6.1.tar.gz"
-  sha1 "4017f58718252a273713bbb6732d9028c5007930"
+  sha256 "9cdcbc5ce4247b72bb72923d01246f51252a88908d760d766daeac51dd8feed9"
 
   depends_on "go" => :build
 
