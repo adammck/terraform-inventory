@@ -4,24 +4,22 @@
 [![GitHub release](https://img.shields.io/github/release/adammck/terraform-inventory.svg?maxAge=2592000)](https://github.com/adammck/terraform-inventory/releases)
 [![GitHub release](https://img.shields.io/homebrew/v/terraform-inventory.svg?maxAge=2592000)](http://braumeister.org/formula/terraform-inventory)
 
-This is a little Go app which generates an dynamic [Ansible] [ansible] inventory
+This is a little Go app which generates a dynamic [Ansible] [ansible] inventory
 from a [Terraform] [tf] state file. It allows one to spawn a bunch of instances
 with Terraform, then (re-)provision them with Ansible. Currently, only **AWS**,
-**DigitalOcean**, **CloudStack**, **VMware**, **OpenStack**, **Google Compute Engine** are supported.
+**DigitalOcean**, **CloudStack**, **VMware**, **OpenStack**, **Google Compute
+Engine** are supported.
 
 
 # Installation
 
 On OSX, install it with Homebrew:
 
-	brew tap adammck/terraform-inventory https://github.com/adammck/terraform-inventory
 	brew install terraform-inventory
 
-This is only a tiny tool, so it's not in the main Homebrew repo. Feel free to
-add it, if you think that would be useful.
-
-Alternatively, you can download a [release](https://github.com/adammck/terraform-inventory/releases) suitable
-to your platform and unzip it. Make sure the `terraform-inventory` binary is executable, and you're ready to go.
+Alternatively, you can download a [release][rel] suitable for your platform and
+unzip it. Make sure the `terraform-inventory` binary is executable, and you're
+ready to go.
 
 
 ## Usage
@@ -141,3 +139,4 @@ MIT.
 
 [ansible]: https://www.ansible.com
 [tf]:      https://www.terraform.io
+[rel]:    https://github.com/adammck/terraform-inventory/releases
