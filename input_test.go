@@ -17,6 +17,7 @@ func TestGetInputPath(t *testing.T) {
 	assert.Equal(t, "aaa", GetInputPath(memfs.Create(), envWith(map[string]string{"TF_STATE": "aaa"})))
 	assert.Equal(t, "bbb", GetInputPath(memfs.Create(), envWith(map[string]string{"TI_TFSTATE": "bbb"})))
 	assert.Equal(t, "terraform.tfstate", GetInputPath(fsWithFiles([]string{"terraform.tfstate"}), venv.Mock()))
+	assert.Equal(t, ".terraform/terraform.tfstate", GetInputPath(fsWithFiles([]string{".terraform/terraform.tfstate"}), venv.Mock()))
 }
 
 func envWith(env map[string]string) venv.Env {

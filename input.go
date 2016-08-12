@@ -25,5 +25,11 @@ func GetInputPath(fs vfs.Filesystem, env venv.Env) string {
 		return fn
 	}
 
+	fn = ".terraform/terraform.tfstate"
+	_, err = fs.Stat(fn)
+	if err == nil {
+		return fn
+	}
+
 	return ""
 }
