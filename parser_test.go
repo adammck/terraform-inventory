@@ -18,9 +18,13 @@ const exampleStateFile = `
 			"path": [
 				"root"
 			],
-      "outputs": {
-          "datacenter": "mydc"
-      },
+			"outputs": {
+				    "datacenter": {
+					"sensitive": false,
+					"type": "string",
+					"value": "mydc"
+				    }
+			},
 			"resources": {
 				"aws_instance.one.0": {
 					"type": "aws_instance",
