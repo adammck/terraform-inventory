@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/adammck/venv"
+	"github.com/blang/vfs"
 	"os"
 	"path/filepath"
 )
@@ -21,23 +23,10 @@ func main() {
 		return
 	}
 
-	// not given on the command line? try ENV.
 	if file == "" {
-		file = os.Getenv("TF_STATE")
-	}
-
-	// also try the old ENV name.
-	if file == "" {
-		file = os.Getenv("TI_TFSTATE")
-	}
-
-	// check for a file named terraform.tfstate in the pwd
-	if file == "" {
-		fn := "terraform.tfstate"
-		_, err := os.Stat(fn)
-		if err == nil {
-			file = fn
-		}
+		fs := vfs.OS()
+		env := venv.OS()
+		file = GetInputPath(fs, env)
 	}
 
 	if file == "" {
