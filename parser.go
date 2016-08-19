@@ -35,7 +35,16 @@ func (s *state) outputs() []*Output {
 
 	for _, m := range s.Modules {
 		for k, v := range m.Outputs {
-			o, _ := NewOutput(k, v.Value)
+			var o *Output;
+			switch v := v.(type) {
+			case map[string]interface{}:
+				o, _ = NewOutput(k, v["value"].(string))
+			case string:
+				o, _ = NewOutput(k, v)
+			default:
+				o, _ = NewOutput(k, "<error>")
+			}
+
 			inst = append(inst, o)
 		}
 	}
@@ -66,15 +75,9 @@ func (s *state) resources() []*Resource {
 	return inst
 }
 
-type outputState struct {
-	Value     string `json:"value"`
-	Sensitive bool   `json:"sensitive"`
-	Type      string `json:"type"`
-}
-
 type moduleState struct {
 	ResourceStates map[string]resourceState `json:"resources"`
-	Outputs        map[string]outputState   `json:"outputs"`
+	Outputs        map[string]interface{}   `json:"outputs"`
 }
 
 // resourceKeys returns a sorted slice of the key names of the resources in this
