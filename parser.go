@@ -35,10 +35,10 @@ func (s *state) outputs() []*Output {
 
 	for _, m := range s.Modules {
 		for k, v := range m.Outputs {
-			var o *Output;
+			var o *Output
 			switch v := v.(type) {
 			case map[string]interface{}:
-				o, _ = NewOutput(k, v["value"].(string))
+				o, _ = NewOutput(k, v["value"])
 			case string:
 				o, _ = NewOutput(k, v)
 			default:

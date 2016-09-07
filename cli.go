@@ -21,9 +21,9 @@ func gatherResources(s *state) map[string]interface{} {
 	}
 
 	if len(s.outputs()) > 0 {
-		groups["all"] = make(map[string]string, 0)
+		groups["all"] = make(map[string]interface{}, 0)
 		for _, out := range s.outputs() {
-			groups["all"].(map[string]string)[out.keyName] = out.value
+			groups["all"].(map[string]interface{})[out.keyName] = out.value
 		}
 	}
 	return groups
