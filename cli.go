@@ -91,7 +91,7 @@ func writeLn(str string, stdout io.Writer, stderr io.Writer) {
 
 func checkErr(err error, stderr io.Writer) int {
 	if err != nil {
-		fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+		fmt.Fprintf(stderr, "Error writing inventory: %s\n", err)
 		return 1
 	}
 	return 0
