@@ -45,28 +45,41 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 	groups := gatherResources(s)
 	for group, res := range groups {
 
-		_, err := io.WriteString(stdout, "["+group+"]\n")
-		if err != nil {
-			fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-			return 1
+		switch grp := res.(type) {
+			case []string:
+				writeLn("["+group+"]", stdout, stderr)
+			    for _, item := range grp {
+					writeLn(item, stdout, stderr)
+				}
+
+			case *allGroup:
+				writeLn("["+group+"]", stdout, stderr)
+			    for _, item := range grp.Hosts {
+			    	writeLn(item, stdout, stderr)
+				}
+				writeLn("", stdout, stderr)
+				writeLn("["+group+":vars]", stdout, stderr)
+			    for key, item := range grp.Vars {
+			    	writeLn(key+"="+item, stdout, stderr)
+				}
 		}
 
-		for _, ress := range res.([]string) {
-
-			_, err := io.WriteString(stdout, ress+"\n")
-			if err != nil {
-				fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-				return 1
-			}
-		}
-
-		_, err = io.WriteString(stdout, "\n")
-		if err != nil {
-			fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
-			return 1
-		}
+		writeLn("", stdout, stderr)
 	}
 
+	return 0
+}
+
+func writeLn(str string, stdout io.Writer, stderr io.Writer) {
+	_, err := io.WriteString(stdout, str + "\n")
+	checkErr(err, stderr)
+}
+
+func checkErr(err error, stderr io.Writer) int {
+	if err != nil {
+		fmt.Fprintf(stderr, "Error writing Invetory: %s\n", err)
+		return 1
+	}
 	return 0
 }
 
