@@ -6,8 +6,16 @@ import (
 	"io"
 )
 
+type allGroup struct {
+	Hosts []string          `json:"hosts"`
+	Vars  map[string]string `json:"vars"`
+}
+
 func gatherResources(s *state) map[string]interface{} {
 	groups := make(map[string]interface{}, 0)
+	all_group := allGroup{Vars: make(map[string]string)}
+	groups["all"] = &all_group
+
 	for _, res := range s.resources() {
 		for _, grp := range res.Groups() {
 
@@ -17,13 +25,13 @@ func gatherResources(s *state) map[string]interface{} {
 			}
 
 			groups[grp] = append(groups[grp].([]string), res.Address())
+			all_group.Hosts = append(all_group.Hosts, res.Address())
 		}
 	}
 
 	if len(s.outputs()) > 0 {
-		groups["all"] = make(map[string]interface{}, 0)
 		for _, out := range s.outputs() {
-			groups["all"].(map[string]interface{})[out.keyName] = out.value
+			all_group.Vars[out.keyName] = out.value.(string)
 		}
 	}
 	return groups
