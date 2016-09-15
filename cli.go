@@ -12,7 +12,7 @@ type allGroup struct {
 	Vars  map[string]string `json:"vars"`
 }
 
-func appendUniq (strs []string, item string) []string {	
+func appendUniq(strs []string, item string) []string {
 	if len(strs) == 0 {
 		strs = append(strs, item)
 		return strs
@@ -20,7 +20,7 @@ func appendUniq (strs []string, item string) []string {
 	sort.Strings(strs)
 	i := sort.SearchStrings(strs, item)
 	if i < len(strs) && strs[i] != item {
-		strs = append(strs, item)	
+		strs = append(strs, item)
 	}
 	return strs
 }
@@ -60,22 +60,22 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 	for group, res := range groups {
 
 		switch grp := res.(type) {
-			case []string:
-				writeLn("["+group+"]", stdout, stderr)
-			    for _, item := range grp {
-					writeLn(item, stdout, stderr)
-				}
+		case []string:
+			writeLn("["+group+"]", stdout, stderr)
+			for _, item := range grp {
+				writeLn(item, stdout, stderr)
+			}
 
-			case *allGroup:
-				writeLn("["+group+"]", stdout, stderr)
-			    for _, item := range grp.Hosts {
-			    	writeLn(item, stdout, stderr)
-				}
-				writeLn("", stdout, stderr)
-				writeLn("["+group+":vars]", stdout, stderr)
-			    for key, item := range grp.Vars {
-			    	writeLn(key+"="+item, stdout, stderr)
-				}
+		case *allGroup:
+			writeLn("["+group+"]", stdout, stderr)
+			for _, item := range grp.Hosts {
+				writeLn(item, stdout, stderr)
+			}
+			writeLn("", stdout, stderr)
+			writeLn("["+group+":vars]", stdout, stderr)
+			for key, item := range grp.Vars {
+				writeLn(key+"="+item, stdout, stderr)
+			}
 		}
 
 		writeLn("", stdout, stderr)
@@ -85,7 +85,7 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 }
 
 func writeLn(str string, stdout io.Writer, stderr io.Writer) {
-	_, err := io.WriteString(stdout, str + "\n")
+	_, err := io.WriteString(stdout, str+"\n")
 	checkErr(err, stderr)
 }
 
