@@ -4,11 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 )
 
 type allGroup struct {
 	Hosts []string          `json:"hosts"`
 	Vars  map[string]string `json:"vars"`
+}
+
+func appendUniq (strs []string, item string) []string {	
+	if len(strs) == 0 {
+		strs = append(strs, item)
+		return strs
+	}
+	sort.Strings(strs)
+	i := sort.SearchStrings(strs, item)
+	if i < len(strs) && strs[i] != item {
+		strs = append(strs, item)	
+	}
+	return strs
 }
 
 func gatherResources(s *state) map[string]interface{} {
@@ -25,7 +39,7 @@ func gatherResources(s *state) map[string]interface{} {
 			}
 
 			groups[grp] = append(groups[grp].([]string), res.Address())
-			all_group.Hosts = append(all_group.Hosts, res.Address())
+			all_group.Hosts = appendUniq(all_group.Hosts, res.Address())
 		}
 	}
 
