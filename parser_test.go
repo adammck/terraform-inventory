@@ -139,7 +139,15 @@ const exampleStateFile = `
 
 const expectedListOutput = `
 {
-	"all":	 {"datacenter": "mydc", "olddatacenter": "<0.7_format", "ids": [1, 2, 3, 4], "map": {"key": "value"}},
+	"all":	 {
+		"hosts": ["10.0.0.1"], 
+		"vars": {
+			"datacenter": "mydc", 
+			"olddatacenter": "<0.7_format", 
+			"ids": [1, 2, 3, 4], 
+			"map": {"key": "value"}
+		}
+	},
 	"one":   ["10.0.0.1", "10.0.1.1"],
 	"two":   ["50.0.0.1"],
 	"three": ["192.168.0.3"],
