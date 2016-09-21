@@ -19,7 +19,7 @@ func appendUniq(strs []string, item string) []string {
 	}
 	sort.Strings(strs)
 	i := sort.SearchStrings(strs, item)
-	if i < len(strs) && strs[i] != item {
+	if i == len(strs) || (i < len(strs) && strs[i] != item) {
 		strs = append(strs, item)
 	}
 	return strs
@@ -38,7 +38,7 @@ func gatherResources(s *state) map[string]interface{} {
 				groups[grp] = []string{}
 			}
 
-			groups[grp] = append(groups[grp].([]string), res.Address())
+			groups[grp] = appendUniq(groups[grp].([]string), res.Address())
 			all_group.Hosts = appendUniq(all_group.Hosts, res.Address())
 		}
 	}
