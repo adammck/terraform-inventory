@@ -49,6 +49,18 @@ const exampleStateFile = `
 						}
 					}
 				},
+				"aws_instance.dup.0": {
+					"type": "aws_instance",
+					"primary": {
+						"id": "i-aaaaaaaa",
+						"attributes": {
+							"id": "i-aaaaaaaa",
+							"private_ip": "10.0.0.1",
+							"tags.#": "1",
+							"tags.Role": "Web"
+						}
+					}
+				},
 				"aws_instance.one.1": {
 					"type": "aws_instance",
 					"primary": {
@@ -139,8 +151,25 @@ const exampleStateFile = `
 
 const expectedListOutput = `
 {
-	"all":	 {"datacenter": "mydc", "olddatacenter": "<0.7_format", "ids": [1, 2, 3, 4], "map": {"key": "value"}},
+	"all":	 {
+		"hosts": [
+			"10.0.0.1", 
+			"10.0.1.1",
+			"10.120.0.226",
+			"10.2.1.5", 
+			"10.20.30.40",
+			"192.168.0.3",
+			"50.0.0.1"
+		], 
+		"vars": {
+			"datacenter": "mydc", 
+			"olddatacenter": "<0.7_format", 
+			"ids": [1, 2, 3, 4], 
+			"map": {"key": "value"}
+		}
+	},
 	"one":   ["10.0.0.1", "10.0.1.1"],
+	"dup":   ["10.0.0.1"],
 	"two":   ["50.0.0.1"],
 	"three": ["192.168.0.3"],
 	"four":  ["10.2.1.5"],
@@ -148,6 +177,7 @@ const expectedListOutput = `
 	"six":   ["10.120.0.226"],
 
 	"one.0":   ["10.0.0.1"],
+	"dup.0":   ["10.0.0.1"],
 	"one.1":   ["10.0.1.1"],
 	"two.0":   ["50.0.0.1"],
 	"three.0": ["192.168.0.3"],
