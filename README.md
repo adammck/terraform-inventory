@@ -11,6 +11,13 @@ with Terraform, then (re-)provision them with Ansible. Currently, only **AWS**,
 Engine** are supported.
 
 
+# Help Wanted 🙋
+
+This library is stable, but I've been neglecting it somewhat on account of no
+longer using Ansible at work. Please drop me a line if you'd be interested in
+helping to maintain this tool.
+
+
 # Installation
 
 On OSX, install it with Homebrew:
