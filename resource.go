@@ -16,7 +16,7 @@ var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
-		"ipv4_address",                                        // DO
+		"ipv4_address",                                        // DO and SoftLayer
 		"public_ip",                                           // AWS
 		"private_ip",                                          // AWS
 		"ipaddress",                                           // CS
@@ -26,6 +26,7 @@ func init() {
 		"network_interface.0.access_config.0.nat_ip",          // GCE
 		"network_interface.0.access_config.0.assigned_nat_ip", // GCE
 		"network_interface.0.address",                         // GCE
+		"ipv4_address_private",                                // SoftLayer
 	}
 
 	// type.name.0
