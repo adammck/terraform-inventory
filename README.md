@@ -110,6 +110,11 @@ Then run Ansible with the script as an inventory:
 
 	ansible-playbook --inventory-file=bin/inventory deploy/playbook.yml
 
+This tool returns the public IP of the host by default. If you require the private
+IP of the instance to run Ansible, set the `TF_KEY_NAME` environment variable
+to `private_ip` before running the playbook, like:
+
+	TF_KEY_NAME=private_ip ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
 ## Development
 
