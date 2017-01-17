@@ -19,12 +19,12 @@ const exampleStateFile = `
 				"root"
 			],
 			"outputs": {
-				    "olddatacenter": "<0.7_format",
-				    "datacenter": {
-					"sensitive": false,
-					"type": "string",
-					"value": "mydc"
-				    },
+					"olddatacenter": "<0.7_format",
+					"datacenter": {
+						"sensitive": false,
+						"type": "string",
+						"value": "mydc"
+					},
 					"ids": {
 						"type": "list",
 						"value": [1, 2, 3, 4]
@@ -142,6 +142,17 @@ const exampleStateFile = `
 							"access_ip_v6": ""
 						}
 					}
+				},
+				"softlayer_virtual_guest.seven": {
+					"type": "softlayer_virtual_guest",
+					"primary": {
+						"id": "12345678",
+						"attributes": {
+							"id":"12345678",
+							"ipv4_address_private":"10.0.0.7",
+							"ipv4_address":""
+						}
+					}
 				}
 			}
 		}
@@ -153,18 +164,19 @@ const expectedListOutput = `
 {
 	"all":	 {
 		"hosts": [
-			"10.0.0.1", 
+			"10.0.0.1",
+			"10.0.0.7",
 			"10.0.1.1",
 			"10.120.0.226",
-			"10.2.1.5", 
+			"10.2.1.5",
 			"10.20.30.40",
 			"192.168.0.3",
 			"50.0.0.1"
-		], 
+		],
 		"vars": {
-			"datacenter": "mydc", 
-			"olddatacenter": "<0.7_format", 
-			"ids": [1, 2, 3, 4], 
+			"datacenter": "mydc",
+			"olddatacenter": "<0.7_format",
+			"ids": [1, 2, 3, 4],
 			"map": {"key": "value"}
 		}
 	},
@@ -175,6 +187,7 @@ const expectedListOutput = `
 	"four":  ["10.2.1.5"],
 	"five":  ["10.20.30.40"],
 	"six":   ["10.120.0.226"],
+	"seven": ["10.0.0.7"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -184,12 +197,14 @@ const expectedListOutput = `
 	"four.0":  ["10.2.1.5"],
 	"five.0":  ["10.20.30.40"],
 	"six.0":   ["10.120.0.226"],
+	"seven.0": ["10.0.0.7"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 
 	"role_web": ["10.0.0.1"]
 }
