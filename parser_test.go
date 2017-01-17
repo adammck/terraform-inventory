@@ -153,6 +153,21 @@ const exampleStateFile = `
 							"ipv4_address":""
 						}
 					}
+				},
+				"google_compute_instance.eight": {
+					"type": "123456789",
+					"primary": {
+						"id": "123456789",
+						"attributes": {
+							"network_interface.0.access_config.0.assigned_nat_ip": "10.0.0.8",
+							"network_interface.0.access_config.0.nat_ip": "10.0.0.8",
+							"network_interface.0.address": "10.0.0.8",
+							"tags.#": "1",
+							"tags.1201918879": "database",
+							"tags_fingerprint": "AqbISNuzJIs=",
+							"zone": "europe-west1-d"
+						}
+					}
 				}
 			}
 		}
@@ -166,6 +181,7 @@ const expectedListOutput = `
 		"hosts": [
 			"10.0.0.1",
 			"10.0.0.7",
+			"10.0.0.8",
 			"10.0.1.1",
 			"10.120.0.226",
 			"10.2.1.5",
@@ -188,6 +204,7 @@ const expectedListOutput = `
 	"five":  ["10.20.30.40"],
 	"six":   ["10.120.0.226"],
 	"seven": ["10.0.0.7"],
+	"eight": ["10.0.0.8"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -198,6 +215,7 @@ const expectedListOutput = `
 	"five.0":  ["10.20.30.40"],
 	"six.0":   ["10.120.0.226"],
 	"seven.0": ["10.0.0.7"],
+	"eight.0": ["10.0.0.8"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -205,8 +223,10 @@ const expectedListOutput = `
 	"type_vsphere_virtual_machine":       ["10.20.30.40"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
+	"type_google_compute_instance":       ["10.0.0.8"],
 
-	"role_web": ["10.0.0.1"]
+	"role_web": ["10.0.0.1"],
+	"database": ["10.0.0.8"]
 }
 `
 
