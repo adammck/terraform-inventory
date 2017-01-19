@@ -94,11 +94,11 @@ func (r Resource) Groups() []string {
 	}
 
 	for k, v := range r.Tags() {
-                // google
+		// Valueless
 		if v == "" {
 			g := k
 			groups = append(groups, g)
-		// aws
+		// Key-value
 		} else {
 			g := fmt.Sprintf("%s_%s", k, v)
 			groups = append(groups, g)
@@ -124,7 +124,7 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "google_compute_instance":
+	case "digitalocean_droplet", "google_compute_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {

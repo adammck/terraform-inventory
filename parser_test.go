@@ -98,7 +98,10 @@ const exampleStateFile = `
 						"id": "ddddddd",
 						"attributes": {
 							"id": "ddddddd",
-							"ipv4_address": "192.168.0.3"
+							"ipv4_address": "192.168.0.3",
+							"tags.#": "2",
+							"tags.1": "staging",
+							"tags.2": "webserver"
 						}
 					}
 				},
@@ -226,6 +229,8 @@ const expectedListOutput = `
 	"type_google_compute_instance":       ["10.0.0.8"],
 
 	"role_web": ["10.0.0.1"],
+	"webserver": ["192.168.0.3"],
+	"staging": ["192.168.0.3"],
 	"database": ["10.0.0.8"]
 }
 `
