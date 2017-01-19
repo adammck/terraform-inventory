@@ -27,7 +27,7 @@ func appendUniq(strs []string, item string) []string {
 
 func gatherResources(s *state) map[string]interface{} {
 	groups := make(map[string]interface{}, 0)
-	all_group := allGroup{Vars: make(map[string]interface{})}
+	all_group := allGroup{Vars: make(map[string]interface{}), Hosts: make([]string, 0)}
 	groups["all"] = &all_group
 
 	for _, res := range s.resources() {
