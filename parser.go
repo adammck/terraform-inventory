@@ -5,10 +5,19 @@ import (
 	"io"
 	"io/ioutil"
 	"sort"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 type state struct {
 	Modules []moduleState `json:"modules"`
+	Backend backend `json:"backend"`
+}
+
+type backend struct {
+	Type string `json:"type"`
+	Config map[string]string
 }
 
 // read populates the state object from a statefile.
@@ -25,7 +34,27 @@ func (s *state) read(stateFile io.Reader) error {
 	if err != nil {
 		return err
 	}
-
+	switch s.Backend.Type {
+	case "s3":
+		s3svc := s3.New(session.New(), &aws.Config{Region: aws.String(s.Backend.Config["region"])})
+		resp, err := s3svc.GetObject(&s3.GetObjectInput{
+			Bucket: aws.String(s.Backend.Config["bucket"]),
+			Key:    aws.String(s.Backend.Config["key"]),
+		})
+		if err != nil {
+			return err
+		}
+		var news state
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(body, &news)
+		if err != nil {
+			return err
+		}
+		s.Modules = news.Modules
+	}
 	return nil
 }
 
