@@ -31,5 +31,5 @@ func GetInputPath(fs vfs.Filesystem, env venv.Env) string {
 		return fn
 	}
 
-	return ""
+	return "."
 }
