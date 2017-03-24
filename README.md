@@ -111,7 +111,6 @@ It looks for state config in this order
 - `TF_STATE`: environment variable of where to find either a statefile or a terraform project
 - `TI_TFSTATE`: another environment variable similar to TF_STATE
 - `terraform.tfstate`: it looks in the state file in the current directory.
-- `.terraform/terraform.tfstate`: it looks for state file in the other default known location
 - `.`: lastly it assumes you are at the root of a terraform project.
 
 Alternately, if you need to do something fancier (like downloading your state
