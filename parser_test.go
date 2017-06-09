@@ -44,7 +44,7 @@ const exampleStateFile = `
 						"attributes": {
 							"id": "i-aaaaaaaa",
 							"private_ip": "10.0.0.1",
-							"tags.#": "1",
+							"tags.%": "1",
 							"tags.Role": "Web"
 						}
 					}
