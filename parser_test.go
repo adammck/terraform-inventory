@@ -143,9 +143,9 @@ const exampleStateFile = `
 							"id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 							"access_ip_v4": "10.120.0.226",
 							"access_ip_v6": "",
-							"metadata.status":"superServer",
-							"metadata.#":"very bad",
-							"metadata_toes":"faada2142412jhb1j2"
+							"metadata.status": "superServer",
+							"metadata.#": "very bad",
+							"metadata_toes": "faada2142412jhb1j2"
 						}
 					}
 				},
@@ -236,7 +236,6 @@ const expectedListOutput = `
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
 	"database": ["10.0.0.8"]
-
 }
 `
 
