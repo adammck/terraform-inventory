@@ -94,10 +94,24 @@ Can be provisioned separately with:
 ## More Usage
 
 Ansible doesn't seem to support calling a dynamic inventory script with params,
-so if you need to specify the location of your state file, set the `TF_STATE`
+so if you need to specify the location of your state file or terraform directory, set the `TF_STATE`
 environment variable before running `ansible-playbook`, like:
 
+
 	TF_STATE=deploy/terraform.tfstate ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
+
+	or
+
+	TF_STATE=../terraform ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
+
+If `TF_STATE` is a file, it parses the file as json, if `TF_STATE` is a directory, it runs `terraform state pull` inside the directory, which is supports both local and remote terraform state.
+
+It looks for state config in this order
+
+- `TF_STATE`: environment variable of where to find either a statefile or a terraform project
+- `TI_TFSTATE`: another environment variable similar to TF_STATE
+- `terraform.tfstate`: it looks in the state file in the current directory.
+- `.`: lastly it assumes you are at the root of a terraform project.
 
 Alternately, if you need to do something fancier (like downloading your state
 file from S3 before running), you might wrap this tool with a shell script, and

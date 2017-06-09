@@ -13,11 +13,12 @@ import (
 )
 
 func TestGetInputPath(t *testing.T) {
-	assert.Equal(t, "", GetInputPath(memfs.Create(), venv.Mock()))
+	assert.Equal(t, ".", GetInputPath(memfs.Create(), venv.Mock()))
 	assert.Equal(t, "aaa", GetInputPath(memfs.Create(), envWith(map[string]string{"TF_STATE": "aaa"})))
 	assert.Equal(t, "bbb", GetInputPath(memfs.Create(), envWith(map[string]string{"TI_TFSTATE": "bbb"})))
 	assert.Equal(t, "terraform.tfstate", GetInputPath(fsWithFiles([]string{"terraform.tfstate"}), venv.Mock()))
-	assert.Equal(t, ".terraform/terraform.tfstate", GetInputPath(fsWithFiles([]string{".terraform/terraform.tfstate"}), venv.Mock()))
+	assert.Equal(t, ".", GetInputPath(fsWithFiles([]string{".terraform/terraform.tfstate"}), venv.Mock()))
+	assert.Equal(t, "terraform", GetInputPath(fsWithDirs([]string{"terraform"}), envWith(map[string]string{"TF_STATE": "terraform"})))
 }
 
 func envWith(env map[string]string) venv.Env {
@@ -45,6 +46,21 @@ func fsWithFiles(filenames []string) vfs.Filesystem {
 		}
 
 		err = touchFile(fs, fn)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return fs
+}
+
+func fsWithDirs(dirs []string) vfs.Filesystem {
+	fs := memfs.Create()
+
+	var err error
+
+	for _, fp := range dirs {
+		err = vfs.MkdirAll(fs, fp, 0700)
 		if err != nil {
 			panic(err)
 		}

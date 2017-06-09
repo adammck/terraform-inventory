@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/adammck/venv"
 	"github.com/blang/vfs"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -23,15 +25,11 @@ func main() {
 		return
 	}
 
+	fs := vfs.OS()
 	if file == "" {
-		fs := vfs.OS()
+
 		env := venv.OS()
 		file = GetInputPath(fs, env)
-	}
-
-	if file == "" {
-		fmt.Printf("Usage: %s [options] path\n", os.Args[0])
-		os.Exit(1)
 	}
 
 	if !*list && *host == "" && !*inventory {
@@ -45,17 +43,53 @@ func main() {
 		os.Exit(1)
 	}
 
-	stateFile, err := os.Open(path)
-	defer stateFile.Close()
+	f, err := fs.Stat(path)
+
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening tfstate file: %s\n", err)
+		fmt.Fprintf(os.Stderr, "Invalid file: %s\n", err)
 		os.Exit(1)
 	}
 
 	var s state
-	err = s.read(stateFile)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading tfstate file: %s\n", err)
+
+	if !f.IsDir() {
+		stateFile, err := os.Open(path)
+		defer stateFile.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error opening tfstate file: %s\n", err)
+			os.Exit(1)
+		}
+
+		err = s.read(stateFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading tfstate file: %s\n", err)
+			os.Exit(1)
+		}
+	}
+
+	if f.IsDir() {
+		cmd := exec.Command("terraform", "state", "pull")
+		cmd.Dir = path
+		var out bytes.Buffer
+		cmd.Stdout = &out
+
+		err = cmd.Run()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error running `terraform state pull` in directory %s, %s\n", path, err)
+			os.Exit(1)
+		}
+
+		err = s.read(&out)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading `terraform state pull` output: %s\n", err)
+			os.Exit(1)
+		}
+
+	}
+
+	if s.Modules == nil {
+		fmt.Printf("Usage: %s [options] path\npath: this is either a path to a state file or a folder from which `terraform commands` are valid\n", os.Args[0])
 		os.Exit(1)
 	}
 
