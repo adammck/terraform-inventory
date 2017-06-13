@@ -21,6 +21,7 @@ func init() {
 		"private_ip",                                          // AWS
 		"ipaddress",                                           // CS
 		"ip_address",                                          // VMware
+		"network_interface.0.ipv4_address",                    // VMware
 		"access_ip_v4",                                        // OpenStack
 		"floating_ip",                                         // OpenStack
 		"network_interface.0.access_config.0.nat_ip",          // GCE

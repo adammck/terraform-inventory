@@ -128,7 +128,7 @@ const exampleStateFile = `
 							"host": "hhhhhhhh",
 							"id": "aaaaaaaa",
 							"image": "Ubunutu 14.04 LTS",
-							"ip_address": "10.20.30.40",
+							"network_interface.0.ipv4_address": "10.20.30.40",
 							"linked_clone": "false",
 							"name": "nnnnnn",
 							"power_on": "true"
