@@ -137,6 +137,15 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
+	case "vsphere_virtual_machine":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "custom_configuration_parameters" && parts[1] != "#" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
 	case "digitalocean_droplet", "google_compute_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
