@@ -124,6 +124,8 @@ const exampleStateFile = `
 					"primary": {
 						"id": "aaaaaaaa",
 						"attributes": {
+  						"custom_configuration_parameters.%": "1",
+	  					"custom_configuration_parameters.role": "rrrrrrrr",
 							"datacenter": "dddddddd",
 							"host": "hhhhhhhh",
 							"id": "aaaaaaaa",
@@ -231,6 +233,7 @@ const expectedListOutput = `
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_google_compute_instance":       ["10.0.0.8"],
 
+	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
