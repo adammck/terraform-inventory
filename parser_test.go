@@ -124,8 +124,8 @@ const exampleStateFile = `
 					"primary": {
 						"id": "aaaaaaaa",
 						"attributes": {
-  						"custom_configuration_parameters.%": "1",
-	  					"custom_configuration_parameters.role": "rrrrrrrr",
+  							"custom_configuration_parameters.%": "1",
+	  						"custom_configuration_parameters.role": "rrrrrrrr",
 							"datacenter": "dddddddd",
 							"host": "hhhhhhhh",
 							"id": "aaaaaaaa",
