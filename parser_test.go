@@ -124,8 +124,8 @@ const exampleStateFile = `
 					"primary": {
 						"id": "aaaaaaaa",
 						"attributes": {
-  							"custom_configuration_parameters.%": "1",
-	  						"custom_configuration_parameters.role": "rrrrrrrr",
+							"custom_configuration_parameters.%": "1",
+							"custom_configuration_parameters.role": "rrrrrrrr",
 							"datacenter": "dddddddd",
 							"host": "hhhhhhhh",
 							"id": "aaaaaaaa",
@@ -176,6 +176,40 @@ const exampleStateFile = `
 							"zone": "europe-west1-d"
 						}
 					}
+				},
+				"exoscale_compute.nine": {
+					"type": "exoscale_compute",
+					"depends_on": [
+						"x",
+						"y"
+					],
+					"primary": {
+						"id": "123456789",
+						"attributes": {
+							"diskSize": "10",
+							"id": "123456789",
+							"keypair": "kp",
+							"name": "xyz",
+							"networks.#": "1",
+							"networks.0.%": "5",
+							"networks.0.default": "true",
+							"networks.0.ip4address": "10.0.0.9",
+							"networks.0.ip6address": "",
+							"networks.0.networkname": "guestNetworkForBasicZone",
+							"networks.0.type": "Shared",
+							"securitygroups.#": "1",
+							"securitygroups.0": "xyz",
+							"size": "zzz",
+							"state": "Running",
+							"template": "Linux CoreOS stable 1298 64-bit",
+							"userdata": "",
+							"zone": "ch-gva-2"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": ""
 				}
 			}
 		}
@@ -190,6 +224,7 @@ const expectedListOutput = `
 			"10.0.0.1",
 			"10.0.0.7",
 			"10.0.0.8",
+			"10.0.0.9",
 			"10.0.1.1",
 			"10.120.0.226",
 			"10.2.1.5",
@@ -213,6 +248,7 @@ const expectedListOutput = `
 	"six":   ["10.120.0.226"],
 	"seven": ["10.0.0.7"],
 	"eight": ["10.0.0.8"],
+	"nine": ["10.0.0.9"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -224,6 +260,7 @@ const expectedListOutput = `
 	"six.0":   ["10.120.0.226"],
 	"seven.0": ["10.0.0.7"],
 	"eight.0": ["10.0.0.8"],
+	"nine.0":  ["10.0.0.9"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -231,6 +268,7 @@ const expectedListOutput = `
 	"type_vsphere_virtual_machine":       ["10.20.30.40"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
+	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
