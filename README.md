@@ -4,11 +4,23 @@
 [![GitHub release](https://img.shields.io/github/release/adammck/terraform-inventory.svg?maxAge=2592000)](https://github.com/adammck/terraform-inventory/releases)
 [![GitHub release](https://img.shields.io/homebrew/v/terraform-inventory.svg?maxAge=2592000)](http://braumeister.org/formula/terraform-inventory)
 
-This is a little Go app which generates a dynamic [Ansible] [ansible] inventory
-from a [Terraform] [tf] state file. It allows one to spawn a bunch of instances
-with Terraform, then (re-)provision them with Ansible. Currently, only **AWS**,
-**DigitalOcean**, **CloudStack**, **VMware**, **OpenStack**, **Google Compute
-Engine**, and **SoftLayer** are supported.
+This is a little Go app which generates a dynamic [Ansible][ans] inventory from
+a [Terraform][tf] state file. It allows one to spawn a bunch of instances with 
+Terraform, then (re-)provision them with Ansible.
+
+The following providers are supported:
+
+* AWS
+* DigitalOcean 
+* CloudStack 
+* VMware 
+* OpenStack 
+* Google Compute Engine 
+* SoftLayer
+* Exoscale
+
+It's very simple to add support for new providers. See pull requests with the
+[provider][pv] label for examples.
 
 
 # Help Wanted 🙋
@@ -163,7 +175,8 @@ was generously sponsored by [Transloadit](https://transloadit.com).
 
 MIT.
 
-[ansible]: https://www.ansible.com
-[tf]:      https://www.terraform.io
-[rel]:     https://github.com/adammck/terraform-inventory/releases
-[rs]:      https://www.terraform.io/docs/state/remote/index.html
+[ans]: https://www.ansible.com
+[tf]:  https://www.terraform.io
+[rel]: https://github.com/adammck/terraform-inventory/releases
+[rs]:  https://www.terraform.io/docs/state/remote/index.html
+[pv]:  https://github.com/adammck/terraform-inventory/pulls?q=is%3Apr+label%3Aprovider
