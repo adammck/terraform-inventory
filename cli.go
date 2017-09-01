@@ -74,7 +74,9 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 			writeLn("", stdout, stderr)
 			writeLn("["+group+":vars]", stdout, stderr)
 			for key, item := range grp.Vars {
-				writeLn(key+"="+item.(string), stdout, stderr)
+				jsonItem, _ := json.Marshal(item)
+				itemLn := fmt.Sprintf("'%s'", string(jsonItem))
+				writeLn(key+"="+itemLn, stdout, stderr)
 			}
 		}
 
