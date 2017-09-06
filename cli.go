@@ -9,7 +9,6 @@ import (
 
 type allGroup struct {
 	Hosts []string               `json:"hosts"`
-	Vars  map[string]interface{} `json:"vars"`
 }
 
 func appendUniq(strs []string, item string) []string {
@@ -27,7 +26,7 @@ func appendUniq(strs []string, item string) []string {
 
 func gatherResources(s *state) map[string]interface{} {
 	groups := make(map[string]interface{}, 0)
-	all_group := allGroup{Vars: make(map[string]interface{}), Hosts: make([]string, 0)}
+	all_group := allGroup{Hosts: make([]string, 0)}
 	groups["all"] = &all_group
 
 	for _, res := range s.resources() {
@@ -43,11 +42,6 @@ func gatherResources(s *state) map[string]interface{} {
 		}
 	}
 
-	if len(s.outputs()) > 0 {
-		for _, out := range s.outputs() {
-			all_group.Vars[out.keyName] = out.value
-		}
-	}
 	return groups
 }
 
@@ -70,11 +64,6 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 			writeLn("["+group+"]", stdout, stderr)
 			for _, item := range grp.Hosts {
 				writeLn(item, stdout, stderr)
-			}
-			writeLn("", stdout, stderr)
-			writeLn("["+group+":vars]", stdout, stderr)
-			for key, item := range grp.Vars {
-				writeLn(key+"="+item.(string), stdout, stderr)
 			}
 		}
 
