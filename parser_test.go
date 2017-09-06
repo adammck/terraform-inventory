@@ -231,13 +231,7 @@ const expectedListOutput = `
 			"10.20.30.40",
 			"192.168.0.3",
 			"50.0.0.1"
-		],
-		"vars": {
-			"datacenter": "mydc",
-			"olddatacenter": "<0.7_format",
-			"ids": [1, 2, 3, 4],
-			"map": {"key": "value"}
-		}
+		]
 	},
 	"one":   ["10.0.0.1", "10.0.1.1"],
 	"dup":   ["10.0.0.1"],
@@ -276,7 +270,9 @@ const expectedListOutput = `
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
-	"database": ["10.0.0.8"]
+	"database": ["10.0.0.8"],
+
+	"_meta": {"hostvars": {}}
 }
 `
 
