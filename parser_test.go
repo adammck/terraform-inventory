@@ -280,6 +280,134 @@ const expectedListOutput = `
 }
 `
 
+const expectedInventoryOutput = `[all]
+10.0.0.1
+10.0.0.7
+10.0.0.8
+10.0.0.9
+10.0.1.1
+10.120.0.226
+10.2.1.5
+10.20.30.40
+192.168.0.3
+50.0.0.1
+
+[all:vars]
+datacenter='"mydc"'
+ids='[1,2,3,4]'
+map='{"key":"value"}'
+olddatacenter='"\u003c0.7_format"'
+
+[one.0]
+10.0.0.1
+
+[four.0]
+10.2.1.5
+
+[webserver]
+192.168.0.3
+
+[type_vsphere_virtual_machine]
+10.20.30.40
+
+[seven.0]
+10.0.0.7
+
+[type_softlayer_virtual_guest]
+10.0.0.7
+
+[dup.0]
+10.0.0.1
+
+[type_digitalocean_droplet]
+192.168.0.3
+
+[nine.0]
+10.0.0.9
+
+[type_exoscale_compute]
+10.0.0.9
+
+[two.0]
+50.0.0.1
+
+[three]
+192.168.0.3
+
+[type_google_compute_instance]
+10.0.0.8
+
+[dup]
+10.0.0.1
+
+[one]
+10.0.0.1
+10.0.1.1
+
+[type_cloudstack_instance]
+10.2.1.5
+
+[role_rrrrrrrr]
+10.20.30.40
+
+[seven]
+10.0.0.7
+
+[five]
+10.20.30.40
+
+[role_web]
+10.0.0.1
+
+[three.0]
+192.168.0.3
+
+[eight.0]
+10.0.0.8
+
+[six.0]
+10.120.0.226
+
+[type_openstack_compute_instance_v2]
+10.120.0.226
+
+[status_superserver]
+10.120.0.226
+
+[type_aws_instance]
+10.0.0.1
+10.0.1.1
+50.0.0.1
+
+[two]
+50.0.0.1
+
+[nine]
+10.0.0.9
+
+[eight]
+10.0.0.8
+
+[six]
+10.120.0.226
+
+[five.0]
+10.20.30.40
+
+[one.1]
+10.0.1.1
+
+[four]
+10.2.1.5
+
+[staging]
+192.168.0.3
+
+[database]
+10.0.0.8
+
+`
+
 const expectedHostOneOutput = `
 {
 	"id":"i-aaaaaaaa",
@@ -337,4 +465,46 @@ func TestHostCommand(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, exp, act)
+}
+
+//	I can't check is inventory are correct, so we need to do that chack with ansible
+//  PLAY [all] *******************************************
+//
+//  TASK [show ids] **************************************
+//  ok: [10.20.30.40] => {
+//  "msg": [
+//  1,
+//  2,
+//  3,
+//  4
+//  ]
+//  }
+//
+//  TASK [show map] ***************************************
+//  ok: [10.20.30.40] => {
+//  "msg": {
+//  "key": "value"
+//  }
+//  }
+func TestInventoryCommand(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFile)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdInventory(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	assert.Equal(t, helperCountCharInStrings(expectedInventoryOutput), helperCountCharInStrings(stdout.String()))
+}
+
+func helperCountCharInStrings(str string) map[rune]int {
+	result := map[rune]int{}
+	for _, i := range str {
+		result[i]++
+	}
+	return result
 }
