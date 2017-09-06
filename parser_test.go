@@ -270,7 +270,9 @@ const expectedListOutput = `
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
-	"database": ["10.0.0.8"]
+	"database": ["10.0.0.8"],
+
+	"_meta": {"hostvars": {}}
 }
 `
 
