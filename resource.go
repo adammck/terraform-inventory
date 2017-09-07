@@ -29,6 +29,7 @@ func init() {
 		"network_interface.0.address",                         // GCE
 		"ipv4_address_private",                                // SoftLayer
 		"networks.0.ip4address",                               // Exoscale
+		"primaryip",                                           // Joyent Triton
 	}
 
 	// type.name.0
