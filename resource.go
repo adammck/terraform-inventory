@@ -127,7 +127,7 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "aws_instance", "triton_machine":
+	case "aws_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			// At some point Terraform changed the key for counts of attributes to end with ".%"
@@ -154,6 +154,15 @@ func (r Resource) Tags() map[string]string {
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
 				vv := strings.ToLower(v)
 				t[vv] = ""
+			}
+		}
+    case "triton_machine":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
 			}
 		}
 	}
