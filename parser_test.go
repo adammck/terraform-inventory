@@ -297,11 +297,7 @@ const expectedListOutput = `
 	"seven": ["10.0.0.7"],
 	"eight": ["10.0.0.8"],
 	"nine": ["10.0.0.9"],
-<<<<<<< a38f08e8c958da2c578976f58f3ba99c5d9e62a9
 	"ten": ["10.0.0.10"],
-=======
-    "ten": ["10.0.0.10"],
->>>>>>> renamed provider in resource.go and created test
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -314,25 +310,17 @@ const expectedListOutput = `
 	"seven.0": ["10.0.0.7"],
 	"eight.0": ["10.0.0.8"],
 	"nine.0":  ["10.0.0.9"],
-<<<<<<< a38f08e8c958da2c578976f58f3ba99c5d9e62a9
 	"ten.0":   ["10.0.0.10"],
-=======
-    "ten.0":   ["10.0.0.10"],
->>>>>>> renamed provider in resource.go and created test
 
-	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
-	"type_digitalocean_droplet":          ["192.168.0.3"],
-	"type_cloudstack_instance":           ["10.2.1.5"],
-	"type_vsphere_virtual_machine":       ["10.20.30.40"],
+	"type_aws_instance":				  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
+	"type_digitalocean_droplet":		  ["192.168.0.3"],
+	"type_cloudstack_instance":			  ["10.2.1.5"],
+	"type_vsphere_virtual_machine":		  ["10.20.30.40"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
-<<<<<<< a38f08e8c958da2c578976f58f3ba99c5d9e62a9
-	"type_triton_machine":                ["10.0.0.10"],
-=======
-    "type_triton_machine":                ["10.0.0.10"],
->>>>>>> renamed provider in resource.go and created test
+	"type_triton_machine":				  ["10.0.0.10"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
