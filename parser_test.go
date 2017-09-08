@@ -324,6 +324,7 @@ const expectedListOutput = `
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
+	"role_test": ["10.0.0.10"],
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
