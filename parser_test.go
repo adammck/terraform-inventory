@@ -334,6 +334,7 @@ const expectedListOutput = `
 
 const expectedInventoryOutput = `[all]
 10.0.0.1
+10.0.0.10
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -396,6 +397,9 @@ olddatacenter=null
 [role_rrrrrrrr]
 10.20.30.40
 
+[role_test]
+10.0.0.10
+
 [role_web]
 10.0.0.1
 
@@ -416,6 +420,12 @@ olddatacenter=null
 
 [status_superserver]
 10.120.0.226
+
+[ten]
+10.0.0.10
+
+[ten.0]
+10.0.0.10
 
 [three]
 192.168.0.3
@@ -451,6 +461,9 @@ olddatacenter=null
 
 [type_softlayer_virtual_guest]
 10.0.0.7
+
+[type_triton_machine]
+10.0.0.10
 
 [type_vsphere_virtual_machine]
 10.20.30.40
