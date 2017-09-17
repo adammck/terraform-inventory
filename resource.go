@@ -29,6 +29,7 @@ func init() {
 		"network_interface.0.address",                         // GCE
 		"ipv4_address_private",                                // SoftLayer
 		"networks.0.ip4address",                               // Exoscale
+		"primaryip",                                           // Joyent Triton
 	}
 
 	// type.name.0
@@ -153,6 +154,15 @@ func (r Resource) Tags() map[string]string {
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
 				vv := strings.ToLower(v)
 				t[vv] = ""
+			}
+		}
+    case "triton_machine":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
 			}
 		}
 	}

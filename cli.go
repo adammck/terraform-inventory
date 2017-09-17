@@ -116,7 +116,7 @@ func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int 
 		}
 	}
 
-	fmt.Fprintf(stderr, "No such host: %s\n", hostname)
+	fmt.Fprintf(stdout, "{}")
 	return 1
 }
 

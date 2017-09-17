@@ -210,6 +210,53 @@ const exampleStateFile = `
 					},
 					"deposed": [],
 					"provider": ""
+				},
+				"triton_machine.ten": {
+					"type": "triton_machine",
+					"depends_on": [],
+					"primary": {
+						"id": "123456789",
+						"attributes": {
+							"administrator_pw": "",
+							"cloud_config": "",
+							"dataset": "dset1",
+							"disk": "25600",
+							"domain_names.#": "",
+							"domain_names.0": "",
+							"domain_names.1": "",
+							"domain_names.2": "",
+							"domain_names.3": "",
+							"firewall_enabled": "true",
+							"id": "123456789",
+							"image": "",
+							"ips.#": "1",
+							"ips.0": "10.0.0.10",
+							"memory": "1024",
+							"metadata.%": "0",
+							"name": "triton_ten",
+							"networks.#": "2",
+							"networks.0": "1",
+							"networks.1": "2",
+							"nic.#": "1",
+							"nic.1.gateway": "",
+							"nic.1.ip": "10.0.0.10",
+							"nic.1.mac": "",
+							"nic.1.netmask": "",
+							"nic.1.network": "",
+							"nic.1.primary": "true",
+							"nic.1.state": "running",
+							"package": "g4-highcpu-1G",
+							"primaryip": "10.0.0.10",
+							"tags.%": "1",
+							"tags.Role": "test",
+							"type": "smartmachine",
+							"user_data": ""
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": ""
 				}
 			}
 		}
@@ -222,6 +269,7 @@ const expectedListOutput = `
 	"all":	 {
 		"hosts": [
 			"10.0.0.1",
+			"10.0.0.10",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -239,16 +287,17 @@ const expectedListOutput = `
 			"map": {"key": "value"}
 		}
 	},
-	"one":   ["10.0.0.1", "10.0.1.1"],
-	"dup":   ["10.0.0.1"],
-	"two":   ["50.0.0.1"],
+	"one":	 ["10.0.0.1", "10.0.1.1"],
+	"dup":	 ["10.0.0.1"],
+	"two":	 ["50.0.0.1"],
 	"three": ["192.168.0.3"],
 	"four":  ["10.2.1.5"],
 	"five":  ["10.20.30.40"],
-	"six":   ["10.120.0.226"],
+	"six":	 ["10.120.0.226"],
 	"seven": ["10.0.0.7"],
 	"eight": ["10.0.0.8"],
 	"nine": ["10.0.0.9"],
+	"ten": ["10.0.0.10"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -261,6 +310,7 @@ const expectedListOutput = `
 	"seven.0": ["10.0.0.7"],
 	"eight.0": ["10.0.0.8"],
 	"nine.0":  ["10.0.0.9"],
+	"ten.0":   ["10.0.0.10"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -270,9 +320,11 @@ const expectedListOutput = `
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
+	"type_triton_machine":                ["10.0.0.10"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
+	"role_test": ["10.0.0.10"],
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
