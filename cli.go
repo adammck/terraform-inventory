@@ -57,9 +57,14 @@ func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
 
 func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 	groups := gatherResources(s)
-	for group, res := range groups {
+	group_names := []string{}
+	for group, _ := range groups {
+		group_names = append(group_names, group)
+	}
+	sort.Strings(group_names)
+	for _, group := range group_names {
 
-		switch grp := res.(type) {
+		switch grp := groups[group].(type) {
 		case []string:
 			writeLn("["+group+"]", stdout, stderr)
 			for _, item := range grp {
@@ -73,9 +78,14 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 			}
 			writeLn("", stdout, stderr)
 			writeLn("["+group+":vars]", stdout, stderr)
-			for key, item := range grp.Vars {
-				jsonItem, _ := json.Marshal(item)
-				itemLn := fmt.Sprintf("'%s'", string(jsonItem))
+			vars := []string{}
+			for key, _ := range grp.Vars {
+				vars = append(vars, key)
+			}
+			sort.Strings(vars)
+			for _, key := range vars {
+				jsonItem, _ := json.Marshal(grp.Vars["key"])
+				itemLn := fmt.Sprintf("%s", string(jsonItem))
 				writeLn(key+"="+itemLn, stdout, stderr)
 			}
 		}
