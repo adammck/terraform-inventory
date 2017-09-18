@@ -4,8 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"sort"
 )
+
+type counterSorter struct {
+	resources []*Resource
+}
+
+func (cs counterSorter) Len() int {
+	return len(cs.resources)
+}
+
+func (cs counterSorter) Swap(i, j int) {
+	cs.resources[i], cs.resources[j] = cs.resources[j], cs.resources[i]
+}
+
+func (cs counterSorter) Less(i, j int) bool {
+	return cs.resources[i].counter < cs.resources[j].counter
+}
 
 type allGroup struct {
 	Hosts []string               `json:"hosts"`
@@ -26,29 +43,88 @@ func appendUniq(strs []string, item string) []string {
 }
 
 func gatherResources(s *state) map[string]interface{} {
-	groups := make(map[string]interface{}, 0)
-	all_group := allGroup{Vars: make(map[string]interface{}), Hosts: make([]string, 0)}
-	groups["all"] = &all_group
+	outputGroups := make(map[string]interface{})
+
+	all := &allGroup{Hosts: make([]string, 0), Vars: make(map[string]interface{})}
+	types := make(map[string][]string)
+	individual := make(map[string][]string)
+	ordered := make(map[string][]string)
+	tags := make(map[string][]string)
+
+	unsortedOrdered := make(map[string][]*Resource)
 
 	for _, res := range s.resources() {
-		for _, grp := range res.Groups() {
+		// place in list of all resources
+		all.Hosts = appendUniq(all.Hosts, res.Address())
 
-			_, ok := groups[grp]
-			if !ok {
-				groups[grp] = []string{}
+		// place in list of resource types
+		tp := fmt.Sprintf("type_%s", res.resourceType)
+		types[tp] = appendUniq(types[tp], res.Address())
+
+		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
+
+		// store as invdividual host (eg. <name>.<count>)
+		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
+		if old, exists := individual[invdName]; exists {
+			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Address())
+		}
+		individual[invdName] = []string{res.Address()}
+
+		// inventorize tags
+		for k, v := range res.Tags() {
+			// Valueless
+			tag := k
+			if v != "" {
+				tag = fmt.Sprintf("%s_%s", k, v)
 			}
-
-			groups[grp] = appendUniq(groups[grp].([]string), res.Address())
-			all_group.Hosts = appendUniq(all_group.Hosts, res.Address())
+			tags[tag] = appendUniq(tags[tag], res.Address())
 		}
 	}
 
+	// inventorize outputs as variables
 	if len(s.outputs()) > 0 {
 		for _, out := range s.outputs() {
-			all_group.Vars[out.keyName] = out.value
+			all.Vars[out.keyName] = out.value
 		}
 	}
-	return groups
+
+	// sort the ordered groups
+	for basename, resources := range unsortedOrdered {
+		cs := counterSorter{resources}
+		sort.Sort(cs)
+
+		for i := range resources {
+			ordered[basename] = append(ordered[basename], resources[i].Address())
+		}
+	}
+
+	outputGroups["all"] = all
+	for k, v := range individual {
+		if old, exists := outputGroups[k]; exists {
+			fmt.Fprintf(os.Stderr, "individual overwriting already existing output with key %s, old: %v, new: %v", k, old, v)
+		}
+		outputGroups[k] = v
+	}
+	for k, v := range ordered {
+		if old, exists := outputGroups[k]; exists {
+			fmt.Fprintf(os.Stderr, "ordered overwriting already existing output with key %s, old: %v, new: %v", k, old, v)
+		}
+		outputGroups[k] = v
+	}
+	for k, v := range types {
+		if old, exists := outputGroups[k]; exists {
+			fmt.Fprintf(os.Stderr, "types overwriting already existing output key %s, old: %v, new: %v", k, old, v)
+		}
+		outputGroups[k] = v
+	}
+	for k, v := range tags {
+		if old, exists := outputGroups[k]; exists {
+			fmt.Fprintf(os.Stderr, "tags overwriting already existing output key %s, old: %v, new: %v", k, old, v)
+		}
+		outputGroups[k] = v
+	}
+
+	return outputGroups
 }
 
 func cmdList(stdout io.Writer, stderr io.Writer, s *state) int {
