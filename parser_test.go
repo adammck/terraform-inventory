@@ -332,6 +332,147 @@ const expectedListOutput = `
 }
 `
 
+const expectedInventoryOutput = `[all]
+10.0.0.1
+10.0.0.10
+10.0.0.7
+10.0.0.8
+10.0.0.9
+10.0.1.1
+10.120.0.226
+10.2.1.5
+10.20.30.40
+192.168.0.3
+50.0.0.1
+
+[all:vars]
+datacenter="mydc"
+ids=[1,2,3,4]
+map={"key":"value"}
+olddatacenter="\u003c0.7_format"
+
+[database]
+10.0.0.8
+
+[dup]
+10.0.0.1
+
+[dup.0]
+10.0.0.1
+
+[eight]
+10.0.0.8
+
+[eight.0]
+10.0.0.8
+
+[five]
+10.20.30.40
+
+[five.0]
+10.20.30.40
+
+[four]
+10.2.1.5
+
+[four.0]
+10.2.1.5
+
+[nine]
+10.0.0.9
+
+[nine.0]
+10.0.0.9
+
+[one]
+10.0.0.1
+10.0.1.1
+
+[one.0]
+10.0.0.1
+
+[one.1]
+10.0.1.1
+
+[role_rrrrrrrr]
+10.20.30.40
+
+[role_test]
+10.0.0.10
+
+[role_web]
+10.0.0.1
+
+[seven]
+10.0.0.7
+
+[seven.0]
+10.0.0.7
+
+[six]
+10.120.0.226
+
+[six.0]
+10.120.0.226
+
+[staging]
+192.168.0.3
+
+[status_superserver]
+10.120.0.226
+
+[ten]
+10.0.0.10
+
+[ten.0]
+10.0.0.10
+
+[three]
+192.168.0.3
+
+[three.0]
+192.168.0.3
+
+[two]
+50.0.0.1
+
+[two.0]
+50.0.0.1
+
+[type_aws_instance]
+10.0.0.1
+10.0.1.1
+50.0.0.1
+
+[type_cloudstack_instance]
+10.2.1.5
+
+[type_digitalocean_droplet]
+192.168.0.3
+
+[type_exoscale_compute]
+10.0.0.9
+
+[type_google_compute_instance]
+10.0.0.8
+
+[type_openstack_compute_instance_v2]
+10.120.0.226
+
+[type_softlayer_virtual_guest]
+10.0.0.7
+
+[type_triton_machine]
+10.0.0.10
+
+[type_vsphere_virtual_machine]
+10.20.30.40
+
+[webserver]
+192.168.0.3
+
+`
+
 const expectedHostOneOutput = `
 {
 	"id":"i-aaaaaaaa",
@@ -389,4 +530,19 @@ func TestHostCommand(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, exp, act)
+}
+
+func TestInventoryCommand(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFile)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdInventory(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	assert.Equal(t, expectedInventoryOutput, stdout.String())
 }
