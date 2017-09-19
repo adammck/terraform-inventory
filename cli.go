@@ -84,7 +84,7 @@ func cmdInventory(stdout io.Writer, stderr io.Writer, s *state) int {
 			}
 			sort.Strings(vars)
 			for _, key := range vars {
-				jsonItem, _ := json.Marshal(grp.Vars["key"])
+				jsonItem, _ := json.Marshal(grp.Vars[key])
 				itemLn := fmt.Sprintf("%s", string(jsonItem))
 				writeLn(key+"="+itemLn, stdout, stderr)
 			}

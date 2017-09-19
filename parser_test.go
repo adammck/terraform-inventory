@@ -346,10 +346,10 @@ const expectedInventoryOutput = `[all]
 50.0.0.1
 
 [all:vars]
-datacenter=null
-ids=null
-map=null
-olddatacenter=null
+datacenter="mydc"
+ids=[1,2,3,4]
+map={"key":"value"}
+olddatacenter="\u003c0.7_format"
 
 [database]
 10.0.0.8
