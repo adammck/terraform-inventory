@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/adammck/venv"
-	"github.com/blang/vfs"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/adammck/venv"
+	"github.com/blang/vfs"
 )
 
 var version = flag.Bool("version", false, "print version information and exit")

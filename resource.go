@@ -87,30 +87,6 @@ func (r Resource) IsSupported() bool {
 	return r.Address() != ""
 }
 
-// Groups returns the list of Ansible groups which this resource should be
-// included in.
-func (r Resource) Groups() []string {
-	groups := []string{
-		r.baseName,
-		r.NameWithCounter(),
-		fmt.Sprintf("type_%s", r.resourceType),
-	}
-
-	for k, v := range r.Tags() {
-		// Valueless
-		if v == "" {
-			g := k
-			groups = append(groups, g)
-			// Key-value
-		} else {
-			g := fmt.Sprintf("%s_%s", k, v)
-			groups = append(groups, g)
-		}
-	}
-
-	return groups
-}
-
 // Tags returns a map of arbitrary key/value pairs explicitly associated with
 // the resource. Different providers have different mechanisms for attaching
 // these.
@@ -159,7 +135,7 @@ func (r Resource) Tags() map[string]string {
 				t[vv] = ""
 			}
 		}
-    case "triton_machine":
+	case "triton_machine":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "%" {
