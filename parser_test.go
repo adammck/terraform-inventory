@@ -257,7 +257,33 @@ const exampleStateFile = `
 					},
 					"deposed": [],
 					"provider": ""
-				}
+				},
+        "scaleway_server.eleven": {
+          "type": "scaleway_server",
+          "depends_on": [],
+          "primary": {
+            "id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
+            "attributes": {
+              "enable_ipv6": "true",
+              "id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
+              "image": "ab8fbe9e-b13c-46a5-9139-ae7ae73569f0",
+              "name": "eleven",
+              "private_ip": "11.0.0.11",
+              "public_ip": "10.0.0.11",
+              "public_ipv6": "2001:bc8:4400:2500::e:800",
+              "security_group": "92a62362-72ab-4864-a94e-f02557153218",
+              "state": "running",
+              "state_detail": "booted",
+              "tags.#": "1",
+              "tags.0": "scw_test",
+              "type": "VC1S"
+            },
+            "meta": {},
+            "tainted": false
+          },
+          "deposed": [],
+          "provider": "provider.scaleway"
+        }
 			}
 		}
 	]
@@ -270,6 +296,7 @@ const expectedListOutput = `
 		"hosts": [
 			"10.0.0.1",
 			"10.0.0.10",
+			"10.0.0.11",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -298,6 +325,7 @@ const expectedListOutput = `
 	"eight": ["10.0.0.8"],
 	"nine": ["10.0.0.9"],
 	"ten": ["10.0.0.10"],
+	"eleven": ["10.0.0.11"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -311,6 +339,7 @@ const expectedListOutput = `
 	"eight.0": ["10.0.0.8"],
 	"nine.0":  ["10.0.0.9"],
 	"ten.0":   ["10.0.0.10"],
+	"eleven.0": ["10.0.0.11"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -321,6 +350,7 @@ const expectedListOutput = `
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
 	"type_triton_machine":                ["10.0.0.10"],
+	"type_scaleway_server":               ["10.0.0.11"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -328,13 +358,15 @@ const expectedListOutput = `
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
-	"database": ["10.0.0.8"]
+	"database": ["10.0.0.8"],
+	"scw_test": ["10.0.0.11"]
 }
 `
 
 const expectedInventoryOutput = `[all]
 10.0.0.1
 10.0.0.10
+10.0.0.11
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -365,6 +397,12 @@ olddatacenter="\u003c0.7_format"
 
 [eight.0]
 10.0.0.8
+
+[eleven]
+10.0.0.11
+
+[eleven.0]
+10.0.0.11
 
 [five]
 10.20.30.40
@@ -402,6 +440,9 @@ olddatacenter="\u003c0.7_format"
 
 [role_web]
 10.0.0.1
+
+[scw_test]
+10.0.0.11
 
 [seven]
 10.0.0.7
@@ -458,6 +499,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
+
+[type_scaleway_server]
+10.0.0.11
 
 [type_softlayer_virtual_guest]
 10.0.0.7
