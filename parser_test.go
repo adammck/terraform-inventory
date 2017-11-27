@@ -258,32 +258,32 @@ const exampleStateFile = `
 					"deposed": [],
 					"provider": ""
 				},
-        "scaleway_server.eleven": {
-          "type": "scaleway_server",
-          "depends_on": [],
-          "primary": {
-            "id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
-            "attributes": {
-              "enable_ipv6": "true",
-              "id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
-              "image": "ab8fbe9e-b13c-46a5-9139-ae7ae73569f0",
-              "name": "eleven",
-              "private_ip": "11.0.0.11",
-              "public_ip": "10.0.0.11",
-              "public_ipv6": "2001:bc8:4400:2500::e:800",
-              "security_group": "92a62362-72ab-4864-a94e-f02557153218",
-              "state": "running",
-              "state_detail": "booted",
-              "tags.#": "1",
-              "tags.0": "scw_test",
-              "type": "VC1S"
-            },
-            "meta": {},
-            "tainted": false
-          },
-          "deposed": [],
-          "provider": "provider.scaleway"
-        }
+				"scaleway_server.eleven": {
+					"type": "scaleway_server",
+					"depends_on": [],
+					"primary": {
+						"id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
+						"attributes": {
+							"enable_ipv6": "true",
+							"id": "490c369b-e062-4951-b1c5-f9a8ccee8a38",
+							"image": "ab8fbe9e-b13c-46a5-9139-ae7ae73569f0",
+							"name": "eleven",
+							"private_ip": "11.0.0.11",
+							"public_ip": "10.0.0.11",
+							"public_ipv6": "2001:bc8:4400:2500::e:800",
+							"security_group": "92a62362-72ab-4864-a94e-f02557153218",
+							"state": "running",
+							"state_detail": "booted",
+							"tags.#": "1",
+							"tags.0": "scw_test",
+							"type": "VC1S"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": "provider.scaleway"
+				}
 			}
 		}
 	]
