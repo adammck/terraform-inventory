@@ -127,7 +127,7 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "digitalocean_droplet", "google_compute_instance":
+	case "digitalocean_droplet", "google_compute_instance", "scaleway_server":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
