@@ -18,6 +18,7 @@ func init() {
 	keyNames = []string{
 		"ipv4_address",                                        // DO and SoftLayer
 		"public_ip",                                           // AWS
+		"public_ipv6",                                         // Scaleway
 		"private_ip",                                          // AWS
 		"ipaddress",                                           // CS
 		"ip_address",                                          // VMware
