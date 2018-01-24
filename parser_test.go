@@ -283,6 +283,15 @@ const exampleStateFile = `
 					},
 					"deposed": [],
 					"provider": "provider.scaleway"
+				},
+				"vsphere_virtual_machine.twelve": {
+					"type": "vsphere_virtual_machine",
+					"primary": {
+						"id": "422cfa4a-c6bb-3405-0335-2d9b2034405f",
+						"attributes": {
+							"default_ip_address": "10.20.30.50"
+						}
+					}
 				}
 			}
 		}
@@ -303,9 +312,10 @@ const expectedListOutput = `
 			"10.0.1.1",
 			"10.120.0.226",
 			"10.2.1.5",
+			"10.20.30.40",
 			"192.168.0.3",
 			"50.0.0.1",
-			"10.20.30.40"
+			"10.20.30.50"
 		],
 		"vars": {
 			"datacenter": "mydc",
@@ -326,6 +336,7 @@ const expectedListOutput = `
 	"nine": ["10.0.0.9"],
 	"ten": ["10.0.0.10"],
 	"eleven": ["10.0.0.11"],
+	"twelve": ["10.20.30.50"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -340,11 +351,12 @@ const expectedListOutput = `
 	"nine.0":  ["10.0.0.9"],
 	"ten.0":   ["10.0.0.10"],
 	"eleven.0": ["10.0.0.11"],
+	"twelve.0": ["10.20.30.50"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
 	"type_cloudstack_instance":           ["10.2.1.5"],
-	"type_vsphere_virtual_machine":       ["10.20.30.40"],
+	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
@@ -373,9 +385,10 @@ const expectedInventoryOutput = `[all]
 10.0.1.1
 10.120.0.226
 10.2.1.5
+10.20.30.40
 192.168.0.3
 50.0.0.1
-10.20.30.40
+10.20.30.50
 
 [all:vars]
 datacenter="mydc"
@@ -474,6 +487,12 @@ olddatacenter="\u003c0.7_format"
 [three.0]
 192.168.0.3
 
+[twelve]
+10.20.30.50
+
+[twelve.0]
+10.20.30.50
+
 [two]
 50.0.0.1
 
@@ -511,6 +530,7 @@ olddatacenter="\u003c0.7_format"
 
 [type_vsphere_virtual_machine]
 10.20.30.40
+10.20.30.50
 
 [webserver]
 192.168.0.3

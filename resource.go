@@ -23,6 +23,7 @@ func init() {
 		"ipaddress",                                           // CS
 		"ip_address",                                          // VMware
 		"network_interface.0.ipv4_address",                    // VMware
+		"default_ip_address",                                  // provider.vsphere v1.1.1
 		"access_ip_v4",                                        // OpenStack
 		"floating_ip",                                         // OpenStack
 		"network_interface.0.access_config.0.nat_ip",          // GCE
