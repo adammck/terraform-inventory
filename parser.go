@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"sort"
+	"strings"
 )
 
 type state struct {
@@ -52,13 +53,26 @@ func (s *state) outputs() []*Output {
 	return inst
 }
 
+func (s *state) mapidnames() map[string]string {
+	t := map[string]string{}
+
+	for _, m := range s.Modules {
+		for _, k := range m.resourceKeys() {
+			if m.ResourceStates[k].Primary.ID != "" && m.ResourceStates[k].Primary.Attributes["name"] != "" {
+				kk := strings.ToLower(m.ResourceStates[k].Primary.ID)
+				t[kk] = m.ResourceStates[k].Primary.Attributes["name"]
+			}
+		}
+	}
+	return t
+}
+
 // resources returns a slice of the Resources found in the statefile.
 func (s *state) resources() []*Resource {
 	inst := make([]*Resource, 0)
 
 	for _, m := range s.Modules {
 		for _, k := range m.resourceKeys() {
-
 			// Terraform stores resources in a name->map map, but we need the name to
 			// decide which groups to include the resource in. So wrap it in a higher-
 			// level object with both properties.
