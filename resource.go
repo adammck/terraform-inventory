@@ -21,7 +21,7 @@ func init() {
 		"public_ipv6",                                         // Scaleway
 		"private_ip",                                          // AWS
 		"ipaddress",                                           // CS
-		"ip_address",                                          // VMware
+		"ip_address",                                          // VMware, Docker
 		"network_interface.0.ipv4_address",                    // VMware
 		"default_ip_address",                                  // provider.vsphere v1.1.1
 		"access_ip_v4",                                        // OpenStack
