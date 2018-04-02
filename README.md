@@ -17,6 +17,7 @@ The following providers are supported:
 * Exoscale
 * Google Compute Engine 
 * OpenStack 
+* Packet
 * Scaleway
 * SoftLayer
 * VMware 

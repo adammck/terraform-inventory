@@ -292,6 +292,37 @@ const exampleStateFile = `
 							"default_ip_address": "10.20.30.50"
 						}
 					}
+				},
+				"packet_device.thirteen": {
+					"type": "packet_device",
+					"depends_on": [],
+					"primary": {
+						"id": "e35816e2-b9b4-4ef3-9317-a32b98f6cb44",
+						"attributes": {
+							"billing_cycle": "hourly",
+							"created": "2018-04-02T14:52:34Z",
+							"facility": "ewr1",
+							"hostname": "sa-test-1",
+							"id": "e35816e2-b9b4-4ef3-9317-a32b98f6cb44",
+							"locked": "false",
+							"network.#": "3",
+							"network.0.address": "10.0.0.13",
+							"network.0.cidr": "31",
+							"network.0.family": "4",
+							"network.0.gateway": "10.0.0.254",
+							"network.0.public": "true",
+							"operating_system": "ubuntu_16_04",
+							"plan": "baremetal_0",
+							"project_id": "123456d5-087a-4976-877a-45b86584b786",
+							"state": "active",
+							"tags.#": "0",
+							"updated": "2018-04-02T14:57:13Z"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": ""
 				}
 			}
 		}
@@ -306,6 +337,7 @@ const expectedListOutput = `
 			"10.0.0.1",
 			"10.0.0.10",
 			"10.0.0.11",
+			"10.0.0.13",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -337,6 +369,7 @@ const expectedListOutput = `
 	"ten": ["10.0.0.10"],
 	"eleven": ["10.0.0.11"],
 	"twelve": ["10.20.30.50"],
+	"thirteen": ["10.0.0.13"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -352,6 +385,7 @@ const expectedListOutput = `
 	"ten.0":   ["10.0.0.10"],
 	"eleven.0": ["10.0.0.11"],
 	"twelve.0": ["10.20.30.50"],
+	"thirteen.0": ["10.0.0.13"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -363,6 +397,7 @@ const expectedListOutput = `
 	"type_google_compute_instance":       ["10.0.0.8"],
 	"type_triton_machine":                ["10.0.0.10"],
 	"type_scaleway_server":               ["10.0.0.11"],
+	"type_packet_device":                 ["10.0.0.13"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -379,6 +414,7 @@ const expectedInventoryOutput = `[all]
 10.0.0.1
 10.0.0.10
 10.0.0.11
+10.0.0.13
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -481,6 +517,12 @@ olddatacenter="\u003c0.7_format"
 [ten.0]
 10.0.0.10
 
+[thirteen]
+10.0.0.13
+
+[thirteen.0]
+10.0.0.13
+
 [three]
 192.168.0.3
 
@@ -518,6 +560,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
+
+[type_packet_device]
+10.0.0.13
 
 [type_scaleway_server]
 10.0.0.11
