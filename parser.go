@@ -53,7 +53,8 @@ func (s *state) outputs() []*Output {
 	return inst
 }
 
-func (s *state) mapidnames() map[string]string {
+// map of resource ID -> resource Name
+func (s *state) mapResourceIDNames() map[string]string {
 	t := map[string]string{}
 
 	for _, m := range s.Modules {
