@@ -291,19 +291,19 @@ const exampleStateFile = `
 						"attributes": {
 							"default_ip_address": "10.20.30.50",
 							"tags.#": "1",
-                            "tags.1357913579": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL"
+							"tags.1357913579": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL"
 						}
 					}
 				},
 				"data.vsphere_tag.testTag1": {
-                    "type": "vsphere_tag",
-                    "primary": {
-                        "id": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL",
-                        "attributes": {
-                            "name": "testTag1"
-                        }
-                    }
-                }
+					"type": "vsphere_tag",
+					"primary": {
+						"id": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL",
+						"attributes": {
+							"name": "testTag1"
+						}
+					}
+				}
 			}
 		}
 	]
