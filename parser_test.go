@@ -292,6 +292,18 @@ const exampleStateFile = `
 							"default_ip_address": "10.20.30.50"
 						}
 					}
+				},
+				"libvirt_domain.thirteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.12",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
 				}
 			}
 		}
@@ -315,7 +327,8 @@ const expectedListOutput = `
 			"10.20.30.40",
 			"192.168.0.3",
 			"50.0.0.1",
-			"10.20.30.50"
+			"10.20.30.50",
+			"192.168.102.12"
 		],
 		"vars": {
 			"datacenter": "mydc",
@@ -337,6 +350,7 @@ const expectedListOutput = `
 	"ten": ["10.0.0.10"],
 	"eleven": ["10.0.0.11"],
 	"twelve": ["10.20.30.50"],
+	"thirteen": ["192.168.102.12"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -352,6 +366,7 @@ const expectedListOutput = `
 	"ten.0":   ["10.0.0.10"],
 	"eleven.0": ["10.0.0.11"],
 	"twelve.0": ["10.20.30.50"],
+	"thirteen.0": ["192.168.102.12"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -363,6 +378,7 @@ const expectedListOutput = `
 	"type_google_compute_instance":       ["10.0.0.8"],
 	"type_triton_machine":                ["10.0.0.10"],
 	"type_scaleway_server":               ["10.0.0.11"],
+	"type_libvirt_domain":                ["192.168.102.12"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -480,6 +496,12 @@ olddatacenter="\u003c0.7_format"
 
 [ten.0]
 10.0.0.10
+
+[thirteen]
+192.168.102.12
+
+[thirteen.0]
+192.168.102.12
 
 [three]
 192.168.0.3
