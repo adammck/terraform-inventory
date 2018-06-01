@@ -33,6 +33,7 @@ func init() {
 		"networks.0.ip4address",                               // Exoscale
 		"primaryip",                                           // Joyent Triton
 		"network_interface.0.addresses.0",    								 // Libvirt
+		"network.0.address",                                   // Packet
 	}
 
 	// type.name.0
