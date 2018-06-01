@@ -11,16 +11,17 @@ Terraform, then (re-)provision them with Ansible.
 The following providers are supported:
 
 * AWS
-* CloudStack 
-* DigitalOcean 
+* CloudStack
+* DigitalOcean
 * Docker
 * Exoscale
-* Google Compute Engine 
-* OpenStack 
+* Google Compute Engine
+* [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
+* OpenStack
 * Packet
 * Scaleway
 * SoftLayer
-* VMware 
+* VMware
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.
