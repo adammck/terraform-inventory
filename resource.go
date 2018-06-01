@@ -32,7 +32,7 @@ func init() {
 		"ipv4_address_private",                                // SoftLayer
 		"networks.0.ip4address",                               // Exoscale
 		"primaryip",                                           // Joyent Triton
-		"network_interface.0.addresses.0",    								 // Libvirt
+		"network_interface.0.addresses.0",                     // Libvirt
 		"network.0.address",                                   // Packet
 	}
 
