@@ -326,9 +326,9 @@ const expectedListOutput = `
 			"10.2.1.5",
 			"10.20.30.40",
 			"192.168.0.3",
+			"192.168.102.12",
 			"50.0.0.1",
-			"10.20.30.50",
-			"192.168.102.12"
+			"10.20.30.50"
 		],
 		"vars": {
 			"datacenter": "mydc",
@@ -403,6 +403,7 @@ const expectedInventoryOutput = `[all]
 10.2.1.5
 10.20.30.40
 192.168.0.3
+192.168.102.12
 50.0.0.1
 10.20.30.50
 
@@ -537,6 +538,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_google_compute_instance]
 10.0.0.8
+
+[type_libvirt_domain]
+192.168.102.12
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
