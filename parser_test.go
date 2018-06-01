@@ -293,19 +293,7 @@ const exampleStateFile = `
 						}
 					}
 				},
-				"libvirt_domain.thirteen": {
-					"type": "libvirt_domain",
-					"primary": {
-						"id": "824c29be-2164-44c8-83e0-787705571d95",
-						"attributes": {
-							"network_interface.#": "1",
-							"network_interface.0.addresses.#": "1",
-							"network_interface.0.addresses.0": "192.168.102.12",
-							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
-						}
-					}
-				},
-				"packet_device.fourteen": {
+				"packet_device.thirteen": {
 					"type": "packet_device",
 					"depends_on": [],
 					"primary": {
@@ -335,6 +323,18 @@ const exampleStateFile = `
 					},
 					"deposed": [],
 					"provider": ""
+				},
+				"libvirt_domain.fourteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.14",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
 				}
 			}
 		}
@@ -382,8 +382,8 @@ const expectedListOutput = `
 	"ten": ["10.0.0.10"],
 	"eleven": ["10.0.0.11"],
 	"twelve": ["10.20.30.50"],
-	"thirteen": ["192.168.102.12"],
-	"fourteen": ["10.0.0.13"],
+	"thirteen": ["10.0.0.13"],
+	"fourteen": ["192.168.102.14"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -399,8 +399,8 @@ const expectedListOutput = `
 	"ten.0":   ["10.0.0.10"],
 	"eleven.0": ["10.0.0.11"],
 	"twelve.0": ["10.20.30.50"],
-	"thirteen.0": ["192.168.102.12"],
-	"fourteen.0": ["10.0.0.13"],
+	"thirteen.0": ["10.0.0.13"],
+	"fourteen.0": ["192.168.102.14"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -412,8 +412,8 @@ const expectedListOutput = `
 	"type_google_compute_instance":       ["10.0.0.8"],
 	"type_triton_machine":                ["10.0.0.10"],
 	"type_scaleway_server":               ["10.0.0.11"],
-	"type_libvirt_domain":                ["192.168.102.12"],
 	"type_packet_device":                 ["10.0.0.13"],
+	"type_libvirt_domain":                ["192.168.102.14"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -482,6 +482,12 @@ olddatacenter="\u003c0.7_format"
 [four.0]
 10.2.1.5
 
+[fourteen]
+192.168.102.14
+
+[fourteen.0]
+192.168.102.14
+
 [nine]
 10.0.0.9
 
@@ -535,15 +541,9 @@ olddatacenter="\u003c0.7_format"
 10.0.0.10
 
 [thirteen]
-192.168.102.12
-
-[thirteen.0]
-192.168.102.12
-
-[fourteen]
 10.0.0.13
 
-[fourteen.0]
+[thirteen.0]
 10.0.0.13
 
 [three]
@@ -582,7 +582,7 @@ olddatacenter="\u003c0.7_format"
 10.0.0.8
 
 [type_libvirt_domain]
-192.168.102.12
+192.168.102.14
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
