@@ -304,7 +304,7 @@ const exampleStateFile = `
 							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
 						}
 					}
-        },
+				},
 				"packet_device.fourteen": {
 					"type": "packet_device",
 					"depends_on": [],
