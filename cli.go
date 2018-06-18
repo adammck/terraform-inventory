@@ -55,20 +55,20 @@ func gatherResources(s *state) map[string]interface{} {
 
 	for _, res := range s.resources() {
 		// place in list of all resources
-		all.Hosts = appendUniq(all.Hosts, res.Address())
+		all.Hosts = appendUniq(all.Hosts, res.Hostname())
 
 		// place in list of resource types
 		tp := fmt.Sprintf("type_%s", res.resourceType)
-		types[tp] = appendUniq(types[tp], res.Address())
+		types[tp] = appendUniq(types[tp], res.Hostname())
 
 		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
 
 		// store as invdividual host (eg. <name>.<count>)
 		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
 		if old, exists := individual[invdName]; exists {
-			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Address())
+			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Hostname())
 		}
-		individual[invdName] = []string{res.Address()}
+		individual[invdName] = []string{res.Hostname()}
 
 		// inventorize tags
 		for k, v := range res.Tags() {
@@ -77,7 +77,7 @@ func gatherResources(s *state) map[string]interface{} {
 			if v != "" {
 				tag = fmt.Sprintf("%s_%s", k, v)
 			}
-			tags[tag] = appendUniq(tags[tag], res.Address())
+			tags[tag] = appendUniq(tags[tag], res.Hostname())
 		}
 	}
 
@@ -94,7 +94,7 @@ func gatherResources(s *state) map[string]interface{} {
 		sort.Sort(cs)
 
 		for i := range resources {
-			ordered[basename] = append(ordered[basename], resources[i].Address())
+			ordered[basename] = append(ordered[basename], resources[i].Hostname())
 		}
 	}
 
@@ -187,8 +187,10 @@ func checkErr(err error, stderr io.Writer) int {
 
 func cmdHost(stdout io.Writer, stderr io.Writer, s *state, hostname string) int {
 	for _, res := range s.resources() {
-		if hostname == res.Address() {
-			return output(stdout, stderr, res.Attributes())
+		if hostname == res.Hostname() {
+			attributes := res.Attributes()
+			attributes["ansible_host"] = res.Address()
+			return output(stdout, stderr, attributes)
 		}
 	}
 

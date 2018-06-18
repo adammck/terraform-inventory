@@ -163,6 +163,17 @@ func (r Resource) NameWithCounter() string {
 	return fmt.Sprintf("%s.%d", r.baseName, r.counter)
 }
 
+// Hostname returns the hostname of this resource.
+func (r Resource) Hostname() string {
+	if keyName := os.Getenv("TF_HOSTNAME_KEY_NAME"); keyName != "" {
+		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
+			return ip
+		}
+	}
+
+	return r.Address()
+}
+
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
 	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {

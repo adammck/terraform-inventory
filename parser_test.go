@@ -610,6 +610,7 @@ olddatacenter="\u003c0.7_format"
 
 const expectedHostOneOutput = `
 {
+	"ansible_host": "10.0.0.1",
 	"id":"i-aaaaaaaa",
 	"private_ip":"10.0.0.1",
 	"tags.#": "1",

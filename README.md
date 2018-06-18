@@ -146,6 +146,11 @@ to `private_ip` before running the playbook, like:
 
 	TF_KEY_NAME=private_ip ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
+By default, the ip address is the ansible inventory name. The `TF_HOSTNAME_KEY_NAME` environment variable allows
+you to overwrite the source of the ansible inventory name.
+
+	TF_HOSTNAME_KEY_NAME=name ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
+
 ## Development
 
 It's just a Go app, so the usual:
