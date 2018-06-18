@@ -335,6 +335,15 @@ const exampleStateFile = `
 							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
 						}
 					}
+				},
+				"profitbricks_server.sixteen": {
+					"type": "profitbricks_server",
+					"primary": {
+						"id": "12345678",
+						"attributes": {
+							"primary_ip": "10.0.0.16"
+						}
+					}
 				}
 			}
 		}
@@ -350,6 +359,7 @@ const expectedListOutput = `
 			"10.0.0.10",
 			"10.0.0.11",
 			"10.0.0.13",
+			"10.0.0.16",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -384,6 +394,7 @@ const expectedListOutput = `
 	"twelve": ["10.20.30.50"],
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
+	"sixteen": ["10.0.0.16"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -401,12 +412,14 @@ const expectedListOutput = `
 	"twelve.0": ["10.20.30.50"],
 	"thirteen.0": ["10.0.0.13"],
 	"fourteen.0": ["192.168.102.14"],
+	"sixteen.0": ["10.0.0.16"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_profitbricks_server":           ["10.0.0.16"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
@@ -431,6 +444,7 @@ const expectedInventoryOutput = `[all]
 10.0.0.10
 10.0.0.11
 10.0.0.13
+10.0.0.16
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -528,6 +542,12 @@ olddatacenter="\u003c0.7_format"
 [six.0]
 10.120.0.226
 
+[sixteen]
+10.0.0.16
+
+[sixteen.0]
+10.0.0.16
+
 [staging]
 192.168.0.3
 
@@ -589,6 +609,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_packet_device]
 10.0.0.13
+
+[type_profitbricks_server]
+10.0.0.16
 
 [type_scaleway_server]
 10.0.0.11
