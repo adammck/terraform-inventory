@@ -34,6 +34,7 @@ func init() {
 		"primaryip",                                           // Joyent Triton
 		"network_interface.0.addresses.0",                     // Libvirt
 		"network.0.address",                                   // Packet
+		"primary_ip",                                          // Profitbricks
 	}
 
 	// type.name.0

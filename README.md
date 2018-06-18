@@ -19,6 +19,7 @@ The following providers are supported:
 * [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 * OpenStack
 * Packet
+* ProfitBricks
 * Scaleway
 * SoftLayer
 * VMware
