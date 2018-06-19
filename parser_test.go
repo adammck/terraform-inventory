@@ -3,11 +3,51 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+const exampleStateFileEnvHostname = `
+{
+	"version": 1,
+	"serial": 1,
+	"modules": [
+		{
+			"resources": {
+				"libvirt_domain.fourteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"name": "fourteen",
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.14",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
+				}
+			}
+		}
+	]
+}`
+
+const expectedListOutputEnvHostname = `
+{
+	"all":	 {
+		"hosts": [
+			"fourteen"
+		],
+		"vars": {
+		}
+	},
+	"fourteen":	 ["fourteen"],
+	"fourteen.0":	 ["fourteen"],
+	"type_libvirt_domain": ["fourteen"]
+}`
 
 const exampleStateFile = `
 {
@@ -632,6 +672,33 @@ func TestListCommand(t *testing.T) {
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
 	exitCode := cmdList(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestListCommandEnvHostname(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFileEnvHostname)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutputEnvHostname), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	os.Setenv("TF_HOSTNAME_KEY_NAME", "name")
+	exitCode := cmdList(&stdout, &stderr, &s)
+	os.Unsetenv("TF_HOSTNAME_KEY_NAME")
 	assert.Equal(t, 0, exitCode)
 	assert.Equal(t, "", stderr.String())
 
