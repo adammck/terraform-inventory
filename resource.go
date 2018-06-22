@@ -55,9 +55,10 @@ type Resource struct {
 	resourceType string
 	baseName     string
 	counter      int
+	modulePath   string
 }
 
-func NewResource(keyName string, state resourceState) (*Resource, error) {
+func NewResource(keyName string, state resourceState, path []string) (*Resource, error) {
 	m := nameParser.FindStringSubmatch(keyName)
 
 	// This should not happen unless our regex changes.
@@ -85,6 +86,7 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 		resourceType: m[1],
 		baseName:     m[2],
 		counter:      c,
+		modulePath:   strings.Join(path, "."),
 	}, nil
 }
 

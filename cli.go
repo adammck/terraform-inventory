@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 )
 
 type counterSorter struct {
@@ -62,10 +63,17 @@ func gatherResources(s *state) map[string]interface{} {
 		tp := fmt.Sprintf("type_%s", res.resourceType)
 		types[tp] = appendUniq(types[tp], res.Hostname())
 
-		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
+		var baseNameArray []string
+		if os.Getenv("TF_ADD_MODULE_PATH") != "" && res.modulePath != "" {
+			baseNameArray = append(baseNameArray, res.modulePath)
+		}
+		baseNameArray = append(baseNameArray, res.baseName)
+		baseName := strings.Join(baseNameArray, ".")
+
+		unsortedOrdered[baseName] = append(unsortedOrdered[baseName], res)
 
 		// store as invdividual host (eg. <name>.<count>)
-		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
+		invdName := fmt.Sprintf("%s.%d", baseName, res.counter)
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Hostname())
 		}
