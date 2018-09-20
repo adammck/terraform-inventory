@@ -329,7 +329,18 @@ const exampleStateFile = `
 					"primary": {
 						"id": "422cfa4a-c6bb-3405-0335-2d9b2034405f",
 						"attributes": {
-							"default_ip_address": "10.20.30.50"
+							"default_ip_address": "10.20.30.50",
+							"tags.#": "1",
+							"tags.1357913579": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL"
+						}
+					}
+				},
+				"data.vsphere_tag.testTag1": {
+					"type": "vsphere_tag",
+					"primary": {
+						"id": "urn:vmomi:InventoryServiceTag:00000000-0001-4957-81fa-1234567890ab:GLOBAL",
+						"attributes": {
+							"name": "testTag1"
 						}
 					}
 				},
@@ -432,6 +443,7 @@ const expectedListOutput = `
 	"ten": ["10.0.0.10"],
 	"eleven": ["10.0.0.11"],
 	"twelve": ["10.20.30.50"],
+	"testTag1": ["10.20.30.50"],
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
 	"sixteen": ["10.0.0.16"],
@@ -599,6 +611,9 @@ olddatacenter="\u003c0.7_format"
 
 [ten.0]
 10.0.0.10
+
+[testTag1]
+10.20.30.50
 
 [thirteen]
 10.0.0.13

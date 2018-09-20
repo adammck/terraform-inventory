@@ -53,6 +53,7 @@ func gatherResources(s *state) map[string]interface{} {
 
 	unsortedOrdered := make(map[string][]*Resource)
 
+	resourceIDNames := s.mapResourceIDNames()
 	for _, res := range s.resources() {
 		// place in list of all resources
 		all.Hosts = appendUniq(all.Hosts, res.Hostname())
@@ -76,6 +77,10 @@ func gatherResources(s *state) map[string]interface{} {
 			tag := k
 			if v != "" {
 				tag = fmt.Sprintf("%s_%s", k, v)
+			}
+			// if v is a resource ID, then tag should be resource name
+			if _, exists := resourceIDNames[v]; exists {
+				tag = resourceIDNames[v]
 			}
 			tags[tag] = appendUniq(tags[tag], res.Hostname())
 		}
