@@ -11,15 +11,18 @@ Terraform, then (re-)provision them with Ansible.
 The following providers are supported:
 
 * AWS
-* CloudStack 
-* DigitalOcean 
+* CloudStack
+* DigitalOcean
 * Docker
 * Exoscale
-* Google Compute Engine 
-* OpenStack 
+* Google Compute Engine
+* [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
+* OpenStack
+* Packet
+* ProfitBricks
 * Scaleway
 * SoftLayer
-* VMware 
+* VMware
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.
@@ -143,6 +146,11 @@ IP of the instance to run Ansible, set the `TF_KEY_NAME` environment variable
 to `private_ip` before running the playbook, like:
 
 	TF_KEY_NAME=private_ip ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
+
+By default, the ip address is the ansible inventory name. The `TF_HOSTNAME_KEY_NAME` environment variable allows
+you to overwrite the source of the ansible inventory name.
+
+	TF_HOSTNAME_KEY_NAME=name ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
 ## Development
 

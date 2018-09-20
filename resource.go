@@ -32,6 +32,9 @@ func init() {
 		"ipv4_address_private",                                // SoftLayer
 		"networks.0.ip4address",                               // Exoscale
 		"primaryip",                                           // Joyent Triton
+		"network_interface.0.addresses.0",                     // Libvirt
+		"network.0.address",                                   // Packet
+		"primary_ip",                                          // Profitbricks
 	}
 
 	// type.name.0
@@ -165,6 +168,17 @@ func (r Resource) Attributes() map[string]string {
 // created without a 'count=' attribute, this will always be zero.
 func (r Resource) NameWithCounter() string {
 	return fmt.Sprintf("%s.%d", r.baseName, r.counter)
+}
+
+// Hostname returns the hostname of this resource.
+func (r Resource) Hostname() string {
+	if keyName := os.Getenv("TF_HOSTNAME_KEY_NAME"); keyName != "" {
+		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
+			return ip
+		}
+	}
+
+	return r.Address()
 }
 
 // Address returns the IP address of this resource.

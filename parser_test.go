@@ -3,11 +3,51 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+const exampleStateFileEnvHostname = `
+{
+	"version": 1,
+	"serial": 1,
+	"modules": [
+		{
+			"resources": {
+				"libvirt_domain.fourteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"name": "fourteen",
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.14",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
+				}
+			}
+		}
+	]
+}`
+
+const expectedListOutputEnvHostname = `
+{
+	"all":	 {
+		"hosts": [
+			"fourteen"
+		],
+		"vars": {
+		}
+	},
+	"fourteen":	 ["fourteen"],
+	"fourteen.0":	 ["fourteen"],
+	"type_libvirt_domain": ["fourteen"]
+}`
 
 const exampleStateFile = `
 {
@@ -303,6 +343,58 @@ const exampleStateFile = `
 							"name": "testTag1"
 						}
 					}
+				},
+				"packet_device.thirteen": {
+					"type": "packet_device",
+					"depends_on": [],
+					"primary": {
+						"id": "e35816e2-b9b4-4ef3-9317-a32b98f6cb44",
+						"attributes": {
+							"billing_cycle": "hourly",
+							"created": "2018-04-02T14:52:34Z",
+							"facility": "ewr1",
+							"hostname": "sa-test-1",
+							"id": "e35816e2-b9b4-4ef3-9317-a32b98f6cb44",
+							"locked": "false",
+							"network.#": "3",
+							"network.0.address": "10.0.0.13",
+							"network.0.cidr": "31",
+							"network.0.family": "4",
+							"network.0.gateway": "10.0.0.254",
+							"network.0.public": "true",
+							"operating_system": "ubuntu_16_04",
+							"plan": "baremetal_0",
+							"project_id": "123456d5-087a-4976-877a-45b86584b786",
+							"state": "active",
+							"tags.#": "0",
+							"updated": "2018-04-02T14:57:13Z"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": ""
+				},
+				"libvirt_domain.fourteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.14",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
+				},
+				"profitbricks_server.sixteen": {
+					"type": "profitbricks_server",
+					"primary": {
+						"id": "12345678",
+						"attributes": {
+							"primary_ip": "10.0.0.16"
+						}
+					}
 				}
 			}
 		}
@@ -317,6 +409,8 @@ const expectedListOutput = `
 			"10.0.0.1",
 			"10.0.0.10",
 			"10.0.0.11",
+			"10.0.0.13",
+			"10.0.0.16",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -325,6 +419,7 @@ const expectedListOutput = `
 			"10.2.1.5",
 			"10.20.30.40",
 			"192.168.0.3",
+			"192.168.102.14",
 			"50.0.0.1",
 			"10.20.30.50"
 		],
@@ -349,6 +444,9 @@ const expectedListOutput = `
 	"eleven": ["10.0.0.11"],
 	"twelve": ["10.20.30.50"],
 	"testTag1": ["10.20.30.50"],
+	"thirteen": ["10.0.0.13"],
+	"fourteen": ["192.168.102.14"],
+	"sixteen": ["10.0.0.16"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -364,17 +462,23 @@ const expectedListOutput = `
 	"ten.0":   ["10.0.0.10"],
 	"eleven.0": ["10.0.0.11"],
 	"twelve.0": ["10.20.30.50"],
+	"thirteen.0": ["10.0.0.13"],
+	"fourteen.0": ["192.168.102.14"],
+	"sixteen.0": ["10.0.0.16"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_profitbricks_server":           ["10.0.0.16"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
 	"type_triton_machine":                ["10.0.0.10"],
 	"type_scaleway_server":               ["10.0.0.11"],
+	"type_packet_device":                 ["10.0.0.13"],
+	"type_libvirt_domain":                ["192.168.102.14"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -391,6 +495,8 @@ const expectedInventoryOutput = `[all]
 10.0.0.1
 10.0.0.10
 10.0.0.11
+10.0.0.13
+10.0.0.16
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -399,6 +505,7 @@ const expectedInventoryOutput = `[all]
 10.2.1.5
 10.20.30.40
 192.168.0.3
+192.168.102.14
 50.0.0.1
 10.20.30.50
 
@@ -441,6 +548,12 @@ olddatacenter="\u003c0.7_format"
 [four.0]
 10.2.1.5
 
+[fourteen]
+192.168.102.14
+
+[fourteen.0]
+192.168.102.14
+
 [nine]
 10.0.0.9
 
@@ -481,6 +594,12 @@ olddatacenter="\u003c0.7_format"
 [six.0]
 10.120.0.226
 
+[sixteen]
+10.0.0.16
+
+[sixteen.0]
+10.0.0.16
+
 [staging]
 192.168.0.3
 
@@ -495,6 +614,12 @@ olddatacenter="\u003c0.7_format"
 
 [testTag1]
 10.20.30.50
+
+[thirteen]
+10.0.0.13
+
+[thirteen.0]
+10.0.0.13
 
 [three]
 192.168.0.3
@@ -531,8 +656,17 @@ olddatacenter="\u003c0.7_format"
 [type_google_compute_instance]
 10.0.0.8
 
+[type_libvirt_domain]
+192.168.102.14
+
 [type_openstack_compute_instance_v2]
 10.120.0.226
+
+[type_packet_device]
+10.0.0.13
+
+[type_profitbricks_server]
+10.0.0.16
 
 [type_scaleway_server]
 10.0.0.11
@@ -554,6 +688,7 @@ olddatacenter="\u003c0.7_format"
 
 const expectedHostOneOutput = `
 {
+	"ansible_host": "10.0.0.1",
 	"id":"i-aaaaaaaa",
 	"private_ip":"10.0.0.1",
 	"tags.#": "1",
@@ -575,6 +710,33 @@ func TestListCommand(t *testing.T) {
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
 	exitCode := cmdList(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestListCommandEnvHostname(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFileEnvHostname)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutputEnvHostname), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	os.Setenv("TF_HOSTNAME_KEY_NAME", "name")
+	exitCode := cmdList(&stdout, &stderr, &s)
+	os.Unsetenv("TF_HOSTNAME_KEY_NAME")
 	assert.Equal(t, 0, exitCode)
 	assert.Equal(t, "", stderr.String())
 
