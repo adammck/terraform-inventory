@@ -395,6 +395,18 @@ const exampleStateFile = `
 							"primary_ip": "10.0.0.16"
 						}
 					}
+				},
+				"aws_spot_instance_request.seventeen": {
+					"type": "aws_spot_instance_request",
+					"primary": {
+						"id": "i-a1a1a1a1",
+						"attributes": {
+							"id": "sir-a1a1a1a1",
+							"public_ip": "50.0.0.17",
+							"tags.%": "1",
+							"tags.Role": "worker"
+						}
+					}
 				}
 			}
 		}
@@ -421,6 +433,7 @@ const expectedListOutput = `
 			"192.168.0.3",
 			"192.168.102.14",
 			"50.0.0.1",
+			"50.0.0.17",
 			"10.20.30.50"
 		],
 		"vars": {
@@ -447,6 +460,7 @@ const expectedListOutput = `
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
 	"sixteen": ["10.0.0.16"],
+	"seventeen": ["50.0.0.17"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -465,6 +479,7 @@ const expectedListOutput = `
 	"thirteen.0": ["10.0.0.13"],
 	"fourteen.0": ["192.168.102.14"],
 	"sixteen.0": ["10.0.0.16"],
+	"seventeen.0": ["50.0.0.17"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -479,10 +494,12 @@ const expectedListOutput = `
 	"type_scaleway_server":               ["10.0.0.11"],
 	"type_packet_device":                 ["10.0.0.13"],
 	"type_libvirt_domain":                ["192.168.102.14"],
+	"type_aws_spot_instance_request":			["50.0.0.17"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
 	"role_test": ["10.0.0.10"],
+	"role_worker": ["50.0.0.17"],
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
@@ -507,6 +524,7 @@ const expectedInventoryOutput = `[all]
 192.168.0.3
 192.168.102.14
 50.0.0.1
+50.0.0.17
 10.20.30.50
 
 [all:vars]
@@ -579,6 +597,9 @@ olddatacenter="\u003c0.7_format"
 [role_web]
 10.0.0.1
 
+[role_worker]
+50.0.0.17
+
 [scw_test]
 10.0.0.11
 
@@ -587,6 +608,12 @@ olddatacenter="\u003c0.7_format"
 
 [seven.0]
 10.0.0.7
+
+[seventeen]
+50.0.0.17
+
+[seventeen.0]
+50.0.0.17
 
 [six]
 10.120.0.226
@@ -643,6 +670,9 @@ olddatacenter="\u003c0.7_format"
 10.0.0.1
 10.0.1.1
 50.0.0.1
+
+[type_aws_spot_instance_request]
+50.0.0.17
 
 [type_cloudstack_instance]
 10.2.1.5
