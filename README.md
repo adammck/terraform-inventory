@@ -188,5 +188,5 @@ MIT.
 [ans]: https://www.ansible.com
 [tf]:  https://www.terraform.io
 [rel]: https://github.com/adammck/terraform-inventory/releases
-[rs]:  https://www.terraform.io/docs/state/remote/index.html
+[rs]:  https://www.terraform.io/docs/state/remote.html
 [pv]:  https://github.com/adammck/terraform-inventory/pulls?q=is%3Apr+label%3Aprovider
