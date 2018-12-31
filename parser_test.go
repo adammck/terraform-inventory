@@ -387,6 +387,21 @@ const exampleStateFile = `
 						}
 					}
 				},
+				"hcloud_server.fifteen": {
+					"type": "hcloud_server",
+					"primary": {
+						"id": "1234567",
+						"attributes": {
+							"id": "1234567",
+							"ipv4_address": "10.0.0.15",
+							"ipv6_address": "2001:db8:85a3::8a2e:370:7334"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": "provider.hcloud"
+				},
 				"profitbricks_server.sixteen": {
 					"type": "profitbricks_server",
 					"primary": {
@@ -422,6 +437,7 @@ const expectedListOutput = `
 			"10.0.0.10",
 			"10.0.0.11",
 			"10.0.0.13",
+			"10.0.0.15",
 			"10.0.0.16",
 			"10.0.0.7",
 			"10.0.0.8",
@@ -459,6 +475,7 @@ const expectedListOutput = `
 	"testTag1": ["10.20.30.50"],
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
+	"fifteen": ["10.0.0.15"],
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
 
@@ -478,6 +495,7 @@ const expectedListOutput = `
 	"twelve.0": ["10.20.30.50"],
 	"thirteen.0": ["10.0.0.13"],
 	"fourteen.0": ["192.168.102.14"],
+	"fifteen.0": ["10.0.0.15"],
 	"sixteen.0": ["10.0.0.16"],
 	"seventeen.0": ["50.0.0.17"],
 
@@ -486,6 +504,7 @@ const expectedListOutput = `
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_hcloud_server":                 ["10.0.0.15"],
 	"type_profitbricks_server":           ["10.0.0.16"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
@@ -513,6 +532,7 @@ const expectedInventoryOutput = `[all]
 10.0.0.10
 10.0.0.11
 10.0.0.13
+10.0.0.15
 10.0.0.16
 10.0.0.7
 10.0.0.8
@@ -553,6 +573,12 @@ olddatacenter="\u003c0.7_format"
 
 [eleven.0]
 10.0.0.11
+
+[fifteen]
+10.0.0.15
+
+[fifteen.0]
+10.0.0.15
 
 [five]
 10.20.30.40
@@ -685,6 +711,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_google_compute_instance]
 10.0.0.8
+
+[type_hcloud_server]
+10.0.0.15
 
 [type_libvirt_domain]
 192.168.102.14

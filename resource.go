@@ -16,7 +16,8 @@ var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
-		"ipv4_address",                                        // DO and SoftLayer
+		"ipv4_address",                                        // DO, Hetzner Cloud and SoftLayer
+		"ipv6_address",                                        // Hetzner Cloud
 		"public_ip",                                           // AWS
 		"public_ipv6",                                         // Scaleway
 		"private_ip",                                          // AWS
