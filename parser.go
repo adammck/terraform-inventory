@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
+	"os"
 	"sort"
 	"strings"
 )
@@ -74,11 +76,40 @@ func (s *state) resources() []*Resource {
 
 	for _, m := range s.Modules {
 		for _, k := range m.resourceKeys() {
+			if strings.HasPrefix(k, "data.") {
+				// This does not represent a host (e.g. AWS AMI)
+				continue
+			}
+
+			// If a module is used, the resource key may not be unique, for instance:
+			//
+			// The module cannot use dynamic resource naming and thus has to use some hardcoded name:
+			//
+			//     resource "aws_instance" "host" { ... }
+			//
+			// The main file then uses the module twice:
+			//
+			//     module "application1" { source = "./modules/mymodulename" }
+			//     module "application2" { source = "./modules/mymodulename" }
+			//
+			// Avoid key clashes by prepending module name to the key. If path is ["root"], don't
+			// prepend anything.
+			//
+			// In the above example: `aws_instance.host` -> `aws_instance.application1_host`
+			fullKey := k
+			resourceNameIndex := strings.Index(fullKey, ".") + 1
+			if len(m.Path) > 1 && resourceNameIndex > 0 {
+				for i := len(m.Path) - 1; i >= 1; i-- {
+					fullKey = fullKey[:resourceNameIndex] + strings.Replace(m.Path[i], ".", "_", -1) + "_" + fullKey[resourceNameIndex:]
+				}
+			}
+
 			// Terraform stores resources in a name->map map, but we need the name to
 			// decide which groups to include the resource in. So wrap it in a higher-
 			// level object with both properties.
-			r, err := NewResource(k, m.ResourceStates[k])
+			r, err := NewResource(fullKey, m.ResourceStates[k])
 			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to parse resource with key %s: %s\n", k, err)
 				continue
 			}
 			if r.IsSupported() {
@@ -91,6 +122,7 @@ func (s *state) resources() []*Resource {
 }
 
 type moduleState struct {
+	Path           []string                 `json:"path"`
 	ResourceStates map[string]resourceState `json:"resources"`
 	Outputs        map[string]interface{}   `json:"outputs"`
 }

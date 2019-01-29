@@ -37,8 +37,11 @@ func init() {
 		"primary_ip",                                          // Profitbricks
 	}
 
-	// type.name.0
-	nameParser = regexp.MustCompile(`^(\w+)\.([\w\-]+)(?:\.(\d+))?$`)
+	// Formats:
+	// - type.[module_]name (no `count` attribute; contains module name if we're not in the root module)
+	// - type.[module_]name.0 (if resource has `count` attribute)
+	// - "data." prefix should not parse and be ignored by caller (does not represent a host)
+	nameParser = regexp.MustCompile(`^([\w\-]+)\.([\w\-]+)(?:\.(\d+))?$`)
 }
 
 type Resource struct {
@@ -61,7 +64,6 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	m := nameParser.FindStringSubmatch(keyName)
 
 	// This should not happen unless our regex changes.
-	// TODO: Warn instead of silently ignore error?
 	if len(m) != 4 {
 		return nil, fmt.Errorf("couldn't parse keyName: %s", keyName)
 	}
@@ -69,7 +71,6 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	var c int
 	var err error
 	if m[3] != "" {
-
 		// The third section should be the index, if it's present. Not sure what
 		// else we can do other than panic (which seems highly undesirable) if that
 		// isn't the case.
