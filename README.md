@@ -23,6 +23,7 @@ The following providers are supported:
 * Scaleway
 * SoftLayer
 * VMware
+* Nutanix
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.

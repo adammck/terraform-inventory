@@ -16,16 +16,16 @@ var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
-		"ipv4_address",                                        // DO and SoftLayer
-		"public_ip",                                           // AWS
-		"public_ipv6",                                         // Scaleway
-		"private_ip",                                          // AWS
-		"ipaddress",                                           // CS
-		"ip_address",                                          // VMware, Docker
-		"network_interface.0.ipv4_address",                    // VMware
-		"default_ip_address",                                  // provider.vsphere v1.1.1
-		"access_ip_v4",                                        // OpenStack
-		"floating_ip",                                         // OpenStack
+		"ipv4_address",                     // DO and SoftLayer
+		"public_ip",                        // AWS
+		"public_ipv6",                      // Scaleway
+		"private_ip",                       // AWS
+		"ipaddress",                        // CS
+		"ip_address",                       // VMware, Docker
+		"network_interface.0.ipv4_address", // VMware
+		"default_ip_address",               // provider.vsphere v1.1.1
+		"access_ip_v4",                     // OpenStack
+		"floating_ip",                      // OpenStack
 		"network_interface.0.access_config.0.nat_ip",          // GCE
 		"network_interface.0.access_config.0.assigned_nat_ip", // GCE
 		"network_interface.0.address",                         // GCE
@@ -35,6 +35,7 @@ func init() {
 		"network_interface.0.addresses.0",                     // Libvirt
 		"network.0.address",                                   // Packet
 		"primary_ip",                                          // Profitbricks
+		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
 	}
 
 	// type.name.0
