@@ -151,12 +151,26 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "digitalocean_droplet", "google_compute_instance", "scaleway_server":
+	case "digitalocean_droplet", "google_compute_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
 				vv := strings.ToLower(v)
 				t[vv] = ""
+			}
+		}
+	case "scaleway_server":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" {
+				kk := strings.ToLower(v)
+				vv := ""
+				tag_parts := strings.SplitN(v, "=", 2)
+				if len(tag_parts) == 2 {
+					kk = strings.ToLower(tag_parts[0])
+					vv = strings.ToLower(tag_parts[1])
+				}
+				t[kk] = vv
 			}
 		}
 	case "triton_machine":
