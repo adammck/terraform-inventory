@@ -224,18 +224,18 @@ const exampleStateFile = `
 						"y"
 					],
 					"primary": {
-                        "id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
-                        "attributes": {
+						"id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
+						"attributes": {
 							"diskSize": "10",
-                            "id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
+							"id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
 							"keypair": "kp",
 							"name": "xyz",
-                            "gateway": "10.0.0.1",
-                            "ip4": "true",
-                            "ip6": "false",
-                            "ip6_address": "",
-                            "ip6_cidr": "",
-                            "ip_address": "10.0.0.9",
+							"gateway": "10.0.0.1",
+							"ip4": "true",
+							"ip6": "false",
+							"ip6_address": "",
+							"ip6_cidr": "",
+							"ip_address": "10.0.0.9",
 							"networks.#": "1",
 							"networks.0.%": "5",
 							"networks.0.default": "true",
@@ -247,8 +247,8 @@ const exampleStateFile = `
 							"securitygroups.0": "xyz",
 							"size": "zzz",
 							"state": "Running",
-                            "tags.%": "1",
-                            "tags.Role": "nine",
+							"tags.%": "1",
+							"tags.Role": "nine",
 							"template": "Linux CoreOS stable 1298 64-bit",
 							"userdata": "",
 							"zone": "ch-gva-2"
