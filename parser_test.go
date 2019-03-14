@@ -224,12 +224,18 @@ const exampleStateFile = `
 						"y"
 					],
 					"primary": {
-						"id": "123456789",
-						"attributes": {
+                        "id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
+                        "attributes": {
 							"diskSize": "10",
-							"id": "123456789",
+                            "id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
 							"keypair": "kp",
 							"name": "xyz",
+                            "gateway": "10.0.0.1",
+                            "ip4": "true",
+                            "ip6": "false",
+                            "ip6_address": "",
+                            "ip6_cidr": "",
+                            "ip_address": "10.0.0.9",
 							"networks.#": "1",
 							"networks.0.%": "5",
 							"networks.0.default": "true",
@@ -241,6 +247,8 @@ const exampleStateFile = `
 							"securitygroups.0": "xyz",
 							"size": "zzz",
 							"state": "Running",
+                            "tags.%": "1",
+                            "tags.Role": "nine",
 							"template": "Linux CoreOS stable 1298 64-bit",
 							"userdata": "",
 							"zone": "ch-gva-2"
@@ -496,6 +504,7 @@ const expectedListOutput = `
 	"type_libvirt_domain":                ["192.168.102.14"],
 	"type_aws_spot_instance_request":			["50.0.0.17"],
 
+	"role_nine": ["10.0.0.9"],
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
 	"role_test": ["10.0.0.10"],
@@ -587,6 +596,9 @@ olddatacenter="\u003c0.7_format"
 
 [one.1]
 10.0.1.1
+
+[role_nine]
+10.0.0.9
 
 [role_rrrrrrrr]
 10.20.30.40
