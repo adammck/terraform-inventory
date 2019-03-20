@@ -17,9 +17,12 @@ const exampleStateFileEnvModulePath = `
 	"modules": [
 		{
 			"path": [
-        "root",
-        "web"
-      ],
+				"root",
+				"web"
+			],
+			"outputs": {
+				"foo": "bar"
+			},
 			"resources": {
 				"libvirt_domain.fourteen": {
 					"type": "libvirt_domain",
@@ -64,7 +67,6 @@ const exampleStateFileEnvHostname = `
 	]
 }`
 
-
 const expectedListOutputEnvHostname = `
 {
 	"all":	 {
@@ -88,11 +90,18 @@ const expectedListOutputEnvModulePath = `
 		"vars": {
 		}
 	},
+	"root.web": {
+		"hosts": [
+			"192.168.102.14"
+		],
+		"vars": {
+			"foo": "bar"
+		}
+	},
 	"root.web.fourteen":	 ["192.168.102.14"],
 	"root.web.fourteen.0":	 ["192.168.102.14"],
 	"type_libvirt_domain": ["192.168.102.14"]
 }`
-
 
 const exampleStateFile = `
 {
@@ -819,7 +828,6 @@ func TestListCommandEnvModulePath(t *testing.T) {
 
 	assert.Equal(t, exp, act)
 }
-
 
 func TestHostCommand(t *testing.T) {
 	var s state

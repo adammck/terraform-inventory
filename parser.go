@@ -39,11 +39,11 @@ func (s *state) outputs() []*Output {
 			var o *Output
 			switch v := v.(type) {
 			case map[string]interface{}:
-				o, _ = NewOutput(k, v["value"])
+				o, _ = NewOutput(k, v["value"], m.Path)
 			case string:
-				o, _ = NewOutput(k, v)
+				o, _ = NewOutput(k, v, m.Path)
 			default:
-				o, _ = NewOutput(k, "<error>")
+				o, _ = NewOutput(k, "<error>", m.Path)
 			}
 
 			inst = append(inst, o)

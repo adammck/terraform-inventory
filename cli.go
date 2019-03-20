@@ -47,6 +47,7 @@ func gatherResources(s *state) map[string]interface{} {
 	outputGroups := make(map[string]interface{})
 
 	all := &allGroup{Hosts: make([]string, 0), Vars: make(map[string]interface{})}
+	modules := make(map[string]*allGroup)
 	types := make(map[string][]string)
 	individual := make(map[string][]string)
 	ordered := make(map[string][]string)
@@ -62,6 +63,16 @@ func gatherResources(s *state) map[string]interface{} {
 		// place in list of resource types
 		tp := fmt.Sprintf("type_%s", res.resourceType)
 		types[tp] = appendUniq(types[tp], res.Hostname())
+
+		if strings.HasPrefix(res.modulePath, "root.") {
+			if _, ok := modules[res.modulePath]; !ok {
+				modules[res.modulePath] = &allGroup{
+					Hosts: make([]string, 0),
+					Vars:  make(map[string]interface{}),
+				}
+			}
+			modules[res.modulePath].Hosts = appendUniq(modules[res.modulePath].Hosts, res.Hostname())
+		}
 
 		var baseNameArray []string
 		if os.Getenv("TF_ADD_MODULE_PATH") != "" && res.modulePath != "" {
@@ -97,7 +108,11 @@ func gatherResources(s *state) map[string]interface{} {
 	// inventorize outputs as variables
 	if len(s.outputs()) > 0 {
 		for _, out := range s.outputs() {
-			all.Vars[out.keyName] = out.value
+			if strings.HasPrefix(out.modulePath, "root.") {
+				modules[out.modulePath].Vars[out.keyName] = out.value
+			} else {
+				all.Vars[out.keyName] = out.value
+			}
 		}
 	}
 
@@ -112,6 +127,9 @@ func gatherResources(s *state) map[string]interface{} {
 	}
 
 	outputGroups["all"] = all
+	for k, v := range modules {
+		outputGroups[k] = v
+	}
 	for k, v := range individual {
 		if old, exists := outputGroups[k]; exists {
 			fmt.Fprintf(os.Stderr, "individual overwriting already existing output with key %s, old: %v, new: %v", k, old, v)
