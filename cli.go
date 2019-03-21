@@ -109,6 +109,12 @@ func gatherResources(s *state) map[string]interface{} {
 	if len(s.outputs()) > 0 {
 		for _, out := range s.outputs() {
 			if strings.HasPrefix(out.modulePath, "root.") {
+				if _, ok := modules[out.modulePath]; !ok {
+					modules[out.modulePath] = &allGroup{
+						Hosts: make([]string, 0),
+						Vars:  make(map[string]interface{}),
+					}
+				}
 				modules[out.modulePath].Vars[out.keyName] = out.value
 			} else {
 				all.Vars[out.keyName] = out.value
