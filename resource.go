@@ -52,10 +52,11 @@ type Resource struct {
 	keyName string
 
 	// Extracted from keyName
-	resourceType string
-	baseName     string
-	counter      int
-	modulePath   string
+	resourceType    string
+	baseName        string
+	counter         int
+	modulePath      string
+	modulePathArray []string
 }
 
 func NewResource(keyName string, state resourceState, path []string) (*Resource, error) {
@@ -81,13 +82,17 @@ func NewResource(keyName string, state resourceState, path []string) (*Resource,
 	}
 
 	return &Resource{
-		State:        state,
-		keyName:      keyName,
-		resourceType: m[1],
-		baseName:     m[2],
-		counter:      c,
-		modulePath:   strings.Join(path, "."),
+		State:           state,
+		keyName:         keyName,
+		resourceType:    m[1],
+		baseName:        m[2],
+		counter:         c,
+		modulePathArray: path,
 	}, nil
+}
+
+func (r Resource) ModulePath() string {
+	return strings.Join(r.modulePathArray, ".")
 }
 
 func (r Resource) IsSupported() bool {

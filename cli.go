@@ -64,19 +64,19 @@ func gatherResources(s *state) map[string]interface{} {
 		tp := fmt.Sprintf("type_%s", res.resourceType)
 		types[tp] = appendUniq(types[tp], res.Hostname())
 
-		if strings.HasPrefix(res.modulePath, "root.") {
-			if _, ok := modules[res.modulePath]; !ok {
-				modules[res.modulePath] = &allGroup{
+		if len(res.modulePathArray) > 1 && res.modulePathArray[0] == "root" {
+			if _, ok := modules[res.ModulePath()]; !ok {
+				modules[res.ModulePath()] = &allGroup{
 					Hosts: make([]string, 0),
 					Vars:  make(map[string]interface{}),
 				}
 			}
-			modules[res.modulePath].Hosts = appendUniq(modules[res.modulePath].Hosts, res.Hostname())
+			modules[res.ModulePath()].Hosts = appendUniq(modules[res.ModulePath()].Hosts, res.Hostname())
 		}
 
 		var baseNameArray []string
-		if os.Getenv("TF_ADD_MODULE_PATH") != "" && res.modulePath != "" {
-			baseNameArray = append(baseNameArray, res.modulePath)
+		if os.Getenv("TF_ADD_MODULE_PATH") != "" && res.ModulePath() != "" {
+			baseNameArray = append(baseNameArray, res.ModulePath())
 		}
 		baseNameArray = append(baseNameArray, res.baseName)
 		baseName := strings.Join(baseNameArray, ".")
@@ -108,14 +108,14 @@ func gatherResources(s *state) map[string]interface{} {
 	// inventorize outputs as variables
 	if len(s.outputs()) > 0 {
 		for _, out := range s.outputs() {
-			if strings.HasPrefix(out.modulePath, "root.") {
-				if _, ok := modules[out.modulePath]; !ok {
-					modules[out.modulePath] = &allGroup{
+			if len(out.modulePathArray) > 1 && out.modulePathArray[0] == "root" {
+				if _, ok := modules[out.ModulePath()]; !ok {
+					modules[out.ModulePath()] = &allGroup{
 						Hosts: make([]string, 0),
 						Vars:  make(map[string]interface{}),
 					}
 				}
-				modules[out.modulePath].Vars[out.keyName] = out.value
+				modules[out.ModulePath()].Vars[out.keyName] = out.value
 			} else {
 				all.Vars[out.keyName] = out.value
 			}

@@ -6,11 +6,14 @@ import (
 )
 
 type Output struct {
-
 	// The keyName and value of the output
-	keyName    string
-	value      interface{}
-	modulePath string
+	keyName         string
+	value           interface{}
+	modulePathArray []string
+}
+
+func (o Output) ModulePath() string {
+	return strings.Join(o.modulePathArray, ".")
 }
 
 func NewOutput(keyName string, value interface{}, path []string) (*Output, error) {
@@ -21,8 +24,8 @@ func NewOutput(keyName string, value interface{}, path []string) (*Output, error
 	}
 
 	return &Output{
-		keyName:    keyName,
-		value:      value,
-		modulePath: strings.Join(path, "."),
+		keyName:         keyName,
+		value:           value,
+		modulePathArray: path,
 	}, nil
 }
