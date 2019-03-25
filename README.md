@@ -5,7 +5,7 @@
 [![GitHub release](https://img.shields.io/homebrew/v/terraform-inventory.svg?maxAge=2592000)](http://braumeister.org/formula/terraform-inventory)
 
 This is a little Go app which generates a dynamic [Ansible][ans] inventory from
-a [Terraform][tf] state file. It allows one to spawn a bunch of instances with 
+a [Terraform][tf] state file. It allows one to spawn a bunch of instances with
 Terraform, then (re-)provision them with Ansible.
 
 The following providers are supported:
@@ -152,6 +152,11 @@ By default, the ip address is the ansible inventory name. The `TF_HOSTNAME_KEY_N
 you to overwrite the source of the ansible inventory name.
 
 	TF_HOSTNAME_KEY_NAME=name ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
+
+
+When using the same terraform module multiple times, the resources have the same name and overwrite themselves. It is therefore possible to set the environment variable TF_ADD_MODULE_PATH to add the module path to the base name.
+
+	TF_ADD_MODULE_PATH=true ansible-playbook --inventory-file=/path/to/terraform-inventory deploy/playbook.yml
 
 ## Development
 

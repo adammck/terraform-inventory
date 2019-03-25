@@ -10,6 +10,38 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const exampleStateFileEnvModulePath = `
+{
+	"version": 1,
+	"serial": 1,
+	"modules": [
+		{
+			"path": [
+				"root",
+				"web"
+			],
+			"outputs": {
+				"foo": "bar"
+			},
+			"resources": {
+				"libvirt_domain.fourteen": {
+					"type": "libvirt_domain",
+					"primary": {
+						"id": "824c29be-2164-44c8-83e0-787705571d95",
+						"attributes": {
+							"name": "fourteen",
+							"network_interface.#": "1",
+							"network_interface.0.addresses.#": "1",
+							"network_interface.0.addresses.0": "192.168.102.14",
+							"network_interface.0.mac": "96:EE:4D:BD:B2:45"
+						}
+					}
+				}
+			}
+		}
+	]
+}`
+
 const exampleStateFileEnvHostname = `
 {
 	"version": 1,
@@ -47,6 +79,28 @@ const expectedListOutputEnvHostname = `
 	"fourteen":	 ["fourteen"],
 	"fourteen.0":	 ["fourteen"],
 	"type_libvirt_domain": ["fourteen"]
+}`
+
+const expectedListOutputEnvModulePath = `
+{
+	"all":	 {
+		"hosts": [
+			"192.168.102.14"
+		],
+		"vars": {
+		}
+	},
+	"root.web": {
+		"hosts": [
+			"192.168.102.14"
+		],
+		"vars": {
+			"foo": "bar"
+		}
+	},
+	"root.web.fourteen":	 ["192.168.102.14"],
+	"root.web.fourteen.0":	 ["192.168.102.14"],
+	"type_libvirt_domain": ["192.168.102.14"]
 }`
 
 const exampleStateFile = `
@@ -767,6 +821,33 @@ func TestListCommandEnvHostname(t *testing.T) {
 	os.Setenv("TF_HOSTNAME_KEY_NAME", "name")
 	exitCode := cmdList(&stdout, &stderr, &s)
 	os.Unsetenv("TF_HOSTNAME_KEY_NAME")
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestListCommandEnvModulePath(t *testing.T) {
+	var s state
+	r := strings.NewReader(exampleStateFileEnvModulePath)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutputEnvModulePath), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	os.Setenv("TF_ADD_MODULE_PATH", "true")
+	exitCode := cmdList(&stdout, &stderr, &s)
+	os.Unsetenv("TF_ADD_MODULE_PATH")
 	assert.Equal(t, 0, exitCode)
 	assert.Equal(t, "", stderr.String())
 

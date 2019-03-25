@@ -53,12 +53,14 @@ type Resource struct {
 	keyName string
 
 	// Extracted from keyName
-	resourceType string
-	baseName     string
-	counter      int
+	resourceType    string
+	baseName        string
+	counter         int
+	modulePath      string
+	modulePathArray []string
 }
 
-func NewResource(keyName string, state resourceState) (*Resource, error) {
+func NewResource(keyName string, state resourceState, path []string) (*Resource, error) {
 	m := nameParser.FindStringSubmatch(keyName)
 
 	// This should not happen unless our regex changes.
@@ -81,12 +83,17 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	}
 
 	return &Resource{
-		State:        state,
-		keyName:      keyName,
-		resourceType: m[1],
-		baseName:     m[2],
-		counter:      c,
+		State:           state,
+		keyName:         keyName,
+		resourceType:    m[1],
+		baseName:        m[2],
+		counter:         c,
+		modulePathArray: path,
 	}, nil
+}
+
+func (r Resource) ModulePath() string {
+	return strings.Join(r.modulePathArray, ".")
 }
 
 func (r Resource) IsSupported() bool {

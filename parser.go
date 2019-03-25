@@ -39,11 +39,11 @@ func (s *state) outputs() []*Output {
 			var o *Output
 			switch v := v.(type) {
 			case map[string]interface{}:
-				o, _ = NewOutput(k, v["value"])
+				o, _ = NewOutput(k, v["value"], m.Path)
 			case string:
-				o, _ = NewOutput(k, v)
+				o, _ = NewOutput(k, v, m.Path)
 			default:
-				o, _ = NewOutput(k, "<error>")
+				o, _ = NewOutput(k, "<error>", m.Path)
 			}
 
 			inst = append(inst, o)
@@ -77,7 +77,7 @@ func (s *state) resources() []*Resource {
 			// Terraform stores resources in a name->map map, but we need the name to
 			// decide which groups to include the resource in. So wrap it in a higher-
 			// level object with both properties.
-			r, err := NewResource(k, m.ResourceStates[k])
+			r, err := NewResource(k, m.ResourceStates[k], m.Path)
 			if err != nil {
 				continue
 			}
@@ -91,6 +91,7 @@ func (s *state) resources() []*Resource {
 }
 
 type moduleState struct {
+	Path           []string                 `json:"path"`
 	ResourceStates map[string]resourceState `json:"resources"`
 	Outputs        map[string]interface{}   `json:"outputs"`
 }

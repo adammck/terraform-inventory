@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 )
 
 type counterSorter struct {
@@ -46,6 +47,7 @@ func gatherResources(s *state) map[string]interface{} {
 	outputGroups := make(map[string]interface{})
 
 	all := &allGroup{Hosts: make([]string, 0), Vars: make(map[string]interface{})}
+	modules := make(map[string]*allGroup)
 	types := make(map[string][]string)
 	individual := make(map[string][]string)
 	ordered := make(map[string][]string)
@@ -62,10 +64,27 @@ func gatherResources(s *state) map[string]interface{} {
 		tp := fmt.Sprintf("type_%s", res.resourceType)
 		types[tp] = appendUniq(types[tp], res.Hostname())
 
-		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
+		if len(res.modulePathArray) > 1 && res.modulePathArray[0] == "root" {
+			if _, ok := modules[res.ModulePath()]; !ok {
+				modules[res.ModulePath()] = &allGroup{
+					Hosts: make([]string, 0),
+					Vars:  make(map[string]interface{}),
+				}
+			}
+			modules[res.ModulePath()].Hosts = appendUniq(modules[res.ModulePath()].Hosts, res.Hostname())
+		}
+
+		var baseNameArray []string
+		if os.Getenv("TF_ADD_MODULE_PATH") != "" && res.ModulePath() != "" {
+			baseNameArray = append(baseNameArray, res.ModulePath())
+		}
+		baseNameArray = append(baseNameArray, res.baseName)
+		baseName := strings.Join(baseNameArray, ".")
+
+		unsortedOrdered[baseName] = append(unsortedOrdered[baseName], res)
 
 		// store as invdividual host (eg. <name>.<count>)
-		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
+		invdName := fmt.Sprintf("%s.%d", baseName, res.counter)
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Hostname())
 		}
@@ -89,7 +108,17 @@ func gatherResources(s *state) map[string]interface{} {
 	// inventorize outputs as variables
 	if len(s.outputs()) > 0 {
 		for _, out := range s.outputs() {
-			all.Vars[out.keyName] = out.value
+			if len(out.modulePathArray) > 1 && out.modulePathArray[0] == "root" {
+				if _, ok := modules[out.ModulePath()]; !ok {
+					modules[out.ModulePath()] = &allGroup{
+						Hosts: make([]string, 0),
+						Vars:  make(map[string]interface{}),
+					}
+				}
+				modules[out.ModulePath()].Vars[out.keyName] = out.value
+			} else {
+				all.Vars[out.keyName] = out.value
+			}
 		}
 	}
 
@@ -104,6 +133,9 @@ func gatherResources(s *state) map[string]interface{} {
 	}
 
 	outputGroups["all"] = all
+	for k, v := range modules {
+		outputGroups[k] = v
+	}
 	for k, v := range individual {
 		if old, exists := outputGroups[k]; exists {
 			fmt.Fprintf(os.Stderr, "individual overwriting already existing output with key %s, old: %v, new: %v", k, old, v)
