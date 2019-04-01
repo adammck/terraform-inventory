@@ -181,6 +181,15 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
+        case "hcloud_server":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "labels" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
 	}
 	return t
 }
