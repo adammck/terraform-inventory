@@ -407,6 +407,19 @@ const exampleStateFile = `
 							"tags.Role": "worker"
 						}
 					}
+				},
+				"linode_instance.eighteen": {
+					"type": "linode_instance",
+					"depends_on": [],
+                    "primary": {
+						"id": "123456789",
+                        "attributes": {
+							"ip_address": "80.80.100.124",
+                            "private_ip": "true",
+                            "private_ip_address": "192.168.167.23",
+							"tags.#": "0"
+						}
+					}
 				}
 			}
 		}
@@ -434,6 +447,7 @@ const expectedListOutput = `
 			"192.168.102.14",
 			"50.0.0.1",
 			"50.0.0.17",
+			"80.80.100.124",
 			"10.20.30.50"
 		],
 		"vars": {
@@ -461,6 +475,7 @@ const expectedListOutput = `
 	"fourteen": ["192.168.102.14"],
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
+	"eighteen": ["80.80.100.124"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -480,6 +495,7 @@ const expectedListOutput = `
 	"fourteen.0": ["192.168.102.14"],
 	"sixteen.0": ["10.0.0.16"],
 	"seventeen.0": ["50.0.0.17"],
+	"eighteen.0": ["80.80.100.124"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -495,6 +511,7 @@ const expectedListOutput = `
 	"type_packet_device":                 ["10.0.0.13"],
 	"type_libvirt_domain":                ["192.168.102.14"],
 	"type_aws_spot_instance_request":			["50.0.0.17"],
+	"type_linode_instance":               ["80.80.100.124"],
 
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -525,6 +542,7 @@ const expectedInventoryOutput = `[all]
 192.168.102.14
 50.0.0.1
 50.0.0.17
+80.80.100.124
 10.20.30.50
 
 [all:vars]
@@ -547,6 +565,12 @@ olddatacenter="\u003c0.7_format"
 
 [eight.0]
 10.0.0.8
+
+[eighteen]
+80.80.100.124
+
+[eighteen.0]
+80.80.100.124
 
 [eleven]
 10.0.0.11
@@ -688,6 +712,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_libvirt_domain]
 192.168.102.14
+
+[type_linode_instance]
+80.80.100.124
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
