@@ -17,6 +17,7 @@ The following providers are supported:
 * Exoscale
 * Google Compute Engine
 * [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
+* Linode
 * OpenStack
 * Packet
 * ProfitBricks
