@@ -112,6 +112,18 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
+	case "opentelekomcloud_compute_instance_v2":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			// At some point Terraform changed the key for counts of attributes to end with ".%"
+			// instead of ".#". Both need to be considered as Terraform still supports state
+			// files using the old format.
+			if len(parts) == 2 && parts[0] == "tag" && parts[1] != "#" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
 	case "aws_instance", "linode_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)

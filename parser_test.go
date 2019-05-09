@@ -395,6 +395,19 @@ const exampleStateFile = `
 						}
 					}
 				},
+				"opentelekomcloud_compute_instance_v2.nineteen": {
+					"type": "opentelekomcloud_compute_instance_v2",
+					"primary": {
+						"id": "00000000-0000-0000-0000-000000000015",
+						"attributes": {
+							"id": "00000000-0000-0000-0000-000000000015",
+							"access_ip_v4": "10.0.0.19",
+							"access_ip_v6": "",
+							"tag.%": "1",
+							"tag.tfinventory": "rocks"
+						}
+					}
+				},
 				"profitbricks_server.sixteen": {
 					"type": "profitbricks_server",
 					"primary": {
@@ -444,6 +457,7 @@ const expectedListOutput = `
 			"10.0.0.11",
 			"10.0.0.13",
 			"10.0.0.16",
+			"10.0.0.19",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -481,6 +495,7 @@ const expectedListOutput = `
 	"testTag1": ["10.20.30.50"],
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
+	"nineteen": ["10.0.0.19"],
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
 	"eighteen": ["80.80.100.124"],
@@ -501,6 +516,7 @@ const expectedListOutput = `
 	"twelve.0": ["10.20.30.50"],
 	"thirteen.0": ["10.0.0.13"],
 	"fourteen.0": ["192.168.102.14"],
+	"nineteen.0": ["10.0.0.19"],
 	"sixteen.0": ["10.0.0.16"],
 	"seventeen.0": ["50.0.0.17"],
 	"eighteen.0": ["80.80.100.124"],
@@ -510,6 +526,7 @@ const expectedListOutput = `
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_opentelekomcloud_compute_instance_v2": ["10.0.0.19"],
 	"type_profitbricks_server":           ["10.0.0.16"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
@@ -530,7 +547,8 @@ const expectedListOutput = `
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
 	"database": ["10.0.0.8"],
-	"scw_test": ["10.0.0.11"]
+	"scw_test": ["10.0.0.11"],
+	"tfinventory_rocks": ["10.0.0.19"]
 }
 `
 
@@ -540,6 +558,7 @@ const expectedInventoryOutput = `[all]
 10.0.0.11
 10.0.0.13
 10.0.0.16
+10.0.0.19
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -611,6 +630,12 @@ olddatacenter="\u003c0.7_format"
 [nine.0]
 10.0.0.9
 
+[nineteen]
+10.0.0.19
+
+[nineteen.0]
+10.0.0.19
+
 [one]
 10.0.0.1
 10.0.1.1
@@ -678,6 +703,9 @@ olddatacenter="\u003c0.7_format"
 [testTag1]
 10.20.30.50
 
+[tfinventory_rocks]
+10.0.0.19
+
 [thirteen]
 10.0.0.13
 
@@ -730,6 +758,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
+
+[type_opentelekomcloud_compute_instance_v2]
+10.0.0.19
 
 [type_packet_device]
 10.0.0.13
