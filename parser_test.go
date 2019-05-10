@@ -411,12 +411,12 @@ const exampleStateFile = `
 				"linode_instance.eighteen": {
 					"type": "linode_instance",
 					"depends_on": [],
-                    "primary": {
+					"primary": {
 						"id": "123456789",
-                        "attributes": {
+						"attributes": {
 							"ip_address": "80.80.100.124",
-                            "private_ip": "true",
-                            "private_ip_address": "192.168.167.23",
+							"private_ip": "true",
+							"private_ip_address": "192.168.167.23",
 							"tags.#": "0"
 						}
 					}
