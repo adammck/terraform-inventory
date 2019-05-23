@@ -14,6 +14,20 @@ import (
 var keyNames []string
 var nameParser *regexp.Regexp
 
+// Azure has separate resources for the VM and the NIC that holds the IP address
+// Everytime we encounter an azurerm_network_interface we will store the IP address
+// in this map with the NIC id as the key. Then when we are looking for the VM address
+// we'll check if the VM's (primary) NIC exists in the map.
+var azureNICPrimaryIps map[string]string
+
+// Azure related keys
+const azureNicResourceKey string = "azurerm_network_interface"
+const azureNicIpKey string = "private_ip_address"
+const azureIdKey string = "id"
+const azureVMResourceKey string = "azurerm_virtual_machine"
+const azureVMPrimaryNicKey string = "primary_network_interface_id"
+const azureVMSecondaryNicKey string = "network_interface_ids.0"
+
 func init() {
 	keyNames = []string{
 		"ipv4_address",                                        // DO and SoftLayer
@@ -37,6 +51,8 @@ func init() {
 		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
 	}
+
+	azureNICPrimaryIps = map[string]string{}
 
 	// type.name.0
 	nameParser = regexp.MustCompile(`^(\w+)\.([\w\-]+)(?:\.(\d+))?$`)
@@ -78,6 +94,11 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	// Special case for azurerm_network_interface
+	if m[1] == azureNicResourceKey {
+		AzureStoreNicIp(state)
 	}
 
 	return &Resource{
@@ -180,6 +201,15 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
+	case "azurerm_virtual_machine":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
 	}
 	return t
 }
@@ -208,6 +238,13 @@ func (r Resource) Hostname() string {
 
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
+
+	switch r.resourceType {
+	case azureNicResourceKey, azureVMResourceKey:
+		// Special case for azurerm_network_interface, azurerm_virtual_machine
+		return r.AzureAddress()
+	}
+
 	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {
 		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
 			return ip
@@ -221,4 +258,31 @@ func (r Resource) Address() string {
 	}
 
 	return ""
+}
+
+func (r Resource) AzureAddress() string {
+	// We'll actually only handle azurerm_virtual_machine and ignore
+	// azurerm_network_interface as that is not a real VM resource
+	if r.resourceType == azureVMResourceKey {
+		nicId := r.State.Primary.Attributes[azureVMPrimaryNicKey]
+		if nicId == "" {
+			nicId = r.State.Primary.Attributes[azureVMSecondaryNicKey]
+		}
+		if nicId != "" {
+			ip := azureNICPrimaryIps[nicId]
+			return ip
+		}
+	}
+
+	return ""
+}
+
+func AzureStoreNicIp(state resourceState) {
+	// Store the first ipAddress (primary) to the map with nic id
+	ip := state.Primary.Attributes[azureNicIpKey]
+	nicId := state.Primary.Attributes[azureIdKey]
+
+	if ip != "" && nicId != "" {
+		azureNICPrimaryIps[nicId] = ip
+	}
 }
