@@ -797,10 +797,12 @@ const expectedHostOneOutput = `
 `
 
 func TestListCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -822,10 +824,12 @@ func TestListCommand(t *testing.T) {
 }
 
 func TestListCommandEnvHostname(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFileEnvHostname)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -849,10 +853,12 @@ func TestListCommandEnvHostname(t *testing.T) {
 }
 
 func TestHostCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -874,10 +880,12 @@ func TestHostCommand(t *testing.T) {
 }
 
 func TestInventoryCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
@@ -887,3 +895,258 @@ func TestInventoryCommand(t *testing.T) {
 
 	assert.Equal(t, expectedInventoryOutput, stdout.String())
 }
+
+//
+// Terraform 0.12 BEGIN
+//
+
+const exampleStateFileTerraform0dot12 = `
+{
+	"format_version": "0.1",
+	"terraform_version": "0.12.1",
+	"values": {
+		"outputs": {
+			"my_endpoint": {
+				"sensitive": false,
+				"value": "a.b.c.d.example.com"
+			},
+			"my_password": {
+				"sensitive": true,
+				"value": "1234"
+			},
+			"map": {
+				"sensitive": false,
+				"value": {
+					"first": "a",
+					"second": "b"
+				}
+			}
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "aws_instance.one",
+					"type": "aws_instance",
+					"name": "one",
+					"provider_name": "aws",
+					"schema_version": 1,
+					"values": {
+						"ami": "ami-00000000000000000",
+						"id": "i-11111111111111111",
+						"private_ip": "10.0.0.1",
+						"public_ip": "35.159.25.34",
+						"tags": {
+							"Name": "one-aws-instance"
+						},
+						"volume_tags": {
+							"Ignored": "stuff"
+						}
+					}
+				}
+			],
+			"child_modules": [
+				{
+					"resources": [
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-22222222222222222",
+								"private_ip": "10.0.0.2",
+								"public_ip": "",
+								"tags": {
+									"Name": "two-aws-instance"
+								}
+							}
+						}
+					],
+					"address": "module.my-module-two"
+				},
+				{
+					"resources": [
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-33333333333333333",
+								"private_ip": "10.0.0.3",
+								"public_ip": "",
+								"tags": {
+									"Name": "three-aws-instance"
+								}
+							}
+						}
+					],
+					"address": "module.my-module-three"
+				}
+			]
+		}
+	}
+}
+`
+
+const expectedListOutputTerraform0dot12 = `
+{
+	"all": {
+		"hosts": [
+			"10.0.0.2",
+			"10.0.0.3",
+			"35.159.25.34"
+		],
+		"vars": {
+			"my_endpoint": "a.b.c.d.example.com",
+			"my_password": "1234",
+			"map": {"first": "a", "second": "b"}
+		}
+	},
+	"one.0": ["35.159.25.34"],
+	"one": ["35.159.25.34"],
+	"module_my-module-two_host.0": ["10.0.0.2"],
+	"module_my-module-two_host": ["10.0.0.2"],
+	"module_my-module-three_host.0": ["10.0.0.3"],
+	"module_my-module-three_host": ["10.0.0.3"],
+
+	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "35.159.25.34"],
+
+	"name_one-aws-instance": ["35.159.25.34"],
+	"name_two-aws-instance": ["10.0.0.2"],
+	"name_three-aws-instance": ["10.0.0.3"]
+}
+`
+
+const expectedInventoryOutputTerraform0dot12 = `[all]
+10.0.0.2
+10.0.0.3
+35.159.25.34
+
+[all:vars]
+map={"first":"a","second":"b"}
+my_endpoint="a.b.c.d.example.com"
+my_password="1234"
+
+[module_my-module-three_host]
+10.0.0.3
+
+[module_my-module-three_host.0]
+10.0.0.3
+
+[module_my-module-two_host]
+10.0.0.2
+
+[module_my-module-two_host.0]
+10.0.0.2
+
+[name_one-aws-instance]
+35.159.25.34
+
+[name_three-aws-instance]
+10.0.0.3
+
+[name_two-aws-instance]
+10.0.0.2
+
+[one]
+35.159.25.34
+
+[one.0]
+35.159.25.34
+
+[type_aws_instance]
+10.0.0.2
+10.0.0.3
+35.159.25.34
+
+`
+
+const expectedHostOneOutputTerraform0dot12 = `
+{
+	"ami": "ami-00000000000000000",
+	"ansible_host": "35.159.25.34",
+	"id":"i-11111111111111111",
+	"private_ip":"10.0.0.1",
+	"public_ip": "35.159.25.34",
+	"tags.#": "1",
+	"tags.Name": "one-aws-instance",
+	"volume_tags.#":"1",
+	"volume_tags.Ignored":"stuff"
+}
+`
+
+func TestListCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutputTerraform0dot12), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdList(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestHostCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedHostOneOutputTerraform0dot12), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdHost(&stdout, &stderr, &s, "35.159.25.34")
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestInventoryCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdInventory(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	assert.Equal(t, expectedInventoryOutputTerraform0dot12, stdout.String())
+}
+
+//
+// Terraform 0.12 END
+//
