@@ -65,6 +65,7 @@ type moduleStateTerraform0dot12 struct {
 }
 type resourceStateTerraform0dot12 struct {
 	Address   string                 `json:"address"`
+	Index     *int                   `json:"index"` // only set by Terraform for counted resources
 	Name      string                 `json:"name"`
 	RawValues map[string]interface{} `json:"values"`
 	Type      string                 `json:"type"`
@@ -290,6 +291,9 @@ func (s *stateTerraform0dot12) resources() []*Resource {
 				modulePrefix = strings.Replace(module.Address, ".", "_", -1) + "_"
 			}
 			resourceKeyName := rs.Type + "." + modulePrefix + rs.Name
+			if rs.Index != nil {
+				resourceKeyName += "." + strconv.Itoa(*rs.Index)
+			}
 
 			// Terraform stores resources in a name->map map, but we need the name to
 			// decide which groups to include the resource in. So wrap it in a higher-

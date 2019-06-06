@@ -970,10 +970,26 @@ const exampleStateFileTerraform0dot12 = `
 							"address": "aws_instance.host",
 							"type": "aws_instance",
 							"name": "host",
+							"index": 0,
 							"values": {
 								"ami": "ami-00000000000000001",
 								"id": "i-33333333333333333",
 								"private_ip": "10.0.0.3",
+								"public_ip": "",
+								"tags": {
+									"Name": "three-aws-instance"
+								}
+							}
+						},
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"index": 1,
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-11133333333333333",
+								"private_ip": "10.0.1.3",
 								"public_ip": "",
 								"tags": {
 									"Name": "three-aws-instance"
@@ -995,6 +1011,7 @@ const expectedListOutputTerraform0dot12 = `
 		"hosts": [
 			"10.0.0.2",
 			"10.0.0.3",
+			"10.0.1.3",
 			"35.159.25.34"
 		],
 		"vars": {
@@ -1008,19 +1025,21 @@ const expectedListOutputTerraform0dot12 = `
 	"module_my-module-two_host.0": ["10.0.0.2"],
 	"module_my-module-two_host": ["10.0.0.2"],
 	"module_my-module-three_host.0": ["10.0.0.3"],
-	"module_my-module-three_host": ["10.0.0.3"],
+	"module_my-module-three_host.1": ["10.0.1.3"],
+	"module_my-module-three_host": ["10.0.0.3", "10.0.1.3"],
 
-	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "35.159.25.34"],
+	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.1.3", "35.159.25.34"],
 
 	"name_one-aws-instance": ["35.159.25.34"],
 	"name_two-aws-instance": ["10.0.0.2"],
-	"name_three-aws-instance": ["10.0.0.3"]
+	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"]
 }
 `
 
 const expectedInventoryOutputTerraform0dot12 = `[all]
 10.0.0.2
 10.0.0.3
+10.0.1.3
 35.159.25.34
 
 [all:vars]
@@ -1030,9 +1049,13 @@ my_password="1234"
 
 [module_my-module-three_host]
 10.0.0.3
+10.0.1.3
 
 [module_my-module-three_host.0]
 10.0.0.3
+
+[module_my-module-three_host.1]
+10.0.1.3
 
 [module_my-module-two_host]
 10.0.0.2
@@ -1045,6 +1068,7 @@ my_password="1234"
 
 [name_three-aws-instance]
 10.0.0.3
+10.0.1.3
 
 [name_two-aws-instance]
 10.0.0.2
@@ -1058,6 +1082,7 @@ my_password="1234"
 [type_aws_instance]
 10.0.0.2
 10.0.0.3
+10.0.1.3
 35.159.25.34
 
 `
