@@ -178,6 +178,10 @@ func gatherResources0dot12(s *stateTerraform0dot12) map[string]interface{} {
 			if v != "" {
 				tag = fmt.Sprintf("%s_%s", k, v)
 			}
+			// if k is special "role", then tag should be the role value
+			if k == "role" {
+				tag = v
+			}
 			// if v is a resource ID, then tag should be resource name
 			if _, exists := resourceIDNames[v]; exists {
 				tag = resourceIDNames[v]
