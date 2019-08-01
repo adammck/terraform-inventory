@@ -16,16 +16,16 @@ var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
-		"ipv4_address",                                        // DO and SoftLayer
-		"public_ip",                                           // AWS
-		"public_ipv6",                                         // Scaleway
-		"ipaddress",                                           // CS
-		"ip_address",                                          // VMware, Docker, Linode
-		"private_ip",                                          // AWS
-		"network_interface.0.ipv4_address",                    // VMware
-		"default_ip_address",                                  // provider.vsphere v1.1.1
-		"access_ip_v4",                                        // OpenStack
-		"floating_ip",                                         // OpenStack
+		"ipv4_address",                     // DO and SoftLayer
+		"public_ip",                        // AWS
+		"public_ipv6",                      // Scaleway
+		"ipaddress",                        // CS
+		"ip_address",                       // VMware, Docker, Linode
+		"private_ip",                       // AWS
+		"network_interface.0.ipv4_address", // VMware
+		"default_ip_address",               // provider.vsphere v1.1.1
+		"access_ip_v4",                     // OpenStack
+		"floating_ip",                      // OpenStack
 		"network_interface.0.access_config.0.nat_ip",          // GCE
 		"network_interface.0.access_config.0.assigned_nat_ip", // GCE
 		"network_interface.0.address",                         // GCE
@@ -38,8 +38,11 @@ func init() {
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
 	}
 
-	// type.name.0
-	nameParser = regexp.MustCompile(`^(\w+)\.([\w\-]+)(?:\.(\d+))?$`)
+	// Formats:
+	// - type.[module_]name (no `count` attribute; contains module name if we're not in the root module)
+	// - type.[module_]name.0 (if resource has `count` attribute)
+	// - "data." prefix should not parse and be ignored by caller (does not represent a host)
+	nameParser = regexp.MustCompile(`^([\w\-]+)\.([\w\-]+)(?:\.(\d+))?$`)
 }
 
 type Resource struct {
@@ -62,15 +65,13 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	m := nameParser.FindStringSubmatch(keyName)
 
 	// This should not happen unless our regex changes.
-	// TODO: Warn instead of silently ignore error?
 	if len(m) != 4 {
-		return nil, fmt.Errorf("couldn't parse keyName: %s", keyName)
+		return nil, fmt.Errorf("couldn't parse resource keyName: %s", keyName)
 	}
 
 	var c int
 	var err error
 	if m[3] != "" {
-
 		// The third section should be the index, if it's present. Not sure what
 		// else we can do other than panic (which seems highly undesirable) if that
 		// isn't the case.

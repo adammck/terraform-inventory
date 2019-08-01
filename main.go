@@ -51,7 +51,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var s state
+	var s stateAnyTerraformVersion
 
 	if !f.IsDir() {
 		stateFile, err := os.Open(path)
@@ -69,39 +69,51 @@ func main() {
 	}
 
 	if f.IsDir() {
-		cmd := exec.Command("terraform", "state", "pull")
+		cmd := exec.Command("terraform", "show", "-json")
 		cmd.Dir = path
 		var out bytes.Buffer
 		cmd.Stdout = &out
 
 		err = cmd.Run()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error running `terraform state pull` in directory %s, %s\n", path, err)
-			os.Exit(1)
+			fmt.Fprintf(os.Stderr, "Error running `terraform show -json` in directory %s, %s, falling back to trying Terraform pre-0.12 command\n", path, err)
+
+			cmd = exec.Command("terraform", "state", "pull")
+			cmd.Dir = path
+			out.Reset()
+			cmd.Stdout = &out
+			err = cmd.Run()
+
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error running `terraform state pull` in directory %s, %s\n", path, err)
+				os.Exit(1)
+			}
 		}
 
 		err = s.read(&out)
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error reading `terraform state pull` output: %s\n", err)
+			fmt.Fprintf(os.Stderr, "Error reading Terraform state: %s\n", err)
 			os.Exit(1)
 		}
-
 	}
 
-	if s.Modules == nil {
-		fmt.Printf("Usage: %s [options] path\npath: this is either a path to a state file or a folder from which `terraform commands` are valid\n", os.Args[0])
+	if s.TerraformVersion == TerraformVersionUnknown {
+		fmt.Fprintf(os.Stderr, "Unknown state format\n\nUsage: %s [options] path\npath: this is either a path to a state file or a folder from which `terraform commands` are valid\n", os.Args[0])
+		os.Exit(1)
+	}
+
+	if (s.TerraformVersion == TerraformVersionPre0dot12 && s.StatePre0dot12.Modules == nil) ||
+		(s.TerraformVersion == TerraformVersion0dot12 && s.State0dot12.Values.RootModule == nil) {
+		fmt.Fprintf(os.Stderr, "No modules found in state\n\nUsage: %s [options] path\npath: this is either a path to a state file or a folder from which `terraform commands` are valid\n", os.Args[0])
 		os.Exit(1)
 	}
 
 	if *list {
 		os.Exit(cmdList(os.Stdout, os.Stderr, &s))
-
 	} else if *inventory {
 		os.Exit(cmdInventory(os.Stdout, os.Stderr, &s))
-
 	} else if *host != "" {
 		os.Exit(cmdHost(os.Stdout, os.Stderr, &s, *host))
-
 	}
 }
