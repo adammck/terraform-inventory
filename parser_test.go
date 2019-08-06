@@ -942,6 +942,37 @@ const exampleStateFileTerraform0dot12 = `
 							"Ignored": "stuff"
 						}
 					}
+				},
+				{
+				  "address": "azurerm_network_interface.node-interface",
+				  "mode": "managed",
+				  "type": "azurerm_network_interface",
+				  "name": "node-interface",
+				  "provider_name": "azurerm",
+				  "schema_version": 0,
+				  "values": {
+					"id": "/subscriptions/kj639K33-389a-4b8b-9a59-ksjd4kdk3/resourceGroups/test-rg/providers/Microsoft.Network/networkInterfaces/node-interface",
+					"name": "node-interface",
+					"private_ip_address": "192.168.1.4",
+					"private_ip_addresses": [
+					  "192.168.1.4"
+					]
+				  }
+				},
+				{
+				  "address": "azurerm_virtual_machine.node",
+				  "mode": "managed",
+				  "type": "azurerm_virtual_machine",
+				  "name": "node",
+				  "provider_name": "azurerm",
+				  "schema_version": 0,
+				  "values": {
+					"id": "/subscriptions/kj639K33-389a-4b8b-9a59-ksjd4kdk3/resourceGroups/test-rg/providers/Microsoft.Compute/virtualMachines/node.test",
+					"name": "node.test",
+					"network_interface_ids": [
+					  "/subscriptions/kj639K33-389a-4b8b-9a59-ksjd4kdk3/resourceGroups/test-rg/providers/Microsoft.Network/networkInterfaces/node-interface"
+					]
+				  }
 				}
 			],
 			"child_modules": [
@@ -1012,6 +1043,7 @@ const expectedListOutputTerraform0dot12 = `
 			"10.0.0.2",
 			"10.0.0.3",
 			"10.0.1.3",
+			"192.168.1.4",
 			"35.159.25.34"
 		],
 		"vars": {
@@ -1020,6 +1052,9 @@ const expectedListOutputTerraform0dot12 = `
 			"map": {"first": "a", "second": "b"}
 		}
 	},
+
+	"node":["192.168.1.4"],
+	"node.0":["192.168.1.4"],
 	"one.0": ["35.159.25.34"],
 	"one": ["35.159.25.34"],
 	"module_my-module-two_host.0": ["10.0.0.2"],
@@ -1029,6 +1064,7 @@ const expectedListOutputTerraform0dot12 = `
 	"module_my-module-three_host": ["10.0.0.3", "10.0.1.3"],
 
 	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.1.3", "35.159.25.34"],
+	"type_azurerm_virtual_machine":["192.168.1.4"],
 
 	"name_one-aws-instance": ["35.159.25.34"],
 	"name_two-aws-instance": ["10.0.0.2"],
@@ -1040,6 +1076,7 @@ const expectedInventoryOutputTerraform0dot12 = `[all]
 10.0.0.2
 10.0.0.3
 10.0.1.3
+192.168.1.4
 35.159.25.34
 
 [all:vars]
@@ -1073,6 +1110,12 @@ my_password="1234"
 [name_two-aws-instance]
 10.0.0.2
 
+[node]
+192.168.1.4
+
+[node.0]
+192.168.1.4
+
 [one]
 35.159.25.34
 
@@ -1084,6 +1127,9 @@ my_password="1234"
 10.0.0.3
 10.0.1.3
 35.159.25.34
+
+[type_azurerm_virtual_machine]
+192.168.1.4
 
 `
 
