@@ -263,6 +263,16 @@ func encodeTerraform0Dot12ValuesAsAttributes(rawValues *map[string]interface{}) 
 			}
 		case string:
 			ret[k] = v
+		case []interface {}:
+			ret[k+".#"] = strconv.Itoa(len(v))
+			for kk, vv := range v {
+				if str, typeOk := vv.(string); typeOk {
+					ret[k+"."+fmt.Sprintf("%d", kk)] = str
+				} else {
+					ret[k+"."+fmt.Sprintf("%d", kk)] = "<error>"
+				}
+
+			}
 		default:
 			ret[k] = "<error>"
 		}
