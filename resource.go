@@ -13,6 +13,7 @@ import (
 // much fuss.
 var keyNames []string
 var nameParser *regexp.Regexp
+var azureIfaceMap map[string]string
 
 func init() {
 	keyNames = []string{
@@ -37,6 +38,8 @@ func init() {
 		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
 	}
+
+	azureIfaceMap = make(map[string]string)
 
 	// Formats:
 	// - type.[module_]name (no `count` attribute; contains module name if we're not in the root module)
@@ -79,6 +82,13 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	// In case we're dealing with the AzureRM provider, we'll have to build
+	// a map that references interface_ids with private IPs.
+	// This way, we can make the lookup faster on GetAddress
+	if strings.Contains(keyName, "azurerm_network_interface") {
+		azureIfaceMap[state.Primary.Attributes["id"]] = state.Primary.Attributes["private_ip_address"]
 	}
 
 	return &Resource{
@@ -209,6 +219,15 @@ func (r Resource) Hostname() string {
 
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
+
+	if strings.Contains(r.keyName, "azurerm_virtual_machine") {
+		network_iface_count, err := strconv.Atoi(r.State.Primary.Attributes["network_interface_ids.#"])
+		if (err != nil) || (network_iface_count < 1) {
+			return ""
+		}
+		return azureIfaceMap[r.State.Primary.Attributes["network_interface_ids.0"]]
+	}
+
 	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {
 		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
 			return ip
