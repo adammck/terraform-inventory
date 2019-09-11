@@ -20,7 +20,7 @@ func init() {
 		"public_ip",                        // AWS
 		"public_ipv6",                      // Scaleway
 		"ipaddress",                        // CS
-		"ip_address",                       // VMware, Docker, Linode
+		"ip_address",                       // VMware, Docker, Linode, Azure
 		"private_ip",                       // AWS
 		"network_interface.0.ipv4_address", // VMware
 		"default_ip_address",               // provider.vsphere v1.1.1
@@ -176,6 +176,15 @@ func (r Resource) Tags() map[string]string {
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
+	case "azurerm_public_ip":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			if len(parts) == 2 && parts[0] == "tags" && parts[1] != "#" && parts[1] != "%" {
 				kk := strings.ToLower(parts[1])
 				vv := strings.ToLower(v)
 				t[kk] = vv
