@@ -942,6 +942,164 @@ const exampleStateFileTerraform0dot12 = `
 							"Ignored": "stuff"
 						}
 					}
+				},
+				{
+					"address": "vsphere_tag.bar",
+					"mode": "managed",
+					"type": "vsphere_tag",
+					"name": "bar",
+					"provider_name": "vsphere",
+					"schema_version": 0,
+					"values": {
+						"category_id": "urn:vmomi:InventoryServiceCategory:dc032379-bc2c-4fe5-bd8a-77040e3f4bc8:GLOBAL",
+						"description": "",
+						"id": "urn:vmomi:InventoryServiceTag:c70f4a73-f744-458a-b2ef-595e3c7c7c28:GLOBAL",
+						"name": "bar"
+					},
+					"depends_on": [
+						"vsphere_tag_category.foo"
+					]
+				},
+				{
+					"address": "vsphere_tag_category.foo",
+					"mode": "managed",
+					"type": "vsphere_tag_category",
+					"name": "foo",
+					"provider_name": "vsphere",
+					"schema_version": 0,
+					"values": {
+						"associable_types": [
+							"VirtualMachine"
+						],
+						"cardinality": "SINGLE",
+						"description": "",
+						"id": "urn:vmomi:InventoryServiceCategory:dc032379-bc2c-4fe5-bd8a-77040e3f4bc8:GLOBAL",
+						"name": "foo"
+					}
+				},
+				{
+					"address": "vsphere_virtual_machine.vm",
+					"mode": "managed",
+					"type": "vsphere_virtual_machine",
+					"name": "vm",
+					"provider_name": "vsphere",
+					"schema_version": 3,
+					"values": {
+						"alternate_guest_name": "",
+						"annotation": "",
+						"boot_delay": 0,
+						"boot_retry_delay": 10000,
+						"boot_retry_enabled": false,
+						"cdrom": [],
+						"change_version": "2019-08-24T17:27:59.706242Z",
+						"clone": [],
+						"cpu_hot_add_enabled": false,
+						"cpu_hot_remove_enabled": false,
+						"cpu_limit": -1,
+						"cpu_performance_counters_enabled": false,
+						"cpu_reservation": 0,
+						"cpu_share_count": 4000,
+						"cpu_share_level": "normal",
+						"custom_attributes": {},
+						"datastore_cluster_id": null,
+						"datastore_id": "datastore-1",
+						"default_ip_address": "12.34.56.78",
+						"disk": [
+							{
+								"attach": false,
+								"datastore_id": "datastore-1",
+								"device_address": "scsi:0:0",
+								"disk_mode": "persistent",
+								"disk_sharing": "sharingNone",
+								"eagerly_scrub": false,
+								"io_limit": -1,
+								"io_reservation": 0,
+								"io_share_count": 1000,
+								"io_share_level": "normal",
+								"keep_on_remove": true,
+								"key": 2000,
+								"label": "disk0",
+								"name": "",
+								"path": "foo/bar.vmdk",
+								"size": 4,
+								"thin_provisioned": true,
+								"unit_number": 0,
+								"uuid": "6000C292-6cff-cc74-87e5-37ce78a22b57",
+								"write_through": false
+							}
+						],
+						"efi_secure_boot_enabled": false,
+						"enable_disk_uuid": false,
+						"enable_logging": false,
+						"ept_rvi_mode": "automatic",
+						"extra_config": {},
+						"firmware": "bios",
+						"folder": "",
+						"force_power_off": true,
+						"guest_id": "debian8_64Guest",
+						"guest_ip_addresses": [
+							"12.34.56.78"
+						],
+						"host_system_id": "host-764",
+						"hv_mode": "hvAuto",
+						"id": "42361f05-2e60-752c-5999-6c592f0a3904",
+						"ignored_guest_ips": null,
+						"imported": false,
+						"latency_sensitivity": "normal",
+						"memory": 2048,
+						"memory_hot_add_enabled": false,
+						"memory_limit": -1,
+						"memory_reservation": 0,
+						"memory_share_count": 20480,
+						"memory_share_level": "normal",
+						"migrate_wait_timeout": 30,
+						"moid": "vm-827",
+						"name": "vm",
+						"nested_hv_enabled": false,
+						"network_interface": [
+							{
+								"adapter_type": "vmxnet3",
+								"bandwidth_limit": -1,
+								"bandwidth_reservation": 0,
+								"bandwidth_share_count": 100,
+								"bandwidth_share_level": "high",
+								"device_address": "pci:0:7",
+								"key": 4000,
+								"mac_address": "00:50:56:b3:af:02",
+								"network_id": "dvportgroup-837",
+								"use_static_mac": false
+							}
+						],
+						"num_cores_per_socket": 1,
+						"num_cpus": 4,
+						"reboot_required": false,
+						"resource_pool_id": "resgroup-768",
+						"run_tools_scripts_after_power_on": true,
+						"run_tools_scripts_after_resume": true,
+						"run_tools_scripts_before_guest_reboot": false,
+						"run_tools_scripts_before_guest_shutdown": true,
+						"run_tools_scripts_before_guest_standby": true,
+						"scsi_bus_sharing": "noSharing",
+						"scsi_controller_count": 1,
+						"scsi_type": "pvscsi",
+						"shutdown_wait_timeout": 3,
+						"swap_placement_policy": "inherit",
+						"sync_time_with_host": false,
+						"tags": [
+							"urn:vmomi:InventoryServiceTag:c70f4a73-f744-458a-b2ef-595e3c7c7c28:GLOBAL"
+						],
+						"uuid": "42361f05-2e60-752c-5999-6c592f0a3904",
+						"vapp": [],
+						"vapp_transport": [],
+						"vmware_tools_status": "guestToolsRunning",
+						"vmx_path": "foo/bar.vmx",
+						"wait_for_guest_ip_timeout": 0,
+						"wait_for_guest_net_routable": true,
+						"wait_for_guest_net_timeout": 5
+					},
+					"depends_on": [
+						"vsphere_tag.bar"
+					]
 				}
 			],
 			"child_modules": [
@@ -1012,7 +1170,8 @@ const expectedListOutputTerraform0dot12 = `
 			"10.0.0.2",
 			"10.0.0.3",
 			"10.0.1.3",
-			"35.159.25.34"
+			"35.159.25.34",
+			"12.34.56.78"
 		],
 		"vars": {
 			"my_endpoint": "a.b.c.d.example.com",
@@ -1032,7 +1191,12 @@ const expectedListOutputTerraform0dot12 = `
 
 	"name_one-aws-instance": ["35.159.25.34"],
 	"name_two-aws-instance": ["10.0.0.2"],
-	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"]
+	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"],
+
+	"foo_bar": ["12.34.56.78"],
+	"type_vsphere_virtual_machine": ["12.34.56.78"],
+	"vm.0": ["12.34.56.78"],
+	"vm": ["12.34.56.78"]
 }
 `
 
@@ -1041,11 +1205,15 @@ const expectedInventoryOutputTerraform0dot12 = `[all]
 10.0.0.3
 10.0.1.3
 35.159.25.34
+12.34.56.78
 
 [all:vars]
 map={"first":"a","second":"b"}
 my_endpoint="a.b.c.d.example.com"
 my_password="1234"
+
+[foo_bar]
+12.34.56.78
 
 [module_my-module-three_host]
 10.0.0.3
@@ -1084,6 +1252,15 @@ my_password="1234"
 10.0.0.3
 10.0.1.3
 35.159.25.34
+
+[type_vsphere_virtual_machine]
+12.34.56.78
+
+[vm]
+12.34.56.78
+
+[vm.0]
+12.34.56.78
 
 `
 

@@ -161,12 +161,35 @@ func (s *stateTerraform0dot12) mapResourceIDNames() map[string]string {
 			id, typeOk := resourceState.RawValues["id"].(string)
 			if typeOk && id != "" && resourceState.Name != "" {
 				k := strings.ToLower(id)
+
+				if val, ok := resourceState.RawValues["category_id"]; ok && resourceState.Type == "vsphere_tag" {
+					if categoryID, typeOk := val.(string); typeOk {
+						if categoryName := s.getResourceIDName(categoryID); categoryName != "" {
+							t[k] = fmt.Sprintf("%s_%s", s.getResourceIDName(categoryID), resourceState.Name)
+							continue
+						}
+					}
+				}
+
 				t[k] = resourceState.Name
 			}
 		}
 	}
 
 	return t
+}
+
+func (s *stateTerraform0dot12) getResourceIDName(matchingID string) string {
+	for _, module := range s.getAllModules() {
+		for _, resourceState := range module.ResourceStates {
+			id, typeOk := resourceState.RawValues["id"].(string)
+			if typeOk && id == matchingID {
+				return resourceState.Name
+			}
+		}
+	}
+
+	return ""
 }
 
 func (s *stateTerraform0dot12) getAllModules() []*moduleStateTerraform0dot12 {
@@ -259,6 +282,15 @@ func encodeTerraform0Dot12ValuesAsAttributes(rawValues *map[string]interface{}) 
 					ret[k+"."+kk] = str
 				} else {
 					ret[k+"."+kk] = "<error>"
+				}
+			}
+		case []interface{}:
+			ret[k+".#"] = strconv.Itoa(len(v))
+			for kk, vv := range v {
+				if str, typeOk := vv.(string); typeOk {
+					ret[k+"."+strconv.Itoa(kk)] = str
+				} else {
+					ret[k+"."+strconv.Itoa(kk)] = "<error>"
 				}
 			}
 		case string:
