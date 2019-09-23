@@ -441,6 +441,19 @@ const exampleStateFile = `
 							"tags.#": "0"
 						}
 					}
+				},
+				"azurerm_public_ip.twenty": {
+					"type": "azurerm_public_ip",
+					"depends_on": [],
+					"primary": {
+						"id": "888888899",
+						"attributes": {
+							"id": "888888899",
+							"ip_address": "50.0.0.20",
+							"tags.%": "1",
+							"tags.Role": "azure-worker"
+						}
+					}
 				}
 			}
 		}
@@ -469,6 +482,7 @@ const expectedListOutput = `
 			"192.168.102.14",
 			"50.0.0.1",
 			"50.0.0.17",
+			"50.0.0.20",
 			"80.80.100.124",
 			"10.20.30.50"
 		],
@@ -499,6 +513,7 @@ const expectedListOutput = `
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
 	"eighteen": ["80.80.100.124"],
+	"twenty": ["50.0.0.20"],
 
 	"one.0":   ["10.0.0.1"],
 	"dup.0":   ["10.0.0.1"],
@@ -520,6 +535,7 @@ const expectedListOutput = `
 	"sixteen.0": ["10.0.0.16"],
 	"seventeen.0": ["50.0.0.17"],
 	"eighteen.0": ["80.80.100.124"],
+	"twenty.0": ["50.0.0.20"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -537,7 +553,9 @@ const expectedListOutput = `
 	"type_libvirt_domain":                ["192.168.102.14"],
 	"type_aws_spot_instance_request":			["50.0.0.17"],
 	"type_linode_instance":               ["80.80.100.124"],
+	"type_azurerm_public_ip":				      ["50.0.0.20"],
 
+	"role_azure-worker": ["50.0.0.20"],
 	"role_nine": ["10.0.0.9"],
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
@@ -570,6 +588,7 @@ const expectedInventoryOutput = `[all]
 192.168.102.14
 50.0.0.1
 50.0.0.17
+50.0.0.20
 80.80.100.124
 10.20.30.50
 
@@ -645,6 +664,9 @@ olddatacenter="\u003c0.7_format"
 
 [one.1]
 10.0.1.1
+
+[role_azure-worker]
+50.0.0.20
 
 [role_nine]
 10.0.0.9
@@ -724,6 +746,12 @@ olddatacenter="\u003c0.7_format"
 [twelve.0]
 10.20.30.50
 
+[twenty]
+50.0.0.20
+
+[twenty.0]
+50.0.0.20
+
 [two]
 50.0.0.1
 
@@ -737,6 +765,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_aws_spot_instance_request]
 50.0.0.17
+
+[type_azurerm_public_ip]
+50.0.0.20
 
 [type_cloudstack_instance]
 10.2.1.5
