@@ -74,8 +74,8 @@ func gatherResourcesPre0dot12(s *state) map[string]interface{} {
 
 		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
 
-		// store as invdividual host (eg. <name>.<count>)
-		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
+		// store as invdividual host (eg. <name>_<count>)
+		invdName := fmt.Sprintf("%s_%d", res.baseName, res.counter)
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v\n", invdName, old, res.Hostname())
 		}
@@ -164,8 +164,8 @@ func gatherResources0dot12(s *stateTerraform0dot12) map[string]interface{} {
 
 		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
 
-		// store as invdividual host (eg. <name>.<count>)
-		invdName := fmt.Sprintf("%s.%d", res.baseName, res.counter)
+		// store as invdividual host (eg. <name>_<count>)
+		invdName := fmt.Sprintf("%s_%d", res.baseName, res.counter)
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Hostname())
 		}
