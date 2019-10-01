@@ -45,7 +45,7 @@ const expectedListOutputEnvHostname = `
 		}
 	},
 	"fourteen":	 ["fourteen"],
-	"fourteen.0":	 ["fourteen"],
+	"fourteen_0":	 ["fourteen"],
 	"type_libvirt_domain": ["fourteen"]
 }`
 
@@ -500,26 +500,26 @@ const expectedListOutput = `
 	"seventeen": ["50.0.0.17"],
 	"eighteen": ["80.80.100.124"],
 
-	"one.0":   ["10.0.0.1"],
-	"dup.0":   ["10.0.0.1"],
-	"one.1":   ["10.0.1.1"],
-	"two.0":   ["50.0.0.1"],
-	"three.0": ["192.168.0.3"],
-	"four.0":  ["10.2.1.5"],
-	"five.0":  ["10.20.30.40"],
-	"six.0":   ["10.120.0.226"],
-	"seven.0": ["10.0.0.7"],
-	"eight.0": ["10.0.0.8"],
-	"nine.0":  ["10.0.0.9"],
-	"ten.0":   ["10.0.0.10"],
-	"eleven.0": ["10.0.0.11"],
-	"twelve.0": ["10.20.30.50"],
-	"thirteen.0": ["10.0.0.13"],
-	"fourteen.0": ["192.168.102.14"],
-	"nineteen.0": ["10.0.0.19"],
-	"sixteen.0": ["10.0.0.16"],
-	"seventeen.0": ["50.0.0.17"],
-	"eighteen.0": ["80.80.100.124"],
+	"one_0":   ["10.0.0.1"],
+	"dup_0":   ["10.0.0.1"],
+	"one_1":   ["10.0.1.1"],
+	"two_0":   ["50.0.0.1"],
+	"three_0": ["192.168.0.3"],
+	"four_0":  ["10.2.1.5"],
+	"five_0":  ["10.20.30.40"],
+	"six_0":   ["10.120.0.226"],
+	"seven_0": ["10.0.0.7"],
+	"eight_0": ["10.0.0.8"],
+	"nine_0":  ["10.0.0.9"],
+	"ten_0":   ["10.0.0.10"],
+	"eleven_0": ["10.0.0.11"],
+	"twelve_0": ["10.20.30.50"],
+	"thirteen_0": ["10.0.0.13"],
+	"fourteen_0": ["192.168.102.14"],
+	"nineteen_0": ["10.0.0.19"],
+	"sixteen_0": ["10.0.0.16"],
+	"seventeen_0": ["50.0.0.17"],
+	"eighteen_0": ["80.80.100.124"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -585,65 +585,65 @@ olddatacenter="\u003c0.7_format"
 [dup]
 10.0.0.1
 
-[dup.0]
+[dup_0]
 10.0.0.1
 
 [eight]
 10.0.0.8
 
-[eight.0]
+[eight_0]
 10.0.0.8
 
 [eighteen]
 80.80.100.124
 
-[eighteen.0]
+[eighteen_0]
 80.80.100.124
 
 [eleven]
 10.0.0.11
 
-[eleven.0]
+[eleven_0]
 10.0.0.11
 
 [five]
 10.20.30.40
 
-[five.0]
+[five_0]
 10.20.30.40
 
 [four]
 10.2.1.5
 
-[four.0]
+[four_0]
 10.2.1.5
 
 [fourteen]
 192.168.102.14
 
-[fourteen.0]
+[fourteen_0]
 192.168.102.14
 
 [nine]
 10.0.0.9
 
-[nine.0]
+[nine_0]
 10.0.0.9
 
 [nineteen]
 10.0.0.19
 
-[nineteen.0]
+[nineteen_0]
 10.0.0.19
 
 [one]
 10.0.0.1
 10.0.1.1
 
-[one.0]
+[one_0]
 10.0.0.1
 
-[one.1]
+[one_1]
 10.0.1.1
 
 [role_nine]
@@ -667,25 +667,25 @@ olddatacenter="\u003c0.7_format"
 [seven]
 10.0.0.7
 
-[seven.0]
+[seven_0]
 10.0.0.7
 
 [seventeen]
 50.0.0.17
 
-[seventeen.0]
+[seventeen_0]
 50.0.0.17
 
 [six]
 10.120.0.226
 
-[six.0]
+[six_0]
 10.120.0.226
 
 [sixteen]
 10.0.0.16
 
-[sixteen.0]
+[sixteen_0]
 10.0.0.16
 
 [staging]
@@ -697,7 +697,7 @@ olddatacenter="\u003c0.7_format"
 [ten]
 10.0.0.10
 
-[ten.0]
+[ten_0]
 10.0.0.10
 
 [testTag1]
@@ -709,25 +709,25 @@ olddatacenter="\u003c0.7_format"
 [thirteen]
 10.0.0.13
 
-[thirteen.0]
+[thirteen_0]
 10.0.0.13
 
 [three]
 192.168.0.3
 
-[three.0]
+[three_0]
 192.168.0.3
 
 [twelve]
 10.20.30.50
 
-[twelve.0]
+[twelve_0]
 10.20.30.50
 
 [two]
 50.0.0.1
 
-[two.0]
+[two_0]
 50.0.0.1
 
 [type_aws_instance]
@@ -1179,12 +1179,12 @@ const expectedListOutputTerraform0dot12 = `
 			"map": {"first": "a", "second": "b"}
 		}
 	},
-	"one.0": ["35.159.25.34"],
+	"one_0": ["35.159.25.34"],
 	"one": ["35.159.25.34"],
-	"module_my-module-two_host.0": ["10.0.0.2"],
+	"module_my-module-two_host_0": ["10.0.0.2"],
 	"module_my-module-two_host": ["10.0.0.2"],
-	"module_my-module-three_host.0": ["10.0.0.3"],
-	"module_my-module-three_host.1": ["10.0.1.3"],
+	"module_my-module-three_host_0": ["10.0.0.3"],
+	"module_my-module-three_host_1": ["10.0.1.3"],
 	"module_my-module-three_host": ["10.0.0.3", "10.0.1.3"],
 
 	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.1.3", "35.159.25.34"],
@@ -1195,7 +1195,7 @@ const expectedListOutputTerraform0dot12 = `
 
 	"foo_bar": ["12.34.56.78"],
 	"type_vsphere_virtual_machine": ["12.34.56.78"],
-	"vm.0": ["12.34.56.78"],
+	"vm_0": ["12.34.56.78"],
 	"vm": ["12.34.56.78"]
 }
 `
@@ -1219,16 +1219,16 @@ my_password="1234"
 10.0.0.3
 10.0.1.3
 
-[module_my-module-three_host.0]
+[module_my-module-three_host_0]
 10.0.0.3
 
-[module_my-module-three_host.1]
+[module_my-module-three_host_1]
 10.0.1.3
 
 [module_my-module-two_host]
 10.0.0.2
 
-[module_my-module-two_host.0]
+[module_my-module-two_host_0]
 10.0.0.2
 
 [name_one-aws-instance]
@@ -1244,7 +1244,7 @@ my_password="1234"
 [one]
 35.159.25.34
 
-[one.0]
+[one_0]
 35.159.25.34
 
 [type_aws_instance]
@@ -1259,7 +1259,7 @@ my_password="1234"
 [vm]
 12.34.56.78
 
-[vm.0]
+[vm_0]
 12.34.56.78
 
 `
