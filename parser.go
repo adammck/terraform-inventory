@@ -65,7 +65,7 @@ type moduleStateTerraform0dot12 struct {
 }
 type resourceStateTerraform0dot12 struct {
 	Address   string                 `json:"address"`
-	Index     *int                   `json:"index"` // only set by Terraform for counted resources
+	Index     *interface{}           `json:"index"` // only set by Terraform for counted resources
 	Name      string                 `json:"name"`
 	RawValues map[string]interface{} `json:"values"`
 	Type      string                 `json:"type"`
@@ -324,7 +324,17 @@ func (s *stateTerraform0dot12) resources() []*Resource {
 			}
 			resourceKeyName := rs.Type + "." + modulePrefix + rs.Name
 			if rs.Index != nil {
-				resourceKeyName += "." + strconv.Itoa(*rs.Index)
+				i := *rs.Index
+				switch v := i.(type) {
+				case int:
+					resourceKeyName += "." + strconv.Itoa(v)
+				case float64:
+					resourceKeyName += "." + strconv.Itoa(int(v))
+				case string:
+					resourceKeyName += "." + v
+				default:
+					fmt.Fprintf(os.Stderr, "Warning: unknown index type %v\n", v)
+				}
 			}
 
 			// Terraform stores resources in a name->map map, but we need the name to

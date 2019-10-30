@@ -18,6 +18,7 @@ func init() {
 	keyNames = []string{
 		"ipv4_address",                     // DO and SoftLayer
 		"public_ip",                        // AWS
+		"public_ipv4",                      // Servers.com
 		"public_ipv6",                      // Scaleway
 		"ipaddress",                        // CS
 		"ip_address",                       // VMware, Docker, Linode
@@ -125,7 +126,7 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "aws_instance", "linode_instance":
+	case "serverscom_dedicated_server", "aws_instance", "linode_instance":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			// At some point Terraform changed the key for counts of attributes to end with ".%"
