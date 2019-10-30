@@ -944,6 +944,35 @@ const exampleStateFileTerraform0dot12 = `
 					}
 				},
 				{
+				  "address": "aws_route53_record.this",
+				  "mode": "managed",
+				  "type": "aws_route53_record",
+				  "name": "this",
+				  "index": "testb",
+				  "provider_name": "aws",
+				  "schema_version": 2,
+				  "values": {
+					"alias": [],
+					"allow_overwrite": null,
+					"failover_routing_policy": [],
+					"fqdn": "testb.tv",
+					"geolocation_routing_policy": [],
+					"health_check_id": null,
+					"id": "abc.tv._A",
+					"latency_routing_policy": [],
+					"multivalue_answer_routing_policy": null,
+					"name": "testb.tv",
+					"records": [
+					  "2.2.2.2"
+					],
+					"set_identifier": null,
+					"ttl": 300,
+					"type": "A",
+					"weighted_routing_policy": [],
+					"zone_id": "abc"
+				  }
+				},
+				{
 					"address": "vsphere_tag.bar",
 					"mode": "managed",
 					"type": "vsphere_tag",
