@@ -41,8 +41,9 @@ func init() {
 	// Formats:
 	// - type.[module_]name (no `count` attribute; contains module name if we're not in the root module)
 	// - type.[module_]name.0 (if resource has `count` attribute)
+	// - type.[module_]name.resource_name
 	// - "data." prefix should not parse and be ignored by caller (does not represent a host)
-	nameParser = regexp.MustCompile(`^([\w\-]+)\.([\w\-]+)(?:\.(\d+))?$`)
+	nameParser = regexp.MustCompile(`^([\w\-]+)\.([\w\-]+)(?:\.(\d+|[\S+]+))?$`)
 }
 
 type Resource struct {
@@ -74,10 +75,10 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	if m[3] != "" {
 		// The third section should be the index, if it's present. Not sure what
 		// else we can do other than panic (which seems highly undesirable) if that
-		// isn't the case.
+		// isn't the case. With Terraform 0.12 for_each syntax, index is a string.
 		c, err = strconv.Atoi(m[3])
 		if err != nil {
-			return nil, err
+			m[2] = fmt.Sprintf("%s.%s", m[2], m[3])
 		}
 	}
 
