@@ -124,6 +124,10 @@ func (r Resource) Tags() map[string]string {
 				kk := strings.ToLower(parts[1])
 				vv := strings.ToLower(v)
 				t[kk] = vv
+			} else if len(parts) == 2 && parts[0] == "metadata" && parts[1] != "#" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
 			}
 		}
 	case "aws_instance", "linode_instance":
