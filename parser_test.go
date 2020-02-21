@@ -404,7 +404,8 @@ const exampleStateFile = `
 							"access_ip_v4": "10.0.0.19",
 							"access_ip_v6": "",
 							"tag.%": "1",
-							"tag.tfinventory": "rocks"
+							"tag.tfinventory": "rocks",
+							"metadata.superman": "clarkkent"
 						}
 					}
 				},
@@ -548,7 +549,8 @@ const expectedListOutput = `
 	"status_superserver": ["10.120.0.226"],
 	"database": ["10.0.0.8"],
 	"scw_test": ["10.0.0.11"],
-	"tfinventory_rocks": ["10.0.0.19"]
+	"tfinventory_rocks": ["10.0.0.19"],
+	"superman_clarkkent": ["10.0.0.19"]
 }
 `
 
@@ -693,6 +695,9 @@ olddatacenter="\u003c0.7_format"
 
 [status_superserver]
 10.120.0.226
+
+[superman_clarkkent]
+10.0.0.19
 
 [ten]
 10.0.0.10
