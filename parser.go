@@ -1,5 +1,6 @@
 package main
 
+
 import (
 	"encoding/json"
 	"fmt"
@@ -289,6 +290,11 @@ func encodeTerraform0Dot12ValuesAsAttributes(rawValues *map[string]interface{}) 
 			for kk, vv := range v {
 				if str, typeOk := vv.(string); typeOk {
 					ret[k+"."+strconv.Itoa(kk)] = str
+				} else if mi, typeOk := vv.(map[string]interface{}); typeOk {
+					attribs := encodeTerraform0Dot12ValuesAsAttributes(&mi)
+					for k3, v3 := range attribs {
+						ret[k+"."+strconv.Itoa(kk)+"."+k3] = v3
+					}
 				} else {
 					ret[k+"."+strconv.Itoa(kk)] = "<error>"
 				}
@@ -312,7 +318,6 @@ func (s *stateTerraform0dot12) resources() []*Resource {
 			if !typeOk {
 				continue
 			}
-
 			if strings.HasPrefix(rs.Address, "data.") {
 				// This does not represent a host (e.g. AWS AMI)
 				continue
@@ -336,7 +341,6 @@ func (s *stateTerraform0dot12) resources() []*Resource {
 					fmt.Fprintf(os.Stderr, "Warning: unknown index type %v\n", v)
 				}
 			}
-
 			// Terraform stores resources in a name->map map, but we need the name to
 			// decide which groups to include the resource in. So wrap it in a higher-
 			// level object with both properties.
