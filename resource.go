@@ -36,7 +36,7 @@ func init() {
 		"network.0.address",                                   // Packet
 		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
-		"ipconfig0",										   // Proxmox
+		"ipconfig0",					       // Telmate-Proxmox
 	}
 
 	// Formats:
