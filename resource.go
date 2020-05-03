@@ -36,6 +36,7 @@ func init() {
 		"network.0.address",                                   // Packet
 		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
+		"ipconfig0",										   // Proxmox
 	}
 
 	// Formats:
@@ -214,14 +215,15 @@ func (r Resource) Hostname() string {
 
 // Address returns the IP address of this resource.
 func (r Resource) Address() string {
+	re := regexp.MustCompile(`(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}`)
 	if keyName := os.Getenv("TF_KEY_NAME"); keyName != "" {
 		if ip := r.State.Primary.Attributes[keyName]; ip != "" {
-			return ip
+			return re.FindString(ip)
 		}
 	} else {
 		for _, key := range keyNames {
 			if ip := r.State.Primary.Attributes[key]; ip != "" {
-				return ip
+				return re.FindString(ip)
 			}
 		}
 	}
