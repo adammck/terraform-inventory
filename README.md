@@ -26,6 +26,7 @@ The following providers are supported:
 * VMware
 * Nutanix
 * Open Telekom Cloud
+* Yandex.Cloud
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.

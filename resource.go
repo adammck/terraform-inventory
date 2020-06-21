@@ -36,6 +36,8 @@ func init() {
 		"network.0.address",                                   // Packet
 		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
+		"network_interface.0.nat_ip_address",                  // Yandex
+		"network_interface.0.ip_address",                      // Yandex
 	}
 
 	// Formats:
@@ -186,7 +188,20 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
+	case "yandex_compute_instance":
+		for k, v := range r.Attributes() {
+			parts := strings.SplitN(k, ".", 2)
+			// At some point Terraform changed the key for counts of attributes to end with ".%"
+			// instead of ".#". Both need to be considered as Terraform still supports state
+			// files using the old format.
+			if len(parts) == 2 && parts[0] == "labels" && parts[1] != "#" && parts[1] != "%" {
+				kk := strings.ToLower(parts[1])
+				vv := strings.ToLower(v)
+				t[kk] = vv
+			}
+		}
 	}
+
 	return t
 }
 
