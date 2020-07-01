@@ -185,6 +185,8 @@ const exampleStateFile = `
 							"id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 							"access_ip_v4": "10.120.0.226",
 							"access_ip_v6": "",
+							"tag.%": "1",
+							"tag.tfinventory": "rocks",
 							"metadata.status": "superServer",
 							"metadata.#": "very bad",
 							"metadata_toes": "faada2142412jhb1j2"
