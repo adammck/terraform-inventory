@@ -16,6 +16,7 @@ The following providers are supported:
 * Docker
 * Exoscale
 * Google Compute Engine
+* Hetzner Cloud
 * [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 * Linode
 * OpenStack
