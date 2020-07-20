@@ -16,7 +16,7 @@ var nameParser *regexp.Regexp
 
 func init() {
 	keyNames = []string{
-		"ipv4_address",                     // DO and SoftLayer
+		"ipv4_address",                     // DO and SoftLayer and HetznerCloud
 		"public_ip",                        // AWS
 		"public_ipv6",                      // Scaleway
 		"ipaddress",                        // CS
@@ -188,7 +188,7 @@ func (r Resource) Tags() map[string]string {
 				t[kk] = vv
 			}
 		}
-	case "yandex_compute_instance":
+	case "yandex_compute_instance", "hcloud_server":
 		for k, v := range r.Attributes() {
 			parts := strings.SplitN(k, ".", 2)
 			// At some point Terraform changed the key for counts of attributes to end with ".%"
