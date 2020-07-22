@@ -20,6 +20,7 @@ func init() {
 		"public_ip",                        // AWS
 		"public_ipv6",                      // Scaleway
 		"ipaddress",                        // CS
+		"primary_ip",                                          // Profitbricks, Cherry servers
 		"ip_address",                       // VMware, Docker, Linode
 		"private_ip",                       // AWS
 		"network_interface.0.ipv4_address", // VMware
@@ -34,7 +35,6 @@ func init() {
 		"primaryip",                                           // Joyent Triton
 		"network_interface.0.addresses.0",                     // Libvirt
 		"network.0.address",                                   // Packet
-		"primary_ip",                                          // Profitbricks
 		"nic_list.0.ip_endpoint_list.0.ip",                    // Nutanix
 		"network_interface.0.nat_ip_address",                  // Yandex
 		"network_interface.0.ip_address",                      // Yandex
