@@ -61,7 +61,13 @@ type Resource struct {
 	// Extracted from keyName
 	resourceType string
 	baseName     string
-	counter      int
+
+	// counterNumeric is 0 for resources created without `count=` attribute or
+	// having a non-numeric string index
+	counterNumeric int
+	// counterStr is set if the resource index (e.g. in `for_each`-constructed
+	// resources) is not a number.
+	counterStr string
 }
 
 func NewResource(keyName string, state resourceState) (*Resource, error) {
@@ -72,24 +78,28 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 		return nil, fmt.Errorf("couldn't parse resource keyName: %s", keyName)
 	}
 
-	var c int
+	counterNumeric := 0
+	counterStr := ""
 	var err error
 	if m[3] != "" {
 		// The third section should be the index, if it's present. Not sure what
 		// else we can do other than panic (which seems highly undesirable) if that
-		// isn't the case. With Terraform 0.12 for_each syntax, index is a string.
-		c, err = strconv.Atoi(m[3])
+		// isn't the case. With Terraform 0.12 for_each syntax, index can also be
+		// a non-numeric string (loop over any string value).
+		counterNumeric, err = strconv.Atoi(m[3])
 		if err != nil {
-			m[2] = fmt.Sprintf("%s.%s", m[2], m[3])
+			counterNumeric = 0
+			counterStr = m[3]
 		}
 	}
 
 	return &Resource{
-		State:        state,
-		keyName:      keyName,
-		resourceType: m[1],
-		baseName:     m[2],
-		counter:      c,
+		State:          state,
+		keyName:        keyName,
+		resourceType:   m[1],
+		baseName:       m[2],
+		counterNumeric: counterNumeric,
+		counterStr:     counterStr,
 	}, nil
 }
 
@@ -208,12 +218,6 @@ func (r Resource) Tags() map[string]string {
 // Attributes returns a map containing everything we know about this resource.
 func (r Resource) Attributes() map[string]string {
 	return r.State.Primary.Attributes
-}
-
-// NameWithCounter returns the resource name with its counter. For resources
-// created without a 'count=' attribute, this will always be zero.
-func (r Resource) NameWithCounter() string {
-	return fmt.Sprintf("%s.%d", r.baseName, r.counter)
 }
 
 // Hostname returns the hostname of this resource.

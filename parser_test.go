@@ -1190,6 +1190,41 @@ const exampleStateFileTerraform0dot12 = `
 						}
 					],
 					"address": "module.my-module-three"
+				},
+				{
+					"resources": [
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"index": "for_each_example.first",
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-44444444444444444",
+								"private_ip": "10.0.0.4",
+								"public_ip": "",
+								"tags": {
+									"Name": "four-aws-instance"
+								}
+							}
+						},
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"index": "for_each_example.second",
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-11144444444444444",
+								"private_ip": "10.0.1.4",
+								"public_ip": "",
+								"tags": {
+									"Name": "four-aws-instance"
+								}
+							}
+						}
+					],
+					"address": "module.my-module-four"
 				}
 			]
 		}
@@ -1203,9 +1238,11 @@ const expectedListOutputTerraform0dot12 = `
 		"hosts": [
 			"10.0.0.2",
 			"10.0.0.3",
+			"10.0.0.4",
 			"10.0.1.3",
-			"35.159.25.34",
-			"12.34.56.78"
+			"10.0.1.4",
+			"12.34.56.78",
+			"35.159.25.34"
 		],
 		"vars": {
 			"my_endpoint": "a.b.c.d.example.com",
@@ -1215,14 +1252,18 @@ const expectedListOutputTerraform0dot12 = `
 	},
 	"one_0": ["35.159.25.34"],
 	"one": ["35.159.25.34"],
+	"module_my-module-four_host_for_each_example_first": ["10.0.0.4"],
+	"module_my-module-four_host_for_each_example_second": ["10.0.1.4"],
+	"module_my-module-four_host": ["10.0.0.4", "10.0.1.4"],
 	"module_my-module-two_host_0": ["10.0.0.2"],
 	"module_my-module-two_host": ["10.0.0.2"],
 	"module_my-module-three_host_0": ["10.0.0.3"],
 	"module_my-module-three_host_1": ["10.0.1.3"],
 	"module_my-module-three_host": ["10.0.0.3", "10.0.1.3"],
 
-	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.1.3", "35.159.25.34"],
+	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.0.4", "10.0.1.3", "10.0.1.4", "35.159.25.34"],
 
+	"name_four-aws-instance": ["10.0.0.4", "10.0.1.4"],
 	"name_one-aws-instance": ["35.159.25.34"],
 	"name_two-aws-instance": ["10.0.0.2"],
 	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"],
@@ -1237,9 +1278,11 @@ const expectedListOutputTerraform0dot12 = `
 const expectedInventoryOutputTerraform0dot12 = `[all]
 10.0.0.2
 10.0.0.3
+10.0.0.4
 10.0.1.3
-35.159.25.34
+10.0.1.4
 12.34.56.78
+35.159.25.34
 
 [all:vars]
 map={"first":"a","second":"b"}
@@ -1248,6 +1291,16 @@ my_password="1234"
 
 [foo_bar]
 12.34.56.78
+
+[module_my-module-four_host]
+10.0.0.4
+10.0.1.4
+
+[module_my-module-four_host_for_each_example_first]
+10.0.0.4
+
+[module_my-module-four_host_for_each_example_second]
+10.0.1.4
 
 [module_my-module-three_host]
 10.0.0.3
@@ -1264,6 +1317,10 @@ my_password="1234"
 
 [module_my-module-two_host_0]
 10.0.0.2
+
+[name_four-aws-instance]
+10.0.0.4
+10.0.1.4
 
 [name_one-aws-instance]
 35.159.25.34
@@ -1284,7 +1341,9 @@ my_password="1234"
 [type_aws_instance]
 10.0.0.2
 10.0.0.3
+10.0.0.4
 10.0.1.3
+10.0.1.4
 35.159.25.34
 
 [type_vsphere_virtual_machine]
