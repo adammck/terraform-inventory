@@ -443,6 +443,16 @@ const exampleStateFile = `
 						}
 					}
 				}
+				"telmate_proxmox.nineteen": {
+					"type": "telmate_proxmox",
+					"primary": {
+						"id": "proxmox/qemu/100",
+						"attributes": {
+							"default_ipv4_address": "192.168.1.123",
+							"ssh_host": "192.168.1.123"
+						}
+					}
+				}
 			}
 		}
 	]
@@ -500,6 +510,7 @@ const expectedListOutput = `
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
 	"eighteen": ["80.80.100.124"],
+	"nineteen": ["192.168.1.123"],
 
 	"one_0":   ["10.0.0.1"],
 	"dup_0":   ["10.0.0.1"],
@@ -521,6 +532,7 @@ const expectedListOutput = `
 	"sixteen_0": ["10.0.0.16"],
 	"seventeen_0": ["50.0.0.17"],
 	"eighteen_0": ["80.80.100.124"],
+	"nineteen_0": ["192.168.1.123"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
@@ -538,6 +550,7 @@ const expectedListOutput = `
 	"type_libvirt_domain":                ["192.168.102.14"],
 	"type_aws_spot_instance_request":			["50.0.0.17"],
 	"type_linode_instance":               ["80.80.100.124"],
+	"type_telmate_proxmox":               ["192.168.1.123"],
 
 	"role_nine": ["10.0.0.9"],
 	"role_rrrrrrrr": ["10.20.30.40"],
@@ -573,6 +586,7 @@ const expectedInventoryOutput = `[all]
 50.0.0.1
 50.0.0.17
 80.80.100.124
+192.168.1.123
 10.20.30.50
 
 [all:vars]
@@ -600,6 +614,12 @@ olddatacenter="\u003c0.7_format"
 80.80.100.124
 
 [eighteen_0]
+80.80.100.124
+
+[nineteen]
+80.80.100.124
+
+[nineteen_0]
 80.80.100.124
 
 [eleven]
@@ -760,6 +780,9 @@ olddatacenter="\u003c0.7_format"
 
 [type_linode_instance]
 80.80.100.124
+
+[type_telmate_proxmox]
+191.168.1.123
 
 [type_openstack_compute_instance_v2]
 10.120.0.226
