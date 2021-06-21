@@ -7,8 +7,7 @@ if [ -z $VERSION ]; then
 	exit 1
 fi
 
-#TARGETS="darwin_386 darwin_amd64 linux_386 linux_amd64 linux_arm windows_386 windows_amd64"
-TARGETS="darwin linux windows"
+TARGETS="darwin_amd64 linux_386 linux_amd64 linux_arm windows_386 windows_amd64"
 
 for target in $TARGETS; do
 	t=(${target//_/ })
