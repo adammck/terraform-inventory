@@ -966,6 +966,9 @@ const exampleStateFileTerraform0dot12 = `
 						"tags": {
 							"Name": "one-aws-instance"
 						},
+						"tags_all": {
+							"Additional": "another-tag"
+						},
 						"volume_tags": {
 							"Ignored": "stuff"
 						}
@@ -1291,6 +1294,8 @@ const expectedListOutputTerraform0dot12 = `
 	"name_two-aws-instance": ["10.0.0.2"],
 	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"],
 
+	"additional_another-tag": ["35.159.25.34"],
+
 	"foo_bar": ["12.34.56.78"],
 	"type_vsphere_virtual_machine": ["12.34.56.78"],
 	"vm_0": ["12.34.56.78"],
@@ -1298,7 +1303,10 @@ const expectedListOutputTerraform0dot12 = `
 }
 `
 
-const expectedInventoryOutputTerraform0dot12 = `[all]
+const expectedInventoryOutputTerraform0dot12 = `[additional_another-tag]
+35.159.25.34
+
+[all]
 10.0.0.2
 10.0.0.3
 10.0.0.4
@@ -1389,6 +1397,8 @@ const expectedHostOneOutputTerraform0dot12 = `
 	"public_ip": "35.159.25.34",
 	"tags.#": "1",
 	"tags.Name": "one-aws-instance",
+	"tags_all.#": "1",
+	"tags_all.Additional": "another-tag",
 	"volume_tags.#":"1",
 	"volume_tags.Ignored":"stuff"
 }
