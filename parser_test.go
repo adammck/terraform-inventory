@@ -185,6 +185,8 @@ const exampleStateFile = `
 							"id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 							"access_ip_v4": "10.120.0.226",
 							"access_ip_v6": "",
+							"tag.%": "1",
+							"tag.ostags": "rock",
 							"metadata.status": "superServer",
 							"metadata.#": "very bad",
 							"metadata_toes": "faada2142412jhb1j2"
@@ -560,6 +562,7 @@ const expectedListOutput = `
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
+	"ostags_rock": ["10.120.0.226"],
 	"database": ["10.0.0.8"],
 	"scw_test": ["10.0.0.11"],
 	"tfinventory_rocks": ["10.0.0.19"],
@@ -667,6 +670,9 @@ olddatacenter="\u003c0.7_format"
 
 [one_1]
 10.0.1.1
+
+[ostags_rock]
+10.120.0.226
 
 [role_nine]
 10.0.0.9
