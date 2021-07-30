@@ -28,6 +28,7 @@ The following providers are supported:
 * Nutanix
 * Open Telekom Cloud
 * Yandex.Cloud
+* Telmate/Proxmox
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.
