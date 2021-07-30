@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 )
 
 type counterSorter struct {
@@ -21,7 +22,7 @@ func (cs counterSorter) Swap(i, j int) {
 }
 
 func (cs counterSorter) Less(i, j int) bool {
-	return cs.resources[i].counter < cs.resources[j].counter
+	return cs.resources[i].counterNumeric < cs.resources[j].counterNumeric || (cs.resources[i].counterNumeric == cs.resources[j].counterNumeric && cs.resources[i].counterStr < cs.resources[j].counterStr)
 }
 
 type allGroup struct {
@@ -74,8 +75,13 @@ func gatherResourcesPre0dot12(s *state) map[string]interface{} {
 
 		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
 
-		// store as invdividual host (eg. <name>_<count>)
-		invdName := fmt.Sprintf("%s_%d", res.baseName, res.counter)
+		// store as individual host (e.g. <name>_<count>)
+		var invdName string
+		if res.counterStr != "" {
+			invdName = fmt.Sprintf("%s_%s", res.baseName, strings.Replace(res.counterStr, ".", "_", -1))
+		} else {
+			invdName = fmt.Sprintf("%s_%d", res.baseName, res.counterNumeric)
+		}
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v\n", invdName, old, res.Hostname())
 		}
@@ -161,11 +167,17 @@ func gatherResources0dot12(s *stateTerraform0dot12) map[string]interface{} {
 		// place in list of resource types
 		tp := fmt.Sprintf("type_%s", res.resourceType)
 		types[tp] = appendUniq(types[tp], res.Hostname())
+		sort.Strings(types[tp])
 
 		unsortedOrdered[res.baseName] = append(unsortedOrdered[res.baseName], res)
 
-		// store as invdividual host (eg. <name>_<count>)
-		invdName := fmt.Sprintf("%s_%d", res.baseName, res.counter)
+		// store as individual host (e.g. <name>_<count>)
+		var invdName string
+		if res.counterStr != "" {
+			invdName = fmt.Sprintf("%s_%s", res.baseName, strings.Replace(res.counterStr, ".", "_", -1))
+		} else {
+			invdName = fmt.Sprintf("%s_%d", res.baseName, res.counterNumeric)
+		}
 		if old, exists := individual[invdName]; exists {
 			fmt.Fprintf(os.Stderr, "overwriting already existing individual key %s, old: %v, new: %v", invdName, old, res.Hostname())
 		}
@@ -183,8 +195,11 @@ func gatherResources0dot12(s *stateTerraform0dot12) map[string]interface{} {
 				tag = resourceIDNames[v]
 			}
 			tags[tag] = appendUniq(tags[tag], res.Hostname())
+			sort.Strings(tags[tag])
 		}
 	}
+
+	sort.Strings(all.Hosts)
 
 	// inventorize outputs as variables
 	if len(s.outputs()) > 0 {

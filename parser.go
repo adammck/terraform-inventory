@@ -340,7 +340,7 @@ func (s *stateTerraform0dot12) resources() []*Resource {
 				case float64:
 					resourceKeyName += "." + strconv.Itoa(int(v))
 				case string:
-					resourceKeyName += "." + v
+					resourceKeyName += "." + strings.Replace(v, ".", "_", -1)
 				default:
 					fmt.Fprintf(os.Stderr, "Warning: unknown index type %v\n", v)
 				}
