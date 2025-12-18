@@ -4,9 +4,6 @@
 [![GitHub release](https://img.shields.io/github/release/adammck/terraform-inventory.svg?maxAge=2592000)](https://github.com/adammck/terraform-inventory/releases)
 [![GitHub release](https://img.shields.io/homebrew/v/terraform-inventory.svg?maxAge=2592000)](https://formulae.brew.sh/formula/terraform-inventory)
 
-# Disclaimer 
-This repository is a fork of [terraform-invetory](https://github.com/adammck/terraform-inventory). Since the original project is no longer actively maintained, I have created this fork and will continue maintaining it going forward.
-
 This is a little Go app which generates a dynamic [Ansible][ans] inventory from
 a [Terraform][tf] state file. It allows one to spawn a bunch of instances with 
 Terraform, then (re-)provision them with Ansible.

@@ -20,12 +20,10 @@ var inventory = flag.Bool("inventory", false, "inventory mode")
 // getTerraformCommand checks for "tofu" or "terraform" and returns the first one found.
 // It prioritizes "tofu" if an environment variable is set, or checks in order.
 func getTerraformCommand() string {
-	// 1. Check for an explicit environment variable override
 	if cmd := os.Getenv("TF_CLI_COMMAND"); cmd != "" {
 		return cmd
 	}
 
-	// 2. Check for 'tofu' first (due to growing popularity/open-source preference)
 	_, err := exec.LookPath("tofu")
 	if err == nil {
 		return "tofu"
@@ -36,8 +34,6 @@ func getTerraformCommand() string {
 	if err == nil {
 		return "terraform"
 	}
-
-	// 4. Neither found
 	return ""
 }
 
@@ -91,15 +87,13 @@ func main() {
 		}
 	}
 
-	// --- 🚀 CHANGES START HERE ---
 	cliCommand := getTerraformCommand()
 	if cliCommand == "" {
 		fmt.Fprint(os.Stderr, "Error: Neither 'terraform' nor 'tofu' found in PATH. Ensure one is installed or set TF_CLI_COMMAND.\n")
 		os.Exit(1)
 	}
-	
+
 	if f.IsDir() {
-		// Attempt 1: Modern command
 		cmd := exec.Command(cliCommand, "show", "-json")
 		cmd.Dir = path
 		var out bytes.Buffer
@@ -108,8 +102,6 @@ func main() {
 		err = cmd.Run()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error running `%s show -json` in directory %s, %s, falling back to trying pre-0.12 command\n", cliCommand, path, err)
-
-			// Attempt 2: Pre-0.12 fallback command
 			cmd = exec.Command(cliCommand, "state", "pull")
 			cmd.Dir = path
 			out.Reset()
@@ -129,7 +121,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	// --- 🚀 CHANGES END HERE ---
 
 	if s.TerraformVersion == TerraformVersionUnknown {
 		fmt.Fprintf(os.Stderr, "Unknown state format\n\nUsage: %s [options] path\npath: this is either a path to a state file or a folder from which `%s commands` are valid\n", os.Args[0], cliCommand)
@@ -149,4 +140,5 @@ func main() {
 	} else if *host != "" {
 		os.Exit(cmdHost(os.Stdout, os.Stderr, &s, *host))
 	}
+
 }
