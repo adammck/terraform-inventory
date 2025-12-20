@@ -17,8 +17,9 @@ var list = flag.Bool("list", false, "list mode")
 var host = flag.String("host", "", "host mode")
 var inventory = flag.Bool("inventory", false, "inventory mode")
 
-// getTerraformCommand checks for "tofu" or "terraform" and returns the first one found.
-// It prioritizes "tofu" if an environment variable is set, or checks in order.
+// getTerraformCommand returns the value of $TF_CLI_COMMAND (env var) if set,
+// otherwise the first of "tofu" or "terraform" which exist in $PATH. If none
+// are found, returns an empty string.
 func getTerraformCommand() string {
 	if cmd := os.Getenv("TF_CLI_COMMAND"); cmd != "" {
 		return cmd
@@ -29,11 +30,11 @@ func getTerraformCommand() string {
 		return "tofu"
 	}
 
-	// 3. Fall back to 'terraform'
 	_, err = exec.LookPath("terraform")
 	if err == nil {
 		return "terraform"
 	}
+
 	return ""
 }
 
