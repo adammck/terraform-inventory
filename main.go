@@ -140,5 +140,4 @@ func main() {
 	} else if *host != "" {
 		os.Exit(cmdHost(os.Stdout, os.Stderr, &s, *host))
 	}
-
 }
