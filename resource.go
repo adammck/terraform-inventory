@@ -45,9 +45,10 @@ func init() {
 	// Formats:
 	// - type.[module_]name (no `count` attribute; contains module name if we're not in the root module)
 	// - type.[module_]name.0 (if resource has `count` attribute)
+	// - type.[module_]name["key"] (if resource has `key` attribute)
 	// - type.[module_]name.resource_name
 	// - "data." prefix should not parse and be ignored by caller (does not represent a host)
-	nameParser = regexp.MustCompile(`^([\w\-]+)\.([\w\-]+)(?:\.(\d+|[\S+]+))?$`)
+	nameParser = regexp.MustCompile(`^([\w_-]+)\.((?:[\w_-]+(\["[^"]+"\])?))(?:\.?(\d+|[\S+]+))?$`)
 }
 
 type Resource struct {
@@ -76,7 +77,7 @@ func NewResource(keyName string, state resourceState) (*Resource, error) {
 	m := nameParser.FindStringSubmatch(keyName)
 
 	// This should not happen unless our regex changes.
-	if len(m) != 4 {
+	if len(m) != 4 && len(m) != 5 {
 		return nil, fmt.Errorf("couldn't parse resource keyName: %s", keyName)
 	}
 
